@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share_e/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:share_e/services/SharedPreferenceHelper.dart';
 import 'package:share_e/services/database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_e/ExceptionHandeling/CustomException.dart';
-
 
 import 'dart:io';
 
@@ -14,11 +14,13 @@ class LoginScreen extends StatelessWidget {
   final _usernameController = TextEditingController();
   final _codeController = TextEditingController();
   final globalKey = GlobalKey<ScaffoldState>();
+
+
   Future<bool> loginUser(
       String phone, String username, BuildContext context) async {
 
       FirebaseAuth _auth = FirebaseAuth.instance;
-      try {
+      try {                                                     //internet exception
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           print('connected');
@@ -34,20 +36,22 @@ class LoginScreen extends StatelessWidget {
                 print(username);
                 print(phone);
                 print(user);
+
                 //final FirebaseUser user = await _auth.currentUser();
                 //final uid = user.uid;
+
+                //data storing in Firestore
                 await DatabaseService(uid: user.uid)
                     .updateUserData(username, phone);
 
                 if (user != null) {
+                  //data storing local storage
+                SharedPreferenceHelper.addtolocalstoage(phone,username,user.uid);
                   AuxiliaryClass.showToast("You are logged in!!");
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => HomeScreen(
-                            user: user,
-                            username: username,
-                          )));
+                          builder: (context) => HomeScreen()));
                 } else {
                   print("Error");
                 }
@@ -94,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => HomeScreen(
-                                          user: user,
+
                                         )));
                               } else {
                                 print("Error");
@@ -109,7 +113,7 @@ class LoginScreen extends StatelessWidget {
         }
       } on SocketException catch (_) {
         print('not connected');
-        AuxiliaryClass.showToast("check you internet connection");
+        AuxiliaryClass.showToast("check your internet connection");
       }
 
 

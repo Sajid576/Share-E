@@ -7,7 +7,7 @@ class AuxiliaryClass{
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIos: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.black,
         textColor: Colors.white,
         fontSize: 16.0);
   }
