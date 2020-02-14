@@ -14,14 +14,20 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
   final Duration duration = const Duration(milliseconds: 300);
   AnimationController _controller;
   Animation<double> _scaleAnimation;
+  Animation<double> _menuScaleAnimation;
+  Animation<Offset> _slideAnimation;
 
  // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
 
   @override
   void initState() {
     super.initState();
+    //these tow for dashboard animation
     _controller=AnimationController(vsync: this,duration: duration);
     _scaleAnimation=Tween<double>(begin: 1,end: 0.6).animate(_controller);
+    //these tow for menu animation
+    _menuScaleAnimation = Tween<double>(begin: 0.5,end: 1).animate(_controller);
+    _slideAnimation = Tween<Offset>(begin: Offset(-1,0),end: Offset(0,0)).animate(_controller);
   }
   @override
   void dispose() {
@@ -65,44 +71,50 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
   //side bar e ki ki option thakbe ta menu te ache
 
   Widget menu(context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 18.0),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Profile",
-              style: TextStyle(color: Colors.white, fontSize: 18),
+    return SlideTransition(
+      position: _slideAnimation,
+      child: ScaleTransition(
+        scale: _menuScaleAnimation,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 18.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Profile",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  "ShareService",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  "Account",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+                Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                SizedBox(
+                  height: 18,
+                ),
+              ],
             ),
-            SizedBox(
-              height: 18,
-            ),
-            Text(
-              "ShareService",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            SizedBox(
-              height: 18,
-            ),
-            Text(
-              "Account",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            SizedBox(
-              height: 18,
-            ),
-            Text(
-              "Logout",
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
-            SizedBox(
-              height: 18,
-            ),
-          ],
+          ),
         ),
       ),
     );
