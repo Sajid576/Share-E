@@ -17,7 +17,7 @@ void main() {
 
   });*/
 
-  //runApp(HomeScreen());
+  runApp(MyApp());
 }
 class MyApp extends StatefulWidget {
   @override
@@ -38,8 +38,8 @@ class _MyAppState extends State<MyApp> {
         ),
 
 
-        home: isSignedUp ==true ? HomeScreen() : LoginScreen(),
-
+        //home: isSignedUp ==true ? HomeScreen() : LoginScreen(),
+           home:HomeScreen(),
 
     );
   }
