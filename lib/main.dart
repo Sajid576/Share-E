@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import  'package:firebase_auth/firebase_auth.dart';
 import 'package:share_e/services/SharedPreferenceHelper.dart';
 import 'package:share_e/AuxilaryClasshelper/Userprofiledetails.dart';
+
+
 void main() {
 
   //WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,7 @@ void main() {
   });*/
 
   runApp(MyApp());
+
 }
 class MyApp extends StatefulWidget {
   @override

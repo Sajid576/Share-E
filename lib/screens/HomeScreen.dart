@@ -40,18 +40,16 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
     Size size = MediaQuery.of(context).size;
     screenheight = size.height;
     screenwidth = size.width;
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
+    return Scaffold(
           backgroundColor: backgroundColor,
           body: Stack(
             children: <Widget>[
               menu(context),
-              dashboard(context),
+              HomeLayout(context),
             ],
           ),
-          appBar: AppBar(
+
+         /* appBar: AppBar(
             backgroundColor: backgroundColor,
             title: Text("Home"),
             centerTitle: true,
@@ -61,11 +59,9 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
                 Tab(icon: Icon(Icons.list),),
               ],
             ),
-          ),
-        ),
-      ),
+          ),*/
 
-    );
+        );
   }
 
   //side bar e ki ki option thakbe ta menu te ache
@@ -120,9 +116,9 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
     );
   }
 
-  // dashboard is for home page
+  // Homelayout is for home page
 
-  Widget dashboard(context) {
+  Widget HomeLayout(context) {
     return AnimatedPositioned(
       duration: duration,
       top: 0,            //scale is done for top and bottom
@@ -136,44 +132,58 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
           elevation: 8,
           color: backgroundColor,
           child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      InkWell(
-                        child: Icon(Icons.menu, color: Colors.white),
-                        onTap: () {
-                          setState(() {
-                            if(isCollapsed)
-                              _controller.forward();
-                            else
-                              _controller.reverse();
-                            isCollapsed =
-                                !isCollapsed; //just reversing it to false
-                          });
-                        },
-                      ),
-                      /*Text(
-                        "Home",
-                        style: TextStyle(fontSize: 24, color: Colors.white),
-                      ),*/
-                      Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ),
-                    ],
+            child: DefaultTabController(
+              length: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        InkWell(
+                          child: Icon(Icons.menu, color: Colors.white),
+                          onTap: () {
+                            setState(() {
+                              if(isCollapsed)
+                                _controller.forward();
+                              else
+                                _controller.reverse();
+                              isCollapsed =
+                                  !isCollapsed; //just reversing it to false
+                            });
+                          },
+                        ),
+                        /*Text(
+                          "Home",
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),*/
+
+                      ],
+                    ),
                   ),
-                ),
-                /*TabBar(
-                  tabs: <Widget>[
-                    Tab(icon: Icon(Icons.map),),
-                    Tab(icon: Icon(Icons.list),),
-                  ],
-                )*/
-              ],
+                  Container(
+                    child:TabBar(
+                      tabs: <Widget>[
+                        Tab(icon: Icon(Icons.map),),
+                        Tab(icon: Icon(Icons.list),),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        Icon(Icons.map),
+                        Icon(Icons.list),
+
+                      ],
+                    ),
+                  ),
+
+
+                ],
+              ),
             ),
           ),
         ),
