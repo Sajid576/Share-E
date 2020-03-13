@@ -1,8 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'GoogleMapView.dart';
+import 'package:share_e/view/GoogleMapView.dart';
+import 'package:share_e/view/ProfileScreen.dart';
+import 'package:share_e/view/LoginScreen.dart';
+import 'package:background_location/background_location.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 final Color backgroundColor = Color(0xFF4A4A58);
 
@@ -11,7 +17,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+
   bool isCollapsed = true; //at the begining it is collapsed that means only home is showing 100%
   double screenheight, screenwidth;
   final Duration duration = const Duration(milliseconds: 300);
@@ -22,11 +29,14 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
 
  // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
 
-
-
   @override
   void initState() {
     super.initState();
+
+    //when user is in home page, the device location will start to be tracked
+    BackgroundLocation.startLocationService();
+
+
     //these code for homePage layout animation
     _controller=AnimationController(vsync: this,duration: duration);
     _scaleAnimation=Tween<double>(begin: 1,end: 0.6).animate(_controller);
@@ -36,32 +46,35 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
   }
   @override
   void dispose() {
+    //When user gets out of this Screen location tracking interface will be disabled
+    //code for disabling
+
+
+
     //this controller is for animating navigation drawyer
     _controller.dispose();
 
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     screenheight = size.height;
     screenwidth = size.width;
     return Scaffold(
-          backgroundColor: backgroundColor,
-          body: Stack(
-            children: <Widget>[
-              menu(context),
-              HomeLayout(context),
-            ],
-          ),
+            backgroundColor: backgroundColor,
+            body: Stack(
+              children: <Widget>[
+                menu(context),
+                HomeLayout(context),
+              ],
+            ),
 
+          );
 
-
-        );
   }
-
-
-
 
 
   //side bar e ki ki option thakbe ta menu te ache
@@ -80,31 +93,78 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  "Profile",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+                FlatButton(
+                  child:Text(
+                    "Home",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => HomeScreen(),
+                        ));
+                  },
+
+                ),
+
+                SizedBox(
+                  height: 18,
+                ),
+                FlatButton(
+                  child:Text(
+                    "Profile",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  onPressed: () {
+                    // Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => ProfileScreen(),
+                        ));
+                  },
+
+                ),
+
+                SizedBox(
+                  height: 18,
+                ),
+                FlatButton(
+                  child:Text(
+                    "ShareService",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+                FlatButton(
+                  child:Text(
+                    "Account",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
                 ),
                 SizedBox(
                   height: 18,
                 ),
-                Text(
-                  "ShareService",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+
+                FlatButton(
+                  child:Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  onPressed: () {
+                    //this logout() used for erasing the session
+                    SharedPreferenceHelper.logout();
+
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => LoginScreen(),
+                        ));
+                  },
                 ),
-                SizedBox(
-                  height: 18,
-                ),
-                Text(
-                  "Account",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                SizedBox(
-                  height: 18,
-                ),
-                Text(
-                  "Logout",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
+
                 SizedBox(
                   height: 18,
                 ),
@@ -176,8 +236,8 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
                       //here body of all tab layouts will be called
                       children: [
                         //tab for google map with device location tracker
-                        GoogleMapView.googleMapLayout(context),
-                        //tab for listview builder with generatedRoute() will be implemented later
+                        new GoogleMapView().googleMapLayout(context),
+                        //tab for listview builder  will be implemented later
                         Icon(Icons.list),
 
                       ],
@@ -193,4 +253,56 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
       ),
     );
   }
+
+   void updateMarkerAndCircle(var lat,var lon,var accuracy,var bearing, Uint8List imageData) {
+    LatLng latlng = LatLng(lat, lon);
+
+  setState(() {
+    GoogleMapView.marker = Marker(
+        markerId: MarkerId("home"),
+        position: latlng,
+        rotation: bearing,    //not sure about this rotation parameter
+        draggable: false,
+        zIndex: 2,
+        flat: true,
+        anchor: Offset(0.5, 0.5),
+        icon: BitmapDescriptor.fromBytes(imageData));
+    GoogleMapView.circle = Circle(
+        circleId: CircleId("user"),
+        radius: accuracy,
+        zIndex: 1,
+        strokeColor: Colors.blue,
+        center: latlng,
+        fillColor: Colors.blue.withAlpha(70));
+
+
+  });
+  }
+  Future<Uint8List> getMarker() async {
+    ByteData byteData = await DefaultAssetBundle.of(context).load("assets/Me.png");
+    return byteData.buffer.asUint8List();
+  }
+  void getCurrentLocation() async {
+    Uint8List imageData = await getMarker();
+
+    BackgroundLocation.getLocationUpdates((location) {
+      var latitude = location.latitude;
+      var longitude = location.longitude;
+      var accuracy = location.accuracy;
+      var bearing = location.bearing;
+      print("latitude:  "+latitude.toString() +"  longitude: "+longitude.toString());
+
+      if (new GoogleMapView().get_googleMapController() != null) {
+        new GoogleMapView().get_googleMapController().animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+            bearing: 192.8334901395799,
+            target: LatLng(latitude, longitude),
+            tilt: 0,
+            zoom: 18.00)));
+        updateMarkerAndCircle(latitude,longitude,accuracy,bearing, imageData);
+      }
+    });
+
+  }
+
+
 }

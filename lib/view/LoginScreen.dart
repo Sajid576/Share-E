@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/view/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/model/database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_e/ExceptionHandeling/CustomException.dart';
-
 import 'dart:io';
 
 class LoginScreen extends StatelessWidget {
@@ -14,6 +13,8 @@ class LoginScreen extends StatelessWidget {
   final _usernameController = TextEditingController();
   final _codeController = TextEditingController();
   final globalKey = GlobalKey<ScaffoldState>();
+
+
 
 
   Future<bool> loginUser(
@@ -41,9 +42,9 @@ class LoginScreen extends StatelessWidget {
                   print(user.toString()+"  verified");
 
                   //data storing in Firestore
-                  await DatabaseService().updateUserData(username, phone,user.uid);
+                  await FirebaseService().setUserData(username, phone,user.uid);
                   //data storing local storage
-                  SharedPreferenceHelper.addtolocalstoage(phone,username,user.uid);
+                  SharedPreferenceHelper.setLocalData(phone,username,user.uid);
                   AuxiliaryClass.showToast("You are logged in!!");
 
 

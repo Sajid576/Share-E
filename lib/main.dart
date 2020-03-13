@@ -39,6 +39,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+
   void autoLogin() async {
 
     SharedPreferenceHelper.readfromlocalstorage().then((user)
