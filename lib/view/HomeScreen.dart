@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'GoogleMapView.dart';
 
 final Color backgroundColor = Color(0xFF4A4A58);
 
@@ -19,10 +22,12 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
 
  // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
 
+
+
   @override
   void initState() {
     super.initState();
-    //these tow for dashboard animation
+    //these code for homePage layout animation
     _controller=AnimationController(vsync: this,duration: duration);
     _scaleAnimation=Tween<double>(begin: 1,end: 0.6).animate(_controller);
     //these tow for menu animation
@@ -31,9 +36,10 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
   }
   @override
   void dispose() {
+    //this controller is for animating navigation drawyer
     _controller.dispose();
-    super.dispose();
 
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -49,20 +55,14 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
             ],
           ),
 
-         /* appBar: AppBar(
-            backgroundColor: backgroundColor,
-            title: Text("Home"),
-            centerTitle: true,
-            bottom: TabBar(
-              tabs: <Widget>[
-                Tab(icon: Icon(Icons.map),),
-                Tab(icon: Icon(Icons.list),),
-              ],
-            ),
-          ),*/
+
 
         );
   }
+
+
+
+
 
   //side bar e ki ki option thakbe ta menu te ache
 
@@ -173,8 +173,11 @@ class _HomeScreenState extends State<HomeScreen>with SingleTickerProviderStateMi
                   ),
                   Expanded(
                     child: TabBarView(
+                      //here body of all tab layouts will be called
                       children: [
-                        Icon(Icons.map),
+                        //tab for google map with device location tracker
+                        GoogleMapView.googleMapLayout(context),
+                        //tab for listview builder with generatedRoute() will be implemented later
                         Icon(Icons.list),
 
                       ],

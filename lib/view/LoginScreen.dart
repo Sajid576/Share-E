@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:share_e/screens/HomeScreen.dart';
+import 'package:share_e/view/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
-import 'package:share_e/services/SharedPreferenceHelper.dart';
-import 'package:share_e/services/database.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
+import 'package:share_e/model/database.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_e/ExceptionHandeling/CustomException.dart';
 
@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
       try {                                                     //internet exception
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          print('connected');
+          print('connected to internet');
           _auth.verifyPhoneNumber(
               phoneNumber: phone,
               timeout: Duration(seconds: 60),
@@ -33,21 +33,20 @@ class LoginScreen extends StatelessWidget {
                 AuthResult result = await _auth.signInWithCredential(credential);
 
                 FirebaseUser user = result.user;
-                print(username);
-                print(phone);
-                print(user);
 
-                //final FirebaseUser user = await _auth.currentUser();
-                //final uid = user.uid;
-
-                //data storing in Firestore
-                await DatabaseService(uid: user.uid)
-                    .updateUserData(username, phone);
 
                 if (user != null) {
+                  print(username+"  verified");
+                  print(phone+"  verified");
+                  print(user.toString()+"  verified");
+
+                  //data storing in Firestore
+                  await DatabaseService().updateUserData(username, phone,user.uid);
                   //data storing local storage
-                SharedPreferenceHelper.addtolocalstoage(phone,username,user.uid);
+                  SharedPreferenceHelper.addtolocalstoage(phone,username,user.uid);
                   AuxiliaryClass.showToast("You are logged in!!");
+
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -83,13 +82,11 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.blue,
                             onPressed: () async {
                               final code = _codeController.text.trim();
-                              AuthCredential credential =
-                              PhoneAuthProvider.getCredential(
+                              AuthCredential credential = PhoneAuthProvider.getCredential(
                                   verificationId: verificationId,
                                   smsCode: code);
 
-                              AuthResult result =
-                              await _auth.signInWithCredential(credential);
+                              AuthResult result = await _auth.signInWithCredential(credential);
 
                               FirebaseUser user = result.user;
 

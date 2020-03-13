@@ -1,5 +1,5 @@
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
-import 'package:share_e/screens/LoginScreen.dart';
+import 'package:share_e/view/LoginScreen.dart';
 class CustomException{
   static void ExceptionHandeling(int value){
     if (value==1){
