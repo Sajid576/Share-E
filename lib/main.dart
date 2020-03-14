@@ -1,27 +1,12 @@
-import 'package:share_e/screens/HomeScreen.dart';
-import 'package:share_e/screens/LoginScreen.dart';
+import 'package:share_e/view/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import  'package:firebase_auth/firebase_auth.dart';
-import 'package:share_e/services/SharedPreferenceHelper.dart';
-import 'package:share_e/AuxilaryClasshelper/Userprofiledetails.dart';
-
+import 'package:share_e/view/LoginScreen.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 void main() {
-
-  //WidgetsFlutterBinding.ensureInitialized();
-/*
-  SharedPreferenceHelper.readfromlocalstorage().then((user)
-  {
-    print('signedup?? '+user.getsession().toString());
-
-    _MyAppState.isSignedUp=  user.getsession();
-    runApp(MyApp());
-
-  });*/
-
   runApp(MyApp());
-
 }
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -29,24 +14,54 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  static bool isSignedUp=false;
+  static bool _isSignedUp=false;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+   // autoLogin();
+
+  }
+  @override
   Widget build(BuildContext context) {
-    print('build hoise');
+
+
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
 
+      home: Scaffold(
+        body:HomeScreen(),
+      ),
+      //home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
 
-        //home: isSignedUp ==true ? HomeScreen() : LoginScreen(),
-           home:HomeScreen(),
 
     );
   }
+
+
+  void autoLogin() async {
+
+    SharedPreferenceHelper.readfromlocalstorage().then((user)
+    {
+      print('signedup?? '+user.getsession().toString());
+      bool isSignedUp=  user.getsession();
+
+      setState(() {
+        _isSignedUp=isSignedUp;
+      });
+    });
+
+  }
 }
+
+
+
+
+
 
 
 
