@@ -4,7 +4,7 @@ import 'package:share_e/view/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 void main() {
-  runApp(HomeScreen());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -20,11 +20,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    autoLogin();
+   // autoLogin();
 
   }
   @override
   Widget build(BuildContext context) {
+
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -32,8 +33,10 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
 
-
-      home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
+      home: Scaffold(
+        body:HomeScreen(),
+      ),
+      //home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
 
 
     );

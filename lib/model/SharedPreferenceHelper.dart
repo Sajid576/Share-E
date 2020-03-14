@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:share_e/AuxilaryClasshelper/Userprofiledetails.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_e/AuxilaryClasshelper/Userprofiledetails.dart';
@@ -9,6 +11,8 @@ class SharedPreferenceHelper{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('session', false);
   }
+
+  
   //write purpose
   static setLocalData(String phone,String username,String uid) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -34,7 +38,9 @@ class SharedPreferenceHelper{
    var username=prefs.getString('username')??'';
    var session = prefs.getBool('session')?? false;
    var uid = prefs.getString('uid')??'';
-    Userprofiledetails userprofile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session);
+
+
+   Userprofiledetails userprofile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session);
     return userprofile;
   }
 

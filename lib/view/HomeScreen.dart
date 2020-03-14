@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
 
   bool isCollapsed = true; //at the begining it is collapsed that means only home is showing 100%
-  double screenheight, screenwidth;
+
   final Duration duration = const Duration(milliseconds: 300);
   AnimationController _controller;
   Animation<double> _scaleAnimation;
@@ -60,19 +60,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
 
-    Size size = MediaQuery.of(context).size;
-    screenheight = size.height;
-    screenwidth = size.width;
     return Scaffold(
-            backgroundColor: backgroundColor,
-            body: Stack(
-              children: <Widget>[
-                menu(context),
-                HomeLayout(context),
-              ],
-            ),
+              backgroundColor: backgroundColor,
+              body: Stack(
+                children: <Widget>[
+                  menu(context),
+                  HomeLayout(context),
+                ],
+              ),
 
-          );
+            );
+
 
   }
 
@@ -183,8 +181,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       duration: duration,
       top: 0,            //scale is done for top and bottom
       bottom: 0,
-      left: isCollapsed ? 0 : 0.6 * screenwidth,
-      right: isCollapsed ? 0 : -0.4 * screenwidth,
+      left: isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width,
+      right: isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width,
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Material(
