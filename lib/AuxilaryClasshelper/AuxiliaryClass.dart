@@ -11,4 +11,6 @@ class AuxiliaryClass{
         textColor: Colors.white,
         fontSize: 16.0);
   }
+
+
 }
