@@ -24,7 +24,7 @@ class GoogleMapView {
   }
   static final CameraPosition initialLocation = CameraPosition(
     target: LatLng(23.2324324, 90.31232),
-    zoom: 14.4746,
+    zoom: 17,
   );
 
 
