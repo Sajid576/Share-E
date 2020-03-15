@@ -39,6 +39,8 @@ dependencies:
   google_maps_flutter: ^0.5.11
   #background location tracking  library
   background_location: ^0.0.9+1
+  #swipe detection on the screen
+  swipedetector: ^1.2.0
 
 dev_dependencies:
   flutter_test:

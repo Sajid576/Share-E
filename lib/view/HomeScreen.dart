@@ -4,11 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/view/GoogleMapView.dart';
 import 'package:share_e/view/ProfileScreen.dart';
 import 'package:share_e/view/LoginScreen.dart';
 import 'package:background_location/background_location.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
+import 'package:swipedetector/swipedetector.dart';
 
 final Color backgroundColor = Color(0xFF4A4A58);
 
@@ -177,73 +179,86 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   // Homelayout is for home page
 
   Widget HomeLayout(context) {
-    return AnimatedPositioned(
-      duration: duration,
-      top: 0,            //scale is done for top and bottom
-      bottom: 0,
-      left: isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width,
-      right: isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Material(
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          elevation: 8,
-          color: backgroundColor,
-          child: SafeArea(
-            child: DefaultTabController(
-              length: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        InkWell(
-                          child: Icon(Icons.menu, color: Colors.white),
-                          onTap: () {
-                            setState(() {
-                              if(isCollapsed)
-                                _controller.forward();
-                              else
-                                _controller.reverse();
-                              isCollapsed =
-                                  !isCollapsed; //just reversing it to false
-                            });
-                          },
-                        ),
-                        /*Text(
-                          "Home",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),*/
+    return SwipeDetector(
+      onSwipeLeft: () {
 
-                      ],
+        print("Swipe Left");
+
+      },
+      onSwipeRight: () {
+
+        print("Swipe Right");
+
+      },
+      child: AnimatedPositioned(
+        duration: duration,
+        top: 0,            //scale is done for top and bottom
+        bottom: 0,
+        left: isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width,
+        right: isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Material(
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+            elevation: 8,
+            color: backgroundColor,
+            child: SafeArea(
+              child: DefaultTabController(
+                length: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          InkWell(
+                            child: Icon(Icons.menu, color: Colors.white),
+                            onTap: () {
+                              setState(() {
+                                if(isCollapsed)
+                                  _controller.forward();
+                                else
+                                  _controller.reverse();
+                                isCollapsed =
+                                    !isCollapsed; //just reversing it to false
+                              });
+                            },
+                          ),
+                          /*Text(
+                            "Home",
+                            style: TextStyle(fontSize: 24, color: Colors.white),
+                          ),*/
+
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    child:TabBar(
-                      tabs: <Widget>[
-                        Tab(icon: Icon(Icons.map),),
-                        Tab(icon: Icon(Icons.list),),
-                      ],
+                    Container(
+                      child:TabBar(
+                        tabs: <Widget>[
+                          Tab(icon: Icon(Icons.map),),
+                          Tab(icon: Icon(Icons.list),),
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      //here body of all tab layouts will be called
-                      children: [
-                        //tab for google map with device location tracker
-                        new GoogleMapView().googleMapLayout(context),
-                        //tab for listview builder  will be implemented later
-                        Icon(Icons.list),
+                    Expanded(
+                      child: TabBarView(
+                        physics: NeverScrollableScrollPhysics(),
+                        //here body of all tab layouts will be called
+                        children: [
+                          //tab for google map with device location tracker
+                          new GoogleMapView().googleMapLayout(context),
+                          //tab for listview builder  will be implemented later
+                          Icon(Icons.list),
 
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
 
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -251,6 +266,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ),
     );
   }
+  
 
    void updateMarkerAndCircle(var lat,var lon,var accuracy,var bearing, Uint8List imageData) {
     LatLng latlng = LatLng(lat, lon);

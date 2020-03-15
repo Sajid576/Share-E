@@ -20,7 +20,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   // autoLogin();
+    autoLogin();
 
   }
   @override
@@ -34,9 +34,10 @@ class _MyAppState extends State<MyApp> {
       ),
 
       home: Scaffold(
+         // body: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
         body:HomeScreen(),
       ),
-      //home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
+
 
 
     );

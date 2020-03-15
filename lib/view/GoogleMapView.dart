@@ -1,5 +1,7 @@
 
 import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -30,15 +32,24 @@ class GoogleMapView {
    Widget googleMapLayout(context)
   {
         return GoogleMap(
-          mapType: MapType.hybrid,
-          initialCameraPosition: initialLocation,
-          markers: Set.of((marker != null) ? [marker] : []),
-          circles: Set.of((circle != null) ? [circle] : []),
-          onMapCreated: (GoogleMapController controller) {
-            _googleMapController = controller;
-          },
 
-        );
+          //gestureRecognizer used for moving the view of google map by swiping
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+            new Factory<OneSequenceGestureRecognizer>(() => new EagerGestureRecognizer(),),
+          ].toSet(),
+
+            mapType: MapType.hybrid,
+
+            initialCameraPosition: initialLocation,
+            markers: Set.of((marker != null) ? [marker] : []),
+            circles: Set.of((circle != null) ? [circle] : []),
+
+            onMapCreated: (GoogleMapController controller) {
+              _googleMapController = controller;
+            },
+
+          );
+
 
   }
 }
