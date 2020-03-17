@@ -1,5 +1,6 @@
 import 'package:share_e/view/HomeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:share_e/view/ListViewServiceShare.dart';
 import 'package:share_e/view/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 
@@ -35,7 +36,7 @@ class _MyAppState extends State<MyApp> {
 
       home: Scaffold(
          // body: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
-        body:HomeScreen(),
+        body:ListViewServiceShare(),
       ),
 
 
