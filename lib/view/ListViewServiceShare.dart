@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 
 class ListViewServiceShare extends StatefulWidget {
   @override
@@ -52,15 +53,23 @@ class _ListPageState extends State<ListPage> {
               child: Text("Loading..."),
             );
           }else{
-             return ListView.builder(
+             return ListView.separated(
                itemCount: snapshot.data.length,//shared_service document array size
-                 itemBuilder:(_, index){
-                   return ListTile(
-                     title:Text(snapshot.data[index].data["service_product_type"]),
-                     subtitle: Text(snapshot.data[index].data["username"]),
-                     onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document
+                 itemBuilder:(BuildContext context,int index){
+                   return SingleChildScrollView(
+                     child: ListTile(
+                       contentPadding: EdgeInsets.all(8),
+                       title:Text(snapshot.data[index].data["service_product_type"]),
+                       subtitle: Text(snapshot.data[index].data["username"]),
+                       onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document
+                     ),
                    );
-                 }
+                 },
+               separatorBuilder: (BuildContext context,int index){
+                 return Divider(
+                   color: Colors.black,
+                 );
+               },
              );
           }
         }
@@ -83,10 +92,39 @@ class _DetailPageState extends State<DetailPage> {
         title: Text(widget.sharedServices.data["service_product_type"]),
       ),
       body: Container(
-        child: Card(
-          child: ListTile(
-            title: Text(widget.sharedServices.data["service_product_name"]),
-            subtitle: Text(widget.sharedServices.data["available_time"]),
+        child: Center(
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                  height: 200.0,
+                  width: 350.0,
+                  child: Carousel(
+                    images: [
+                      AssetImage('assets/Me.png'),
+                      AssetImage('assets/book_ico.png'),
+                      AssetImage('assets/vehicle_ico.png'),
+                      AssetImage('assets/food_ico.jpg'),
+                    ],
+                    dotSize: 4.0,
+                    dotSpacing: 15.0,
+                    dotColor: Colors.lightGreenAccent,
+                    indicatorBgPadding: 5.0,
+                    dotBgColor: Colors.purple.withOpacity(0.5),
+                    borderRadius: true,
+                  )
+              ),
+                 SizedBox(
+                   height: 20,
+                 ),
+                 Text(widget.sharedServices.data["service_product_name"],style: TextStyle(
+                   fontSize: 40
+                 ),),
+                 Text(widget.sharedServices.data["available_time"],style: TextStyle(fontSize: 18),),
+                 Text(widget.sharedServices.data["area"].toString(),style: TextStyle(fontSize: 18),),
+                 Text(widget.sharedServices.data["service_product_type"],style: TextStyle(fontSize: 18),),
+                 Text(widget.sharedServices.data["username"],style: TextStyle(fontSize: 18),),
+            ],
           ),
         ),
       ),
