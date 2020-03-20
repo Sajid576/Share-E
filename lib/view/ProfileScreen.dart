@@ -36,6 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.tealAccent[700],
         appBar: AppBar(
           title: Text("Profile"),
           centerTitle:true,
@@ -54,30 +55,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
             )
           ],
         ),
-      body:
-           Row(
+      body: SafeArea(
+        child: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.black,
-                    child: Icon(
-                      Icons.person,
-                    ),
-                  ),
-
-                  Text("$_profile_username"),
-                  Text("$_profile_phone_no"),
-                ],
-
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.black,
+                child: Icon(
+                  Icons.person,
+                ),
               ),
 
-
+              Text('Your profile',style: TextStyle(
+                fontSize: 20,
+                //fontFamily: 'SourceSansPro',
+                color: Colors.black,
+                letterSpacing: 2.5,
+              ),),
+              SizedBox(
+                height: 20.0,
+                width: 200,
+                child: Divider(
+                  color: Colors.white,
+                ),
+              ),
+              Text('Welcome',style: TextStyle(
+                fontSize: 20,
+                //fontFamily: 'SourceSansPro',
+                color: Colors.black,
+                letterSpacing: 2.5,
+              ),),
+              SizedBox(
+                height: 20.0,
+                width: 200,
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              Card(
+                  color: Colors.white,
+                  margin:
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.person,
+                      color: Colors.teal[900],
+                    ),
+                    title: Text(
+                      "$_profile_username",
+                      style:
+                      TextStyle( fontSize: 20.0),
+                    ),
+                  )),
+              Card(
+                  color: Colors.white,
+                  margin:
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.phone,
+                      color: Colors.teal[900],
+                    ),
+                    title: Text(
+                      "$_profile_phone_no",
+                      style:
+                      TextStyle( fontSize: 20.0),
+                    ),
+                  )),
             ],
+
           ),
+             ),
+      ),
 
 
     );
