@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
-
+import 'AllServiceDetail.dart';
 class ListViewServiceShare extends StatefulWidget {
   @override
   _ListViewServiceShareState createState() => _ListViewServiceShareState();
@@ -40,7 +40,7 @@ class _ListPageState extends State<ListPage> {
     _data = getPosts();//for the very first time it loads up all the data from fireStore
   }
   navigateToDetailPage(DocumentSnapshot sharedServices){
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage(sharedServices: sharedServices,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>AllServiceDetail(sharedServices: sharedServices)));
   }
   @override
   Widget build(BuildContext context) {
@@ -80,136 +80,3 @@ class _ListPageState extends State<ListPage> {
     );
   }
 }
-class DetailPage extends StatefulWidget {
-  final DocumentSnapshot sharedServices;
-  DetailPage({this.sharedServices});
-  @override
-  _DetailPageState createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-
-  //var uid;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.sharedServices.data["service_product_type"]),
-        backgroundColor: Colors.grey[800],
-      ),
-      body: Container(
-        color: Colors.grey[400],
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-            children: <Widget>[
-              //uid =widget.sharedServices.data["uid"],
-              Center(
-                child: SizedBox(
-                    height: 200.0,
-                    width: 350.0,
-                    child: Carousel(
-                      images: [
-                        AssetImage('assets/Me.png'),
-                        AssetImage('assets/book_ico.png'),
-                        AssetImage('assets/vehicle_ico.png'),
-                        AssetImage('assets/food_ico.jpg'),
-                      ],
-                      dotSize: 4.0,
-                      dotSpacing: 15.0,
-                      dotColor: Colors.lightGreenAccent,
-                      indicatorBgPadding: 5.0,
-                      dotBgColor: Colors.purple.withOpacity(0.5),
-                      borderRadius: true,
-                    )
-                ),
-              ),
-                SizedBox(height: 10,),
-                StreamBuilder(
-                   stream: Firestore.instance.collection("users").snapshots(),
-                   builder: (context, snapshot){
-                     var uid = widget.sharedServices.data["uid"];
-                    // readLoacationData();
-                     print("uid of shared service "+ uid);
-                     if(!snapshot.hasData){
-                       return Text('Loading Data');
-                     }else{
-                       int i =0;
-                       return Padding(
-                         padding: EdgeInsets.all(10),
-                         child: Row(
-                           children: <Widget>[
-                             CircleAvatar(
-                               radius: 35,
-                               backgroundColor: Colors.black,
-                               child: Icon(
-                                 Icons.person,
-                               ),
-                             ),
-                             SizedBox(width: 10,),
-                             Column(
-
-                               children: <Widget>[
-                                 Text(snapshot.data.documents[0]["username"],style: TextStyle(fontSize: 30,),),
-                                 Text("Mobile: "+snapshot.data.documents[0]["Phone"]),
-                               ],
-                             ),
-                             SizedBox(width: 15,),
-                              RaisedButton(
-                               color: Colors.red,
-                               onPressed: null,
-                               child: Text(
-                                   'chat',
-                                   style: TextStyle(fontSize: 20,color: Colors.black),
-                               ),
-                             ),
-                           ],
-
-                         ),
-                       );
-                     }
-                   },
-                 ),
-
-                 SizedBox(
-                   height: 20,
-                 ),
-                 Container(
-
-                   child: Padding(
-                     padding: EdgeInsets.all(12),
-                     child: Column(
-                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                       crossAxisAlignment: CrossAxisAlignment.stretch,
-
-                       children: <Widget>[
-                         Text("Product Name : "+widget.sharedServices.data["service_product_name"],style: TextStyle(
-                             fontSize: 18
-                         ),),
-
-                         Text("price : "+widget.sharedServices.data["price"],style: TextStyle(fontSize: 18),),
-                         SizedBox(height: 10,),
-                         Text("Available Time : "+widget.sharedServices.data["available_time"],style: TextStyle(fontSize: 18),),
-                         SizedBox(height: 10,),
-                         Text("Service id : "+widget.sharedServices.data["service_id"],style: TextStyle(fontSize: 18),),
-                         SizedBox(height: 10,),
-                         Text("Address : "+widget.sharedServices.data["area"].toString(),style: TextStyle(fontSize: 18),),
-                         SizedBox(height: 10,),
-
-                       ],
-                     ),
-                   ),
-                 ),
-
-
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
