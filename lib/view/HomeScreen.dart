@@ -12,6 +12,7 @@ import 'package:share_e/view/LoginScreen.dart';
 import 'package:background_location/background_location.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:swipedetector/swipedetector.dart';
+import 'YourSharedService.dart';
 
 final Color backgroundColor = Color(0xFF4A4A58);
 
@@ -158,7 +159,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                     onPressed: () {
-
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => YourSharedService(),
+                          ));
                     }
                 ),
                 FlatButton(

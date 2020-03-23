@@ -15,9 +15,9 @@ class FirebaseService{
 
   //this function updates a specific field corresponding to the uid
   Future EditUserData(String username,String uid)async{
-    final CollectionReference userinfo = Firestore.instance.collection('users');
+    final CollectionReference userinfo = Firestore.instance.collection('users'); //instatiate the firebase
 
-    return await userinfo.document(uid).setData({
+    return await userinfo.document(uid).setData({     //updat the firebase with that coressponding uid
       'username':username,
     },merge: true);
 

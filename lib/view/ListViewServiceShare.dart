@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_pro/carousel_pro.dart';
 import 'AllServiceDetail.dart';
 class ListViewServiceShare extends StatefulWidget {
   @override
@@ -34,7 +33,7 @@ class _ListPageState extends State<ListPage> {
     return qn.documents;  //all the documents array inside the shared_Service
   }
   @override
-  void initState() {
+  void initState() {         //only runs when the activity load at the very begging
     // TODO: implement initState
     super.initState();
     _data = getPosts();//for the very first time it loads up all the data from fireStore

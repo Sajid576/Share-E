@@ -18,6 +18,7 @@ class _AllServiceDetailState extends State<AllServiceDetail> {
 
   @override
   void initState() {
+    super.initState();
     String uid = widget.sharedServices.data["uid"];
     print(uid);
     readUserData(uid.trim());
