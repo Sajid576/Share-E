@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
-class YourReceivedServiceDetails extends StatefulWidget {
-  final DocumentSnapshot ReceivedService;
-  YourReceivedServiceDetails({this.ReceivedService});
+class YourCartListDetails extends StatefulWidget {
+  final DocumentSnapshot SharedService;
+  YourCartListDetails({this.SharedService});
   @override
-  _YourReceivedServiceDetailsState createState() => _YourReceivedServiceDetailsState();
+  _YourCartListDetailsState createState() => _YourCartListDetailsState();
 }
 
-class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails> {
+class _YourCartListDetailsState extends State<YourCartListDetails> {
   String username=""; //otherwise invalid arguments will be shown(only user username will contain null
   String phn="";
 
@@ -16,7 +16,7 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
   void initState() {
     // TODO: implement initState
     super.initState();
-    String useruid =widget.ReceivedService.data["uid"];
+    String useruid =widget.SharedService.data["uid"];
     readUserData(useruid);
   }
   Future<void>readUserData(useruid)async{
@@ -35,7 +35,7 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
     bool isButtonPressed = false;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.ReceivedService.data["service_product_type"]),
+        title: Text(widget.SharedService.data["service_product_type"]),
         centerTitle: true,
         backgroundColor: Colors.grey[800],
       ),
@@ -104,73 +104,27 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("Product Name : "+widget.ReceivedService.data["service_product_name"],style: TextStyle(
+                  Text("Product Name : "+widget.SharedService.data["service_product_name"],style: TextStyle(
                       fontSize: 18
                   ),),
 
-                  Text("price : "+widget.ReceivedService.data["price"],style: TextStyle(fontSize: 18),),
+                  Text("price : "+widget.SharedService.data["price"],style: TextStyle(fontSize: 18),),
                   SizedBox(height: 10,),
-                  Text("Available Time : "+widget.ReceivedService.data["available_time"],style: TextStyle(fontSize: 18),),
+                  Text("Available Time : "+widget.SharedService.data["available_time"],style: TextStyle(fontSize: 18),),
                   SizedBox(height: 10,),
-                  Text("Service id : "+widget.ReceivedService.data["service_id"],style: TextStyle(fontSize: 18),),
+                  Text("Service id : "+widget.SharedService.data["service_id"],style: TextStyle(fontSize: 18),),
                   SizedBox(height: 10,),
-                  Text("Address : "+widget.ReceivedService.data["area"].toString(),style: TextStyle(fontSize: 18),),
+                  Text("Address : "+widget.SharedService.data["area"].toString(),style: TextStyle(fontSize: 18),),
                   SizedBox(height: 10,),
                 ],
               ),
             ),
-            SizedBox(height: 120,),
-            //button edit and Save
+            
 
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("Edit"),
-                    color: isButtonPressed ? Colors.redAccent : Colors.black,
-                    onPressed: () {
-                      setState(() {
-                        isButtonPressed =!isButtonPressed;
-                      });
-                    },
-                    textColor: Colors.yellow,
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    splashColor: Colors.grey,
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  RaisedButton(
-                    child: Text("Save"),
-                    color: isButtonPressed ? Colors.redAccent : Colors.green,
-                    onPressed: () {
-                      setState(() {
-                        isButtonPressed =!isButtonPressed;
-                      });
-                    },
-                    textColor: Colors.yellow,
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    splashColor: Colors.grey,
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 40,),
-            //button Stop service
+            
 
-            RaisedButton(
-              child: Text("Stop Service"),
-              color: isButtonPressed ? Colors.redAccent : Colors.red,
-              onPressed: () {
-                setState(() {
-                  isButtonPressed =!isButtonPressed;
-                });
-              },
-              textColor: Colors.yellow,
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              splashColor: Colors.grey,
-            )
+
+
           ],
         ),
       ) ,

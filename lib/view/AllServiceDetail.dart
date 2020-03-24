@@ -54,7 +54,7 @@ class _AllServiceDetailState extends State<AllServiceDetail> {
         title: Text(widget.sharedServices.data["service_product_type"]),
         backgroundColor: Colors.grey[800],
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Container(
           color: Colors.grey[400],
           child: Column(
@@ -66,7 +66,7 @@ class _AllServiceDetailState extends State<AllServiceDetail> {
               Center(
                 child: SizedBox(
                     height: 200.0,
-                    width: 350.0,
+                    width: double.infinity,
                     child: Carousel(                     //Carousel image showing
                       images: [
                         AssetImage('assets/Me.png'),
@@ -98,6 +98,7 @@ class _AllServiceDetailState extends State<AllServiceDetail> {
 
                     children: <Widget>[
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           CircleAvatar(
                             radius: 35,
