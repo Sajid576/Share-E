@@ -63,7 +63,7 @@ class _YourListPageState extends State<YourListPage> {
             future:_data,//getting documents of shared_services
             builder:(_, snapshot){ //snapshot has all the array data
               //if it's not yet come from fireBase
-              if(snapshot.connectionState==ConnectionState.waiting){
+              if(!snapshot.hasData){
                 return Center(
                   child: Text("Loading..."),
                 );

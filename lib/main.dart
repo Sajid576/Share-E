@@ -4,6 +4,7 @@ import 'package:share_e/view/ListViewServiceShare.dart';
 import 'package:share_e/view/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/ProfileScreen.dart';
+import 'package:share_e/view/YourReceivedSharedService.dart';
 import 'package:share_e/view/YourSharedService.dart';
 
 void main() {
@@ -23,7 +24,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    autoLogin();
+    //autoLogin();
 
   }
   @override
@@ -38,7 +39,7 @@ class _MyAppState extends State<MyApp> {
 
       home: Scaffold(
          // body: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
-        body:YourSharedService(),
+        body:YourReceivedSharedService(),
       ),
 
 

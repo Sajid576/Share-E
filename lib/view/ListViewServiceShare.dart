@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'AllServiceDetail.dart';
+import 'dart:async';
 class ListViewServiceShare extends StatefulWidget {
   @override
   _ListViewServiceShareState createState() => _ListViewServiceShareState();
@@ -50,7 +51,7 @@ class _ListPageState extends State<ListPage> {
         future:_data,//getting documents of shared_services
         builder:(_, snapshot){ //snapshot has all the array data
           //if it's not yet come from fireBase
-          if(snapshot.connectionState==ConnectionState.waiting){
+          if(!snapshot.hasData){
             return Center(
               child: Text("Loading..."),
             );
@@ -75,7 +76,7 @@ class _ListPageState extends State<ListPage> {
              );
           }
         }
-      )
+      ),
     );
   }
 }
