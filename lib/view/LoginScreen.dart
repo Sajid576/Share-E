@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                   print(phone+"  verified");
                   print(user.toString()+"  verified");
 
-                  //data storing in Firestore
+                  //data storing in FireStore in (FireBaseService.dart)
                   await FirebaseService().setUserData(username, phone,user.uid);
                   //data storing local storage
                   SharedPreferenceHelper.setLocalData(phone,username,user.uid);

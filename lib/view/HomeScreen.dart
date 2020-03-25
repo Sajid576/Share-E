@@ -1,8 +1,6 @@
-import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/view/CustomMarker.dart';
@@ -11,7 +9,9 @@ import 'package:share_e/view/ProfileScreen.dart';
 import 'package:share_e/view/LoginScreen.dart';
 import 'package:background_location/background_location.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:swipedetector/swipedetector.dart';
+import 'package:share_e/view/YourReceivedSharedService.dart';
+
+import 'YourSharedService.dart';
 
 final Color backgroundColor = Color(0xFF4A4A58);
 
@@ -149,8 +149,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                     onPressed: () {
-
-                    }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => YourSharedService(),
+                          ));
+                    },
                 ),
                 FlatButton(
                   child:Text(
@@ -158,8 +162,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                     onPressed: () {
-
-                    }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => YourReceivedSharedService(),
+                          ));
+                    },
                 ),
                 FlatButton(
                   child:Text(

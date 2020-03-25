@@ -14,6 +14,7 @@ class _EditprofileState extends State<Editprofile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.tealAccent[700],
       appBar: AppBar(
         title: Text("Edit Profile"),
         centerTitle: true,
