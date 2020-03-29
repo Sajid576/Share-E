@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 class AllServiceDetail extends StatefulWidget {         //this is for if user tabs any item of the listpage then the detail page will loads up
   final DocumentSnapshot sharedServices;
+
   AllServiceDetail({this.sharedServices});
   @override
   _AllServiceDetailState createState() => _AllServiceDetailState();

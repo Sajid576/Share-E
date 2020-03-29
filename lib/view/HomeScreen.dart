@@ -1,17 +1,15 @@
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
-import 'package:share_e/view/CustomMarker.dart';
 import 'package:share_e/view/GoogleMapView.dart';
 import 'package:share_e/view/ProfileScreen.dart';
 import 'package:share_e/view/LoginScreen.dart';
-import 'package:background_location/background_location.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/view/YourReceivedSharedService.dart';
+import 'package:after_layout/after_layout.dart';
+import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:share_e/view/ServiceMarkerIcon.dart';
 
-import 'YourSharedService.dart';
+import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
 
 final Color backgroundColor = Color(0xFF4A4A58);
 
@@ -29,17 +27,44 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
+  // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
 
 
- // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
+
+  Scaffold googlemap_scaffold;
+
+  GoogleMapView googleMapView;
+
 
   @override
   void initState() {
     super.initState();
 
-    //when user is in home page, the device location will start to be tracked
-    BackgroundLocation.startLocationService();
-    getCurrentLocationUpdates();
+
+    //initializing the google map interface with initial location and markers
+    googleMapView= new GoogleMapView.init(true);
+    googlemap_scaffold=googleMapView.googleMapLayout();
+    //here list of services will be fetched to set markers with the fetched value
+
+
+
+    //this function will keep updating the UI of google map on changed location
+    GoogleMapView.locationTrackingController.stream.listen((isTrackOn) {
+
+            print("isTrackON:  "+isTrackOn.toString());
+            setState(() {
+
+            });
+
+        });
+
+
+
+    //ServiceMarkerIcon markerIcon=new ServiceMarkerIcon();
+    //markerIcon.getMarkerIcon(service_name);
+    //googleMapView.setMarker(id, lat, lon, title, snippet, _markerIcon)
+
+
 
     //these code for homePage layout animation
     _controller=AnimationController(vsync: this,duration: duration);
@@ -48,11 +73,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _menuScaleAnimation = Tween<double>(begin: 0.5,end: 1).animate(_controller);
     _slideAnimation = Tween<Offset>(begin: Offset(-1,0),end: Offset(0,0)).animate(_controller);
   }
+
+
+
   @override
   void dispose() {
     //When user gets out of this Screen location tracking interface will be disabled
     //code for disabling
-    BackgroundLocation.stopLocationService();
+    new UserBackgroundLocation().stopLocationService();
 
 
     //this controller is for animating navigation drawyer
@@ -66,15 +94,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
 
     return Scaffold(
-              backgroundColor: backgroundColor,
-              body: Stack(
-                children: <Widget>[
-                  leftMenu(context),
-                  HomeLayout(context),
-                ],
-              ),
+      backgroundColor: backgroundColor,
+      body: Stack(
+        children: <Widget>[
+          leftMenu(context),
+          HomeLayout(context),
+        ],
+      ),
 
-            );
+    );
 
 
   }
@@ -135,45 +163,37 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   height: 18,
                 ),
                 FlatButton(
-                  child:Text(
-                    "Share Service",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                    child:Text(
+                      "Share Service",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                     onPressed: () {
 
                     }
                 ),
                 FlatButton(
-                  child:Text(
-                    "Your Shared Service",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                    child:Text(
+                      "Your Shared Service",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => YourSharedService(),
-                          ));
-                    },
+
+                    }
                 ),
                 FlatButton(
-                  child:Text(
-                    "Your Received Service",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                    child:Text(
+                      "Your Received Service",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => YourReceivedSharedService(),
-                          ));
-                    },
+
+                    }
                 ),
                 FlatButton(
-                  child:Text(
-                    "Account",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                    child:Text(
+                      "Account",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                     onPressed: () {
 
                     }
@@ -214,6 +234,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   // Homelayout is for home page
 
   Widget HomeLayout(context) {
+    GoogleMapView.context=context;
+
+    print("hey: "+googlemap_scaffold.toString());
+
     return AnimatedPositioned(
       duration: duration,
       top: 0,            //scale is done for top and bottom
@@ -246,14 +270,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               else
                                 _controller.reverse();
                               isCollapsed =
-                                  !isCollapsed; //just reversing it to false
+                              !isCollapsed; //just reversing it to false
                             });
                           },
                         ),
-                        /*Text(
-                          "Home",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),*/
 
                       ],
                     ),
@@ -267,12 +287,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     ),
                   ),
                   Expanded(
+
                     child: TabBarView(
                       physics: NeverScrollableScrollPhysics(),
                       //here body of all tab layouts will be called
                       children: [
+
                         //tab for google map with device location tracker
-                        new GoogleMapView().googleMapLayout(context),
+                        googlemap_scaffold,
+
+
                         //tab for listview builder  will be implemented later
                         Icon(Icons.list),
 
@@ -289,58 +313,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       ),
     );
   }
-  
-
-   void updateMarkerAndCircle(var lat,var lon,var accuracy,var bearing) {
-    LatLng latlng = LatLng(lat, lon);
-
-  setState(() {
-    GoogleMapView.marker = Marker(
-        markerId: MarkerId("user"),
-        position: latlng,
-        rotation: bearing,    //not sure about this rotation parameter
-        draggable: false,
-        zIndex: 2,
-        flat: true,
-        anchor: Offset(0.5, 0.5),
-          );
-    GoogleMapView.circle = Circle(
-        circleId: CircleId("user"),
-        radius: accuracy,
-        zIndex: 1,
-        strokeColor: Colors.blue,
-        center: latlng,
-        fillColor: Colors.blue.withAlpha(30));
-
-
-  });
-  }
-
-  void getCurrentLocationUpdates() async {
 
 
 
 
-    BackgroundLocation.getLocationUpdates((location) {
-      var latitude = location.latitude;
-      var longitude = location.longitude;
-      var accuracy = location.accuracy;
-      var bearing = location.bearing;
-      print("latitude:  "+latitude.toString() +"  longitude: "+longitude.toString());
-      
-      var googleMapController=new GoogleMapView().get_googleMapController();
-      if (googleMapController != null)
-      {
-        googleMapController.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-            bearing: 192.8334901395799,
-            target: LatLng(latitude, longitude),
-            tilt: 0,
-            zoom: 18.00)));
-        updateMarkerAndCircle(latitude,longitude,accuracy,bearing);
-      }
-    });
 
-  }
 
 
 }
