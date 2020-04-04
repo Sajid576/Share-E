@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:share_e/view/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:share_e/view/ListViewServiceShare.dart';
+import 'package:share_e/view/AllSharedServices.dart';
 import 'package:share_e/view/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/ProfileScreen.dart';
+import 'package:share_e/view/ProfileView.dart';
 import 'package:share_e/view/YourCartList.dart';
 import 'package:share_e/view/YourReceivedSharedService.dart';
 import 'package:share_e/view/YourSharedService.dart';
@@ -40,10 +41,9 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
 
-      home: Scaffold(
-         // body: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
-        body:HomeScreen(),
-      ),
+      home: YourCartList(),
+         // home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
+
 
 
 

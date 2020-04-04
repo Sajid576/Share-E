@@ -16,25 +16,30 @@ class GoogleMapView{
   static BuildContext context;
   static GoogleMapController _googleMapController;
 
-  static  CameraPosition initialLocation;
 
   static var _userLatitutde=0.0;
   static var _userLongitude=0.0;
 
   static Map<MarkerId, Marker> serviceMarkers ;
 
-  static int currentSearchingTypeIndex=1;
+  static int currentSearchingTypeIndex;
+  static String currentSearchingTypeHint;
   static UserBackgroundLocation loc;
 
   static StreamController<bool> locationTrackingController ;
-
+  static StreamController<String> searchBoxParameterController;
 
   GoogleMapView();
 
   GoogleMapView.init(bool initGoogleMap)
   {
+     currentSearchingTypeIndex=1;
+     currentSearchingTypeHint="Search By Location";
+
+
+     searchBoxParameterController= StreamController();
      locationTrackingController = StreamController();
-     setStreamContoller(initGoogleMap);
+     setLocationStreamController(initGoogleMap);
 
      serviceMarkers = <MarkerId, Marker>{};
 
@@ -44,28 +49,34 @@ class GoogleMapView{
 
     print("Google map initialized");
 
-    initialLocation=CameraPosition(
-      target: LatLng(_userLatitutde,_userLongitude),
-      zoom: 17,
-    );
+
   }
 
-  static setStreamContoller(bool init)
+  static setLocationStreamController(bool init)
   {
-    locationTrackingController.add(init);
+        locationTrackingController.add(init);
 
   }
 
   setCurrentSearchingIndex(val)
   {
     currentSearchingTypeIndex=val;
-
+    if(currentSearchingTypeIndex==1)
+      {
+        currentSearchingTypeHint="Search By Location";
+        searchBoxParameterController.add("Search By Location");
+      }
+    else
+      {
+        currentSearchingTypeHint="Search By Service";
+        searchBoxParameterController.add("Search By Service Name");
+      }
 
   }
 
 
 
-  void setMarker(String id,double lat,double lon,var title,var snippet,BitmapDescriptor _markerIcon)
+  void setServiceMarker(String id,double lat,double lon,var title,var snippet,BitmapDescriptor _markerIcon)
   {
 
 
@@ -111,9 +122,7 @@ class GoogleMapView{
     serviceMarkers[new MarkerId('user')]=userMarker;
     print("service markers length : "+serviceMarkers.length.toString());
 
-   setStreamContoller(true);
-
-
+    setLocationStreamController(true);
 
   }
   void _onMapCreated(GoogleMapController controller) {
@@ -136,7 +145,10 @@ class GoogleMapView{
 
             mapType: MapType.normal,
 
-            initialCameraPosition: initialLocation,
+            initialCameraPosition: CameraPosition(
+                         target: LatLng(_userLatitutde,_userLongitude),
+                         zoom: 17,
+            ),
             markers: Set<Marker>.of(serviceMarkers.values),
             onMapCreated: _onMapCreated,
             compassEnabled: true,
@@ -173,14 +185,18 @@ class GoogleMapView{
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding:EdgeInsets.symmetric(horizontal: 15),
-                          hintText: "Search..."),
+                          hintText: currentSearchingTypeHint),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.deepPurple,
-                      child: Text('RD'),
+                    child:IconButton(
+                      splashColor: Colors.grey,
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                              AuxiliaryClass.showToast("Searching ");
+
+                      },
                     ),
                   ),
 

@@ -34,7 +34,7 @@ class UserBackgroundLocation
   {
     BackgroundLocation.stopLocationService();
 
-    GoogleMapView.setStreamContoller(false);
+    GoogleMapView.setLocationStreamController(false);
 
 
 

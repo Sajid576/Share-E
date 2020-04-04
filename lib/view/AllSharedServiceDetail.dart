@@ -1,16 +1,18 @@
-import 'ListViewServiceShare.dart';
+import 'AllSharedServices.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
-class AllServiceDetail extends StatefulWidget {         //this is for if user tabs any item of the listpage then the detail page will loads up
+
+
+class AllSharedServiceDetail extends StatefulWidget {         //this is for if user tabs any item of the listpage then the detail page will loads up
   final DocumentSnapshot sharedServices;
 
-  AllServiceDetail({this.sharedServices});
+  AllSharedServiceDetail({this.sharedServices});
   @override
-  _AllServiceDetailState createState() => _AllServiceDetailState();
+  _AllSharedServiceDetailState createState() => _AllSharedServiceDetailState();
 }
 
-class _AllServiceDetailState extends State<AllServiceDetail> {
+class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
   //GlobalKey<FormState> _homeKey = GlobalKey<FormState>(debugLabel: '_homeScreenkey');
   String username=""; //otherwise invalid arguments will be shown(only user username will contain null
   String phn="";

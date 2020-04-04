@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
@@ -7,48 +8,66 @@ import 'package:share_e/view/GoogleMapView.dart';
 class AuxiliaryClass{
 
 
-  static alertboxCallback(val)
-  {
-    new GoogleMapView().setCurrentSearchingIndex(val);
-  }
+
   static displayAlertDialog(BuildContext context,int currentSearchingTypeIndex) async {
+    int index=currentSearchingTypeIndex;
+    print("index:  "+index.toString());
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Search by location/product name'),
+            title: Text('Search by location/Service Name'),
 
             content: Column(
+              mainAxisSize: MainAxisSize.min,
+
               children: <Widget>[
-                RadioListTile(
-                  title: Text("Search by location"),
-                  groupValue: currentSearchingTypeIndex,
-                  value: 1,
-                  onChanged: (val) {
-                    alertboxCallback(val);
-                    print("selected index(alertbox): "+val);
+                Container(
+                  width: double.infinity,
 
-                  },
+                  child: RadioListTile(
+                    title: Text("Search by location"),
+                    groupValue: index,
+                    value: 1,
+                    onChanged: (val) {
+                      print("selected index(alertbox): "+val.toString());
+                      GoogleMapView().setCurrentSearchingIndex(val);
+                      Navigator.of(context).pop();
+                      displayAlertDialog(context,val);
+
+                    },
+                  ),
                 ),
-                RadioListTile(
-                  title: Text("Search by product name"),
-                  groupValue: currentSearchingTypeIndex,
-                  value: 2,
-                  onChanged: (val) {
-                    alertboxCallback(val);
-                    print("selected index(alertbox): "+val);
+                SizedBox(
+                  height: 18,
+                ),
+                Container(
+                  width: double.infinity,
 
-                  },
+                  child: RadioListTile(
+                    title: Text("Search by Service name"),
+                    groupValue: index,
+                    value: 2,
+                    onChanged: (val) {
+                      print("selected index(alertbox): "+val.toString());
+                      GoogleMapView().setCurrentSearchingIndex(val);
+                      Navigator.of(context).pop();
+                      displayAlertDialog(context,val);
+
+                    },
+                  ),
                 ),
               ],
             ),
             actions: <Widget>[
-              new FlatButton(
-                child: new Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
+               Center(
+                 child: FlatButton(
+                  child: Text('OK'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+              ),
+               )
             ],
           );
         });

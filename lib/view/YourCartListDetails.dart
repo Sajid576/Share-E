@@ -1,23 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 class YourCartListDetails extends StatefulWidget {
   final DocumentSnapshot SharedService;
+
   YourCartListDetails({this.SharedService});
+
   @override
   _YourCartListDetailsState createState() => _YourCartListDetailsState();
 }
 
 class _YourCartListDetailsState extends State<YourCartListDetails> {
-  String username=""; //otherwise invalid arguments will be shown(only user username will contain null
+  String username="";
   String phn="";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    String useruid =widget.SharedService.data["uid"];
-    readUserData(useruid);
+
+    String userUid =widget.SharedService.data["uid"];
+    readUserData(userUid);
   }
   Future<void>readUserData(useruid)async{
     var userquery = await Firestore.instance.collection("users").document(useruid);
@@ -30,9 +34,37 @@ class _YourCartListDetailsState extends State<YourCartListDetails> {
       print("username "+username+"Phone no "+phn);
     });
   }
+
+  //this method used for dynamically fetching image URL ,set them on a list of widgets
+  List<Widget> CaroselImageGenarator()
+  {
+    String Images=widget.SharedService.data["images"];
+    List<String>imageUrl;
+    if(Images!=null)
+    {
+      Images=Images.trim();
+      imageUrl= Images.split(",");
+
+      print("length:  "+imageUrl.length.toString());
+    }
+
+    List imageWidgets = new List<Widget>();
+    for(var i=0;i<imageUrl.length;i++)
+      {
+        imageWidgets.add(
+          CachedNetworkImage(
+            imageUrl:imageUrl[i],
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+        );
+      }
+   return imageWidgets;
+
+  }
   @override
   Widget build(BuildContext context) {
-    bool isButtonPressed = false;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.SharedService.data["service_product_type"]),
@@ -48,17 +80,13 @@ class _YourCartListDetailsState extends State<YourCartListDetails> {
                   height: 200.0,
                   width: double.infinity,
                   child: Carousel(                     //Carousel image showing
-                    images: [
-                      AssetImage('assets/Me.png'),
-                      AssetImage('assets/book_ico.png'),
-                      AssetImage('assets/vehicle_ico.png'),
-                      AssetImage('assets/food_ico.jpg'),
-                    ],
+                    images: CaroselImageGenarator(),
+
                     dotSize: 4.0,
                     dotSpacing: 15.0,
                     dotColor: Colors.lightGreenAccent,
                     indicatorBgPadding: 5.0,
-                    dotBgColor: Colors.purple.withOpacity(0.5),
+                    dotBgColor: Colors.black.withOpacity(0.5),
                     borderRadius: true,
                   )
               ),
@@ -87,13 +115,15 @@ class _YourCartListDetailsState extends State<YourCartListDetails> {
                 SizedBox(width: 10,),
                 RaisedButton(
                   child: Text("Chat"),
-                  color: isButtonPressed ? Colors.redAccent : Colors.green,
+                  color: Colors.black,
                   onPressed: () {
-                    setState(() {
-                      isButtonPressed =!isButtonPressed;
-                    });
+                        //navigate to the particular User's inbox
+
+
+
+
                   },
-                  textColor: Colors.yellow,
+                  textColor: Colors.white,
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                   splashColor: Colors.grey,
                 )

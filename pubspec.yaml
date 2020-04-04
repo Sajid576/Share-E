@@ -47,8 +47,7 @@ dependencies:
   #swipe detection on the screen
   swipedetector: ^1.2.0
 
-  #this library for passing context before build() is invoked
-  after_layout: ^1.0.7+2
+
 
   #library for checking internet connectivity
   connectivity: ^0.4.6+2
@@ -56,6 +55,10 @@ dependencies:
   #library for selecting image from gallery
   image_picker: ^0.5.3+1
   multi_image_picker: ^4.6.5+rc.1
+
+  #A library that is used to store images in local cache from internet
+  cached_network_image: ^2.0.0
+
 
 dev_dependencies:
   flutter_test:
