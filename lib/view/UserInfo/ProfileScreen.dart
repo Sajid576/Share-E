@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share_e/AuxilaryClasshelper/Userprofiledetails.dart';
-import 'package:share_e/view/HomeScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/view/EditProfile.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/EditProfile.dart';
 class ProfileScreen extends StatefulWidget {
 
   @override

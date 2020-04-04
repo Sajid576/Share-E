@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share_e/model/FirebaseService.dart';
-import 'package:share_e/view/HomeScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';

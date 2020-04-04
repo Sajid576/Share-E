@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:background_location/background_location.dart';
-import 'package:share_e/view/GoogleMapView.dart';
-import 'package:share_e/view/HomeScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 
 class UserBackgroundLocation
 {

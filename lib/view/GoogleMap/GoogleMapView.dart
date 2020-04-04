@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
-import 'package:share_e/view/HomeScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:background_location/background_location.dart';
 

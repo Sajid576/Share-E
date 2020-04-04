@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:share_e/view/GoogleMapView.dart';
-import 'package:share_e/view/ProfileScreen.dart';
-import 'package:share_e/view/LoginScreen.dart';
+import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/Authentication/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
-import 'package:share_e/view/AllSharedServices.dart';
+
 import 'package:share_e/Controller/FutureHolder.dart';
-import 'package:share_e/view/YourCartList.dart';
-import 'package:share_e/view/YourReceivedSharedService.dart';
-import 'package:share_e/view/YourSharedService.dart';
+import 'package:share_e/view/UserRecord/YourReceivedSharedService.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
+import 'package:share_e/view/UserRecord/YourSharedService.dart';
+
 
 final Color backgroundColor = Colors.white;
 

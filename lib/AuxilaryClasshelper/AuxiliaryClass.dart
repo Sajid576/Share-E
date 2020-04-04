@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:share_e/view/GoogleMapView.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
 
 class AuxiliaryClass{
 

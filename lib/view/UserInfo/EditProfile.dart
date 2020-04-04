@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:share_e/view/ProfileScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/model/FirebaseService.dart';
 

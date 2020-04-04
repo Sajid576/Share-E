@@ -1,15 +1,11 @@
 import 'dart:async';
-
-import 'package:share_e/view/HomeScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:share_e/view/AllSharedServices.dart';
-import 'package:share_e/view/LoginScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/Authentication/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/view/ProfileScreen.dart';
-import 'package:share_e/view/ProfileView.dart';
-import 'package:share_e/view/YourCartList.dart';
-import 'package:share_e/view/YourReceivedSharedService.dart';
-import 'package:share_e/view/YourSharedService.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileScreen.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileView.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
 
 void main() {
   runApp(MyApp());

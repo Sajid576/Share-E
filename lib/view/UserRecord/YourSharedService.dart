@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/view/YourSharedServiceDetails.dart';
+import 'package:share_e/view/UserRecord/YourSharedServiceDetails.dart';
+
 class YourSharedService extends StatefulWidget {
   @override
   _YourSharedServiceState createState() => _YourSharedServiceState();

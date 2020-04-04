@@ -1,4 +1,4 @@
-import 'AllSharedServices.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
