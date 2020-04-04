@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -30,9 +31,37 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
       print("username "+username+"Phone no "+phn);
     });
   }
+
+  //this method used for dynamically fetching image URL ,set them on a list of widgets
+  List<Widget> CaroselImageGenarator()
+  {
+    String Images=widget.ReceivedService.data["images"];
+    List<String>imageUrl;
+    if(Images!=null)
+    {
+      Images=Images.trim();
+      imageUrl= Images.split(",");
+
+      print("length:  "+imageUrl.length.toString());
+    }
+
+    List imageWidgets = new List<Widget>();
+    for(var i=0;i<imageUrl.length;i++)
+    {
+      imageWidgets.add(
+        CachedNetworkImage(
+          imageUrl:imageUrl[i],
+          placeholder: (context, url) => CircularProgressIndicator(),
+          errorWidget: (context, url, error) => Icon(Icons.error),
+        ),
+      );
+    }
+    return imageWidgets;
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isButtonPressed = false;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.ReceivedService.data["service_product_type"]),
@@ -48,12 +77,7 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
                   height: 200.0,
                   width: double.infinity,
                   child: Carousel(                     //Carousel image showing
-                    images: [
-                      AssetImage('assets/Me.png'),
-                      AssetImage('assets/book_ico.png'),
-                      AssetImage('assets/vehicle_ico.png'),
-                      AssetImage('assets/food_ico.jpg'),
-                    ],
+                    images: CaroselImageGenarator(),
                     dotSize: 4.0,
                     dotSpacing: 15.0,
                     dotColor: Colors.lightGreenAccent,
@@ -87,11 +111,11 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
                 SizedBox(width: 10,),
                 RaisedButton(
                   child: Text("Chat"),
-                  color: isButtonPressed ? Colors.redAccent : Colors.green,
+                  color:Colors.black,
                   onPressed: () {
-                    setState(() {
-                      isButtonPressed =!isButtonPressed;
-                    });
+                      //navigate to particular user's inbox
+
+
                   },
                   textColor: Colors.yellow,
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
@@ -130,9 +154,7 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
                     child: Text("Edit"),
                     color: isButtonPressed ? Colors.redAccent : Colors.black,
                     onPressed: () {
-                      setState(() {
-                        isButtonPressed =!isButtonPressed;
-                      });
+                      
                     },
                     textColor: Colors.yellow,
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),

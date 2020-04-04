@@ -8,7 +8,7 @@ import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
 
 import 'package:share_e/Controller/FutureHolder.dart';
-import 'package:share_e/view/UserRecord/YourReceivedSharedService.dart';
+import 'package:share_e/view/UserRecord/YourReceivedService.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourSharedService.dart';
 
@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => YourReceivedSharedService(),
+                              builder: (BuildContext context) => YourReceivedService(),
                             ));
                       }
                   ),
