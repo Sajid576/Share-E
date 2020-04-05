@@ -144,55 +144,8 @@ class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails>
               ),
             ),
             SizedBox(height: 120,),
-            //button edit and Save
 
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  FlatButton(
-                    child: Text("Edit"),
-                    color: isButtonPressed ? Colors.redAccent : Colors.black,
-                    onPressed: () {
-                      
-                    },
-                    textColor: Colors.yellow,
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    splashColor: Colors.grey,
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  RaisedButton(
-                    child: Text("Save"),
-                    color: isButtonPressed ? Colors.redAccent : Colors.green,
-                    onPressed: () {
-                      setState(() {
-                        isButtonPressed =!isButtonPressed;
-                      });
-                    },
-                    textColor: Colors.yellow,
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    splashColor: Colors.grey,
-                  )
-                ],
-              ),
-            ),
-            SizedBox(height: 40,),
-            //button Stop service
 
-            RaisedButton(
-              child: Text("Stop Service"),
-              color: isButtonPressed ? Colors.redAccent : Colors.red,
-              onPressed: () {
-                setState(() {
-                  isButtonPressed =!isButtonPressed;
-                });
-              },
-              textColor: Colors.yellow,
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              splashColor: Colors.grey,
-            )
           ],
         ),
       ) ,

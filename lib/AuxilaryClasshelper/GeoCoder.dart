@@ -1,23 +1,11 @@
-import 'package:geocoder/geocoder.dart';
+//import 'package:geolocator/geolocator.dart';
 
+class GeoCoder {
 
-class GeoCoder{
-
-      static geoCoding(var lat,var lon) async
+      static geoCoding(var lat, var lon) async
       {
-          // From coordinates
-          final coordinates = new Coordinates(lat, lon);
-          var addresses = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-          var first = addresses.first;
-          print(""+first.featureName +" ___"+first.addressLine);
+            //List<Placemark> placemark = await Geolocator().placemarkFromCoordinates();
+
 
       }
-
-      static reverseGeoCoding(var query) async
-      {
-          var addresses = await Geocoder.local.findAddressesFromQuery(query);
-          var first = addresses.first;
-          print(""+first.featureName +" ___"+first.coordinates.toString());
-      }
-
 }

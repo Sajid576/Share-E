@@ -7,6 +7,7 @@ import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/Prof
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileView.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourReceivedService.dart';
+import 'package:share_e/view/UserRecord/YourSharedService.dart';
 
 void main() {
   runApp(MyApp());
@@ -38,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
 
-      home: YourReceivedService(),
+      home: YourSharedService(),
          // home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
 
 

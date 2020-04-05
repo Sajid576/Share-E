@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
@@ -13,7 +16,7 @@ class _YourSharedServiceState extends State<YourSharedService> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("your Shared Services"),
+        title: Center(child: Text("Your Shared Services")),
         backgroundColor: Colors.grey[800],
       ),
       body: YourListPage(),
@@ -26,8 +29,7 @@ class YourListPage extends StatefulWidget {
 }
 
 class _YourListPageState extends State<YourListPage> {
-  Future _data;
-  var _uid;
+  final StreamController<dynamic> _streamController = new StreamController<dynamic>();
 
   @override
   void initState() {         //only runs when the activity load at the very begging
@@ -37,20 +39,28 @@ class _YourListPageState extends State<YourListPage> {
 
       //_profile_username = user.getusername();
       //_uid= user.getid();
-      _uid = 'O13DYw7p94dj3AExf8D7g77rfC72';
-      print("Current User"+_uid);
-      _data = getPosts();//for the very first time it loads up all the data from fireStore
+      var uid = 'O13DYw7p94dj3AExf8D7g77rfC72';
+      print("Current User"+uid);
+      getPosts(uid);//for the very first time it loads up all the data from fireStore
 
     });
 
 
   }
-  Future getPosts()async{
-    //instantiate FireStore
-    //var firestore = Firestore.instance; //giving a FireBase instance
-    QuerySnapshot qn= await Firestore.instance.collection("Shared_Services").where("uid",isEqualTo: _uid).getDocuments();//accessing shared_services documents
-   // print("Getpost "+_uid);
-    return qn.documents;  //all the documents array inside the shared_Service
+
+  @override
+  void dispose() {
+    super.dispose();
+    _streamController.close();
+
+  }
+  Future getPosts(uid)async{
+
+    QuerySnapshot qn= await Firestore.instance.collection("Shared_Services").where("uid",isEqualTo: uid).getDocuments();//accessing shared_services documents
+
+    //all the documents array inside the shared_Service
+    _streamController.add(qn.documents);
+
   }
   navigateToDetailPage(DocumentSnapshot YourSharedService){
     Navigator.push(context, MaterialPageRoute(builder: (context)=>YourSharedServiceDetails(Yoursharedservice: YourSharedService,)));
@@ -60,8 +70,8 @@ class _YourListPageState extends State<YourListPage> {
     return Container(
         color: Colors.grey[400],
         //bringing data from cloud fireStore through 'FutureBuilder'
-        child: FutureBuilder(
-            future:_data,//getting documents of shared_services
+        child: StreamBuilder(
+            stream:_streamController.stream,//getting documents of shared_services
             builder:(_, snapshot){ //snapshot has all the array data
               //if it's not yet come from fireBase
               if(!snapshot.hasData){
@@ -72,12 +82,30 @@ class _YourListPageState extends State<YourListPage> {
                 return ListView.separated(
                   itemCount: snapshot.data.length,//shared_service document array size
                   itemBuilder:(BuildContext context,int index){
+                    String images=snapshot.data[index].data["images"];
+                    List<String>imageUrl;
+                    if(images!=null)
+                    {
+                      images=images.trim();
+                      imageUrl= images.split(",");
+                    }
+
                     return SingleChildScrollView(                          //srollable
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(8),
-                        title:Text(snapshot.data[index].data["service_product_type"]),
-                        subtitle: Text(snapshot.data[index].data["uid"]),
-                        onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document to the detail page
+                      child: Container(
+                        color:Colors.white,
+                        child: ListTile(
+                          leading: CachedNetworkImage(
+                            width: 100,
+                            height: 100,
+                            imageUrl:imageUrl[0],
+                            placeholder: (context, url) => CircularProgressIndicator(),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
+                          ),
+                          contentPadding: EdgeInsets.all(8),
+                          title:Text(snapshot.data[index].data["service_product_type"]),
+                          subtitle: Text(snapshot.data[index].data["service_product_name"]),
+                          onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document to the detail page
+                        ),
                       ),
                     );
                   },
