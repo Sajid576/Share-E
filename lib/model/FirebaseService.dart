@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
+import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:share_e/Controller/GetAllSharedServiceController.dart';
+
 class FirebaseService{
 
   //this function set/overwrites the user data corresponding to the uid
@@ -18,22 +21,91 @@ class FirebaseService{
   Future EditUserData(String username,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users'); //instatiate the firebase
 
-    return await userinfo.document(uid).setData({     //update the firebase with that coressponding uid
+     userinfo.document(uid).setData({     //update the firebase with that coressponding uid
       'username':username,
     },merge: true);
 
   }
 
-   Future getAllSharedServicePosts()async{
-    //instantiate FireStore
-    var firestore = Firestore.instance; //giving a FireBase instance
-    QuerySnapshot qn= await firestore.collection("Shared_Services").getDocuments();//accessing shared_services documents
-    //return qn.documents;  //all the documents array inside the shared_Service
-    print("documents length:  "+qn.documents.length.toString());
-    return qn.documents;
+  //this function will be called from HomeScreen
+  getAllSharedServicePosts()async{
 
+          var firestore = Firestore.instance; //giving a FireBase instance
+           await firestore.collection("Shared_Services").where("active_state",isEqualTo: 1).getDocuments().then((query){
+             print("*************DATA queried: "+query.documents.length.toString());
+             GetAllSharedServiceController.setAllServiceData(query.documents);
+
+          });//accessing shared_services documents
+          //return qn.documents;  //all the documents array inside the shared_Service
+
+
+  }
+
+  //It is called from YourShared Service Page
+  EditYourServiceData(ServiceId,ServiceName,Price,StartingTime,EndingTime)
+  {
+        String availableTime=StartingTime+"-"+EndingTime;
+        final CollectionReference userinfo = Firestore.instance.collection('Shared_Services');
+
+         userinfo.document(ServiceId).setData({
+          'service_id':ServiceId,
+          'service_product_name':ServiceName,
+          'price':Price,
+          'available_time':availableTime,
+        },merge: true).then((value) {
+            print("Data Edited Successfully");
+            AuxiliaryClass.showToast("Data Edited Successfully");
+        });
+
+  }
+  //this function used for stopping/starting a Service
+  setActiveService(ServiceId,status)
+  {
+        final CollectionReference userinfo = Firestore.instance.collection('Shared_Services');
+
+        userinfo.document(ServiceId).setData({
+            'active_state':status,
+        },merge: true).then((value) {
+          if(status==1)
+            {
+              print("Service Started");
+              AuxiliaryClass.showToast("Service Started");
+            }
+          else{
+              print("Service Stopped");
+              AuxiliaryClass.showToast("Service Stopped");
+          }
+
+        });
+  }
+
+  static AddToCart(uid,ServiceId)
+  {
+
+       final CollectionReference ref = Firestore.instance.collection('Cart');
+
+        var list=new List<String>();
+        list.add(ServiceId);
+
+       ref.document(uid).setData({
+          'Service_list': FieldValue.arrayUnion(list)
+        },merge: true).then((value) {
+            AuxiliaryClass.showToast("Added item to Cart");
+       });
+  }
+
+  searchByService(search) async
+  {
+      return Firestore.instance
+          .collection('Shared_Services')
+          .where('searchKey',
+          isEqualTo: search.substring(0, 1).toUpperCase())
+          .getDocuments();
   }
 
 
 
 }
+
+
+

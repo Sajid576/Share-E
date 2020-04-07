@@ -7,6 +7,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 class YourSharedServiceDetails extends StatefulWidget {
   final DocumentSnapshot Yoursharedservice;
   YourSharedServiceDetails({this.Yoursharedservice});
@@ -26,10 +28,14 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
   String _ServiceId="";
   GeoPoint  _Area;
   String address;
+  String startingTime="";
+  String endingTime="";
 
   TextEditingController _serviceProductNameEditingController;
   TextEditingController _priceEditingController;
   TextEditingController _availableTimeEditingController;
+  TextEditingController _StartingTimeEditingController;
+  TextEditingController _EndingTimeEditingController;
   TextEditingController _addressEditingController;
 
   //Google Map related variables
@@ -43,6 +49,8 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
 
 
         //fetching data from Listview that came from firestore
+        int activeServiceStatus=widget.Yoursharedservice.data["active_state"];
+
         _ServiceProductname=widget.Yoursharedservice.data["service_product_name"];
         _Price=widget.Yoursharedservice.data["price"];
         _AvailableTime=widget.Yoursharedservice.data["available_time"];
@@ -51,13 +59,16 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
         _ServiceId=widget.Yoursharedservice.data["service_id"];
 
         _Area=widget.Yoursharedservice.data["area"];  //return coordinates
-        GeoCoder.geoCoding(_Area.latitude,_Area.longitude).then((addrss){
+        GeoCoder.geoCoding(_Area.latitude,_Area.longitude).then((address){
                setState(() {
-                     address=addrss;
+                     this.address=address;
+                     print("Adress:  "+address);
+                     //this text widget will be  changed when marker of the google map will be changed
+                     _addressEditingController=TextEditingController(text:address);
                });
 
         });   //retuns address in form of string
-
+        setServiceStateButtonPress(activeServiceStatus);
         setMarkers(_Area.latitude,_Area.longitude);
 
 
@@ -67,11 +78,14 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
         _serviceProductNameEditingController = TextEditingController(text: _ServiceProductname);
         _priceEditingController=TextEditingController(text:_Price);
 
+         startingTime=_AvailableTime.split("-")[0];
+         endingTime=_AvailableTime.split("-")[1];
+        _StartingTimeEditingController= TextEditingController(text:startingTime);
+         _EndingTimeEditingController=TextEditingController(text: endingTime);
         //this text widget will be changed when Starting time or Ending time will be changed
         _availableTimeEditingController=TextEditingController(text:_AvailableTime);
 
-        //this text widget will be  changed when marker of the google map will be changed
-        _addressEditingController=TextEditingController(text:address);
+
 
   }
 
@@ -86,6 +100,17 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
 
   }
 
+  void setServiceStateButtonPress(status)
+  {
+      if(status==1)
+        {
+            isButtonPressed=false;
+        }
+      else
+        {
+            isButtonPressed=true;
+        }
+  }
   void setMarkers(lat,lon)
   {
         Marker marker= Marker(
@@ -169,6 +194,15 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
                         child:isButtonPressed ?  Text("Start Service") : Text("Stop Service"),
                         color: isButtonPressed ? Colors.green : Colors.red,
                         onPressed: () {
+
+                           if(isButtonPressed)//Service is in stopped state
+                             {
+                                    FirebaseService().setActiveService(_ServiceId, 1);
+                             }
+                           else  //Service is in ON state
+                             {
+                               FirebaseService().setActiveService(_ServiceId, 0);
+                             }
                           setState(() {
                             isButtonPressed =!isButtonPressed;
                           });
@@ -180,7 +214,8 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
                     ),
 
                     Text("Service Name: ",style: TextStyle(
-                        fontSize: 18,fontWeight: FontWeight.bold
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
                     ),),
                     TextField(
                       enabled: editEnabled,
@@ -189,12 +224,12 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
                       },
                       controller: _serviceProductNameEditingController,
                     ),
-
-                    Text("Service id : ",style: TextStyle(fontSize: 18),),
+                    SizedBox(height: 20,),
+                    Text("Service id : ",style: TextStyle(fontSize: 18 ,fontWeight: FontWeight.bold,),),
                     Text(_ServiceId,style: TextStyle(fontSize: 18),),
                     SizedBox(height: 20,),
 
-                    Text("price : ",style: TextStyle(fontSize: 18),),
+                    Text("price : ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),),
                     TextField(
                         enabled: editEnabled,
                         onChanged: (text) {
@@ -204,21 +239,54 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
                       controller: _priceEditingController,
                     ),
                     SizedBox(height: 20,),
-                    Text("Available Time : ",style: TextStyle(fontSize: 18),),
+                    Text("Available Time : ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),),
                     TextField(
                       enabled: false,
                       controller: _availableTimeEditingController,
                     ),
-
                     SizedBox(height: 20,),
+                    Container(
+                      child: editEnabled ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text("Starting Time : ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),),
+                            TextField(
+                              enabled: true,
+                              onChanged: (text) {
 
-                    Text("Address : ",style: TextStyle(fontSize: 18),),
+                                _StartingTimeEditingController.text = text;
+                                startingTime=text;
+                                _availableTimeEditingController.text=_AvailableTime=startingTime+"-"+endingTime;
+                              },
+                              controller: _StartingTimeEditingController,
+                            ),
+
+                            SizedBox(height: 20,),
+                            Text("Ending Time : ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),),
+                            TextField(
+                              enabled: true,
+                              onChanged: (text) {
+                                _EndingTimeEditingController.text = text;
+                                endingTime=text;
+                                _availableTimeEditingController.text=_AvailableTime=startingTime+"-"+endingTime;
+                              },
+                              controller: _EndingTimeEditingController,
+                            ),
+
+                          ]
+                      ) : SizedBox(height: 20,),
+
+                    ),
+
+
+                    Text("Address : ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,),),
                     TextField(
                       enabled: false,
                       controller: _addressEditingController,
                     ),
                     SizedBox(height: 20,),
 
+                    //Container for holding Google Map
                     Container(
                       width: double.infinity,
                       height: mapHeight,
@@ -262,7 +330,7 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
                                   });
                                 }
                               }
-                         
+
 
 
 
@@ -277,14 +345,18 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
               ),
 
                SizedBox(height: 40,),
-               //button Stop service
-
                RaisedButton(
                  child:editEnabled ? Text("Save") :  Text("Edit"),
                  color: editEnabled ? Colors.green : Colors.red,
                  onPressed: () {
+                    if(editEnabled)
+                      {
+                            FirebaseService service=new FirebaseService();
+                            service.EditYourServiceData(_ServiceId,_ServiceProductname,_Price,startingTime , endingTime);
+                      }
                    setState(() {
                      editEnabled =!editEnabled;
+
                    });
                  },
                  textColor: Colors.yellow,

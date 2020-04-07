@@ -1,13 +1,7 @@
-import 'dart:async';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/Authentication/LoginScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileScreen.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileView.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
-import 'package:share_e/view/UserRecord/YourReceivedService.dart';
-import 'package:share_e/view/UserRecord/YourSharedService.dart';
+import 'package:share_e/view/GoogleMap/HomeScreen.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -39,7 +33,8 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
 
-      home: YourSharedService(),
+      home: HomeScreen(),
+
          // home: _isSignedUp ==true ? HomeScreen() : LoginScreen(),
 
 
@@ -53,7 +48,9 @@ class _MyAppState extends State<MyApp> {
 
     SharedPreferenceHelper.readfromlocalstorage().then((user)
     {
+
       print('signedup?? '+user.getsession().toString());
+
       bool isSignedUp=  user.getsession();
 
       setState(() {

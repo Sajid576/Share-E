@@ -7,7 +7,7 @@ import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
 
-import 'package:share_e/Controller/FutureHolder.dart';
+import 'package:share_e/Controller/GetAllSharedServiceController.dart';
 import 'package:share_e/view/UserRecord/YourReceivedService.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourSharedService.dart';
@@ -16,6 +16,7 @@ import 'package:share_e/view/UserRecord/YourSharedService.dart';
 final Color backgroundColor = Colors.white;
 
 class HomeScreen extends StatefulWidget {
+
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -43,10 +44,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.initState();
     //initializing the google map interface with initial location and markers
     googleMapView= new GoogleMapView.init(true);
-
-    FutureHolder futureHolder=new FutureHolder();
-    futureHolder.requestAllSharedService();
-
 
     //this function will keep updating the UI of google map on changed location
     GoogleMapView.locationTrackingController.stream.listen((isTrackOn) {
@@ -82,8 +79,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     new UserBackgroundLocation().stopLocationService();
 
     //closing the stream controller to prevent performance dropout
-    GoogleMapView.locationTrackingController.close();
-    GoogleMapView.searchBoxParameterController.close();
+    //GoogleMapView.locationTrackingController.close();
+    //GoogleMapView.searchBoxParameterController.close();
+    //GetAllSharedServiceController.AllServicedataController.close();
 
     //this controller is for animating navigation drawyer
     _controller.dispose();
@@ -376,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         googleMapView.googleMapLayout(),
 
                        //tab for listview builder  will be implemented later
-                        AllSharedServices().AllSharedServiceslayout(context),
+                        AllSharedServices(),
                       ],
                     ),
                   ),

@@ -6,10 +6,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:background_location/background_location.dart';
+import 'package:share_e/Controller/GetAllSharedServiceController.dart';
+import 'package:share_e/model/FirebaseService.dart';
 
 class GoogleMapView{
 
@@ -37,8 +40,8 @@ class GoogleMapView{
      currentSearchingTypeHint="Search By Location";
 
 
-     searchBoxParameterController= StreamController();
-     locationTrackingController = StreamController();
+     searchBoxParameterController= new BehaviorSubject();
+     locationTrackingController = new BehaviorSubject();
      setLocationStreamController(initGoogleMap);
 
      serviceMarkers = <MarkerId, Marker>{};
@@ -114,13 +117,12 @@ class GoogleMapView{
       position: latlng,
       draggable: false,
       zIndex: 2,
-      flat: true,
-      anchor: Offset(0.5, 0.5),
+
     );
-    print("update Marker");
+
 
     serviceMarkers[new MarkerId('user')]=userMarker;
-    print("service markers length : "+serviceMarkers.length.toString());
+    //print("service markers length : "+serviceMarkers.length.toString());
 
     setLocationStreamController(true);
 
@@ -182,6 +184,9 @@ class GoogleMapView{
                       cursorColor: Colors.black,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.go,
+                      onChanged: (val) {
+                          //GetAllSharedServiceController().initiateSearch(val);
+                      },
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding:EdgeInsets.symmetric(horizontal: 15),

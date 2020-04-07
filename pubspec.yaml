@@ -43,12 +43,12 @@ dependencies:
   #background location tracking  library
   background_location: ^0.0.9+1
   #convert coordinate to address library
-
+  geolocator: ^5.3.1
 
   #swipe detection on the screen
   swipedetector: ^1.2.0
-
-
+  #Date-Time picker package
+  datetime_picker_formfield: ^1.0.0
 
   #library for checking internet connectivity
   connectivity: ^0.4.6+2
@@ -59,7 +59,7 @@ dependencies:
 
   #A library that is used to store images in local cache from internet
   cached_network_image: ^2.0.0
-
+  rxdart: ^0.23.1
 
 dev_dependencies:
   flutter_test:
