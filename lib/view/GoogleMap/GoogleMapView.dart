@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:share_e/AuxilaryClasshelper/GeoCoder.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
@@ -27,10 +28,13 @@ class GoogleMapView{
 
   static int currentSearchingTypeIndex;
   static String currentSearchingTypeHint;
+  static String searchingVal="";
+
   static UserBackgroundLocation loc;
 
   static StreamController<bool> locationTrackingController ;
   static StreamController<String> searchBoxParameterController;
+  static StreamController<String> searchingController;
 
   GoogleMapView();
 
@@ -39,7 +43,7 @@ class GoogleMapView{
      currentSearchingTypeIndex=1;
      currentSearchingTypeHint="Search By Location";
 
-
+     searchingController=new BehaviorSubject();
      searchBoxParameterController= new BehaviorSubject();
      locationTrackingController = new BehaviorSubject();
      setLocationStreamController(initGoogleMap);
@@ -185,8 +189,10 @@ class GoogleMapView{
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.go,
                       onChanged: (val) {
+                          searchingVal=val;
                           //GetAllSharedServiceController().initiateSearch(val);
                       },
+
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding:EdgeInsets.symmetric(horizontal: 15),
@@ -199,7 +205,14 @@ class GoogleMapView{
                       splashColor: Colors.grey,
                       icon: Icon(Icons.search),
                       onPressed: () {
-                              AuxiliaryClass.showToast("Searching ");
+                              if(currentSearchingTypeIndex==1)
+                                {
+                                    AuxiliaryClass.showToast("Searching Location");
+                                    GeoCoder.ReverseGeocoding(searchingVal).then((val){
+
+                                    }) ;
+                                }
+
 
                       },
                     ),

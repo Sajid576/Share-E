@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'YourCartListDetails.dart';
 
@@ -11,13 +12,18 @@ class YourCartList extends StatefulWidget {
   _YourCartListState createState() => _YourCartListState();
 }
 
-class _YourCartListState extends State<YourCartList>{
+class _YourCartListState extends State<YourCartList> with SingleTickerProviderStateMixin{
   final StreamController<dynamic> _streamController = new StreamController<dynamic>();
-
+  LeftNavDrawyer leftnavState;
   @override
   void initState() {         //only runs when the activity load at the very begging
     // TODO: implement initState
     super.initState();
+    //instantiating left Navigation drawyer Object
+    AnimationController controller=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
+    leftnavState=LeftNavDrawyer(controller);
+
+
     SharedPreferenceHelper.readfromlocalstorage().then((user) { //Reading from local storage it needs some time
 
       //_profile_username = user.getusername();

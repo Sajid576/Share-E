@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
+import 'package:share_e/Controller/RightNavigationDrawyer.dart';
 import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileScreen.dart';
@@ -16,34 +18,30 @@ import 'package:share_e/view/UserRecord/YourSharedService.dart';
 final Color backgroundColor = Colors.white;
 
 class HomeScreen extends StatefulWidget {
-
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
-
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
-
-  bool isCollapsed = true; //at the begining it is collapsed that means only home is showing 100%
-
-  final Duration duration = const Duration(milliseconds: 300);
-  AnimationController _controller;
-  Animation<double> _scaleAnimation;
-  Animation<double> _menuScaleAnimation;
-  Animation<Offset> _slideAnimation;
-  Color selectedBackgroundColor =Colors.white;
-  // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
-
-
+class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   GoogleMapView googleMapView;
-
+  LeftNavDrawyer leftnavState;
+  RightNavDrawyer rightnavState;
+  bool leftEnabled=false;
+  bool rightEnabled=false;
 
   @override
   void initState() {
     super.initState();
     //initializing the google map interface with initial location and markers
     googleMapView= new GoogleMapView.init(true);
+
+    //instantiating left Navigation drawyer Object
+    AnimationController leftController=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
+    leftnavState=LeftNavDrawyer(leftController);
+
+    //instantiating right Navigation drawyer object
+    AnimationController rightController=AnimationController(vsync:this ,duration: RightNavDrawyer.duration);
+    rightnavState=RightNavDrawyer(rightController);
 
     //this function will keep updating the UI of google map on changed location
     GoogleMapView.locationTrackingController.stream.listen((isTrackOn) {
@@ -57,17 +55,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       });
     });
 
+
     //ServiceMarkerIcon markerIcon=new ServiceMarkerIcon();
     //markerIcon.getMarkerIcon(service_name);
     //googleMapView.setMarker(id, lat, lon, title, snippet, _markerIcon)
 
-
-    //these code for homePage layout animation
-    _controller=AnimationController(vsync: this,duration: duration);
-    _scaleAnimation=Tween<double>(begin: 1,end: 0.6).animate(_controller);
-    //these tow for menu animation
-    _menuScaleAnimation = Tween<double>(begin: 0.5,end: 1).animate(_controller);
-    _slideAnimation = Tween<Offset>(begin: Offset(-1,0),end: Offset(0,0)).animate(_controller);
   }
 
 
@@ -83,10 +75,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     //GoogleMapView.searchBoxParameterController.close();
     //GetAllSharedServiceController.AllServicedataController.close();
 
-    //this controller is for animating navigation drawyer
-    _controller.dispose();
 
-
+    leftnavState.controller.dispose();
+    rightnavState.controller.dispose();
   }
 
   @override
@@ -97,7 +88,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       backgroundColor: backgroundColor,
       body: Stack(
         children: <Widget>[
-          leftMenu(context),
+          rightnavState.rightNavLayout(context),
+          leftnavState.leftNavLayout(context),
           HomeLayout(context),
         ],
       ),
@@ -107,220 +99,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   }
 
-
-  //side bar e ki ki option thakbe ta menu te ache
-
-  Widget leftMenu(context) {
-    return SlideTransition(
-      position: _slideAnimation,
-      child: ScaleTransition(
-        scale: _menuScaleAnimation,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 18.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 200,
-                  ),
-                  FlatButton(
-                    disabledColor: selectedBackgroundColor,
-                    child:Text(
-                      "Home",
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => HomeScreen(),
-                          ));
-                    },
-
-                  ),
-
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                    disabledColor: selectedBackgroundColor,
-                    child:Text(
-                      "Profile",
-                      style: TextStyle(color:  Colors.black, fontSize: 18),
-                    ),
-                    onPressed: () {
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => ProfileScreen(),
-                          ));
-                    },
-
-                  ),
-
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "Share Service",
-                        style: TextStyle(color:  Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => ProfileScreen(),
-                            ));
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "Your Shared Service",
-                        style: TextStyle(color:  Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => YourSharedService(),
-                            ));
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "Your Received Service",
-                        style: TextStyle(color:  Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => YourReceivedService(),
-                            ));
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "Your Cart Services",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => YourCartList(),
-                            ));
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "Your Requisite Services",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "All Requisite Services",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  FlatButton(
-                      disabledColor: selectedBackgroundColor,
-                      child:Text(
-                        "Account",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                      onPressed: () {
-
-                      }
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-
-                  FlatButton(
-                    disabledColor: selectedBackgroundColor,
-                    child:Text(
-                      "Logout",
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                    onPressed: () {
-                      //this logout() used for erasing the session
-                      SharedPreferenceHelper.logout();
-
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => LoginScreen(),
-                          ));
-                    },
-                  ),
-
-                  SizedBox(
-                    height: 18,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   // Homelayout is for home page
 
   Widget HomeLayout(context) {
     GoogleMapView.context=context;
 
     return AnimatedPositioned(
-      duration: duration,
+      duration: LeftNavDrawyer.duration,
       top: 0,            //scale is done for top and bottom
       bottom: 0,
-      left: isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width,
-      right: isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width,
+      left:rightEnabled==true ?  rightnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width : leftEnabled==true?  leftnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width : 0,
+      right:rightEnabled==true ? rightnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width : leftEnabled==true? leftnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width : 0,
       child: ScaleTransition(
-        scale: _scaleAnimation,
+        scale:rightEnabled==true ? rightnavState.scaleAnimation : leftEnabled==true ? leftnavState.scaleAnimation : leftnavState.scaleAnimation,
         child: Material(
           borderRadius: BorderRadius.all(Radius.circular(40)),
           elevation: 8,
@@ -334,25 +125,50 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         InkWell(
                           child: Icon(Icons.menu, color: Colors.black,size: 35,),
                           onTap: () {
+
                             setState(() {
-                              if(isCollapsed)
-                                _controller.forward();
+                              if(leftnavState.isCollapsed)
+                               {
+                                  leftnavState.controller.forward();
+                               }
                               else
-                                _controller.reverse();
-                              isCollapsed =
-                              !isCollapsed; //just reversing it to false
+                                {
+                                  leftnavState.controller.reverse();
+                                }
+                              leftEnabled=!leftEnabled;
+                              leftnavState.isCollapsed = !leftnavState.isCollapsed;
+                                 //just reversing it to false
                             });
                           },
                         ),
-                          Text("Share-E",style: TextStyle(color: Colors.black, fontSize: 25,),
+                        Center(
+                            child: Text("Share-E",style: TextStyle(color: Colors.black, fontSize: 25,),),
                           ),
+                        InkWell(
+                          child: Icon(Icons.menu, color: Colors.black,size: 35,),
+                          onTap: () {
+
+                            setState(() {
+                              if(rightnavState.isCollapsed)
+                              {
+                                rightnavState.controller.forward();
+                              }
+                              else
+                              {
+                                rightnavState.controller.reverse();
+                              }
+                              rightEnabled=!rightEnabled;
+                              rightnavState.isCollapsed = !rightnavState.isCollapsed;
+                              //just reversing it to false
+                            });
+                          },
+                        ),
+
                       ],
                     ),
                   ),

@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 class YourSharedServiceDetails extends StatefulWidget {
@@ -16,8 +17,8 @@ class YourSharedServiceDetails extends StatefulWidget {
   _YourSharedServiceDetailsState createState() => _YourSharedServiceDetailsState();
 }
 
-class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
-
+class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> with SingleTickerProviderStateMixin{
+  LeftNavDrawyer leftnavState;
   bool isButtonPressed=false;
 
   bool editEnabled=false;
@@ -44,6 +45,11 @@ class _YourSharedServiceDetailsState extends State<YourSharedServiceDetails> {
   @override
   void initState() {
         super.initState();
+
+        //instantiating left Navigation drawyer Object
+        AnimationController controller=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
+        leftnavState=LeftNavDrawyer(controller);
+
         //Google Map realated variables instantiated
         serviceMarkers = <MarkerId, Marker>{};
 

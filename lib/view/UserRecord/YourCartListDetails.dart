@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 class YourCartListDetails extends StatefulWidget {
   final DocumentSnapshot SharedService;
 
@@ -11,14 +12,17 @@ class YourCartListDetails extends StatefulWidget {
   _YourCartListDetailsState createState() => _YourCartListDetailsState();
 }
 
-class _YourCartListDetailsState extends State<YourCartListDetails> {
+class _YourCartListDetailsState extends State<YourCartListDetails>  with SingleTickerProviderStateMixin{
   String username="";
   String phn="";
-
+  LeftNavDrawyer leftnavState;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    //instantiating left Navigation drawyer Object
+    AnimationController controller=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
+    leftnavState=LeftNavDrawyer(controller);
 
     String userUid =widget.SharedService.data["uid"];
     readUserData(userUid);

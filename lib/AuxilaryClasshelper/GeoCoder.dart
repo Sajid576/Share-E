@@ -27,8 +27,15 @@ class GeoCoder {
       //Used in HomeScreen for searching a location by address name
       static ReverseGeocoding(address) async
       {
-            List<Placemark> placemark = await Geolocator().placemarkFromAddress(address);
-            Placemark place = placemark[0];
+            Placemark place;
+            try{
+                  List<Placemark> placemark = await Geolocator().placemarkFromAddress(address);
+                  place = placemark[0];
+            }catch(Exception)
+            {
+                  print(Exception);
+            }
+
 
             return place.position;
 

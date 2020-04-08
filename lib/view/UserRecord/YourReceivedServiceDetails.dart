@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 class YourReceivedServiceDetails extends StatefulWidget {
   final DocumentSnapshot ReceivedService;
   YourReceivedServiceDetails({this.ReceivedService});
@@ -9,14 +10,18 @@ class YourReceivedServiceDetails extends StatefulWidget {
   _YourReceivedServiceDetailsState createState() => _YourReceivedServiceDetailsState();
 }
 
-class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails> {
+class _YourReceivedServiceDetailsState extends State<YourReceivedServiceDetails> with SingleTickerProviderStateMixin{
   String username=""; //otherwise invalid arguments will be shown(only user username will contain null
   String phn="";
-
+  LeftNavDrawyer leftnavState;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    //instantiating left Navigation drawyer Object
+    AnimationController controller=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
+    leftnavState=LeftNavDrawyer(controller);
+
     String useruid =widget.ReceivedService.data["uid"];
     readUserData(useruid);
   }
