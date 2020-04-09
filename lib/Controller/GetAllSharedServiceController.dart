@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'dart:async';
-
+import 'package:share_e/model/FirebaseServiceFilterModel.dart';
 
 class GetAllSharedServiceController
 {
@@ -58,7 +58,7 @@ class GetAllSharedServiceController
         value.substring(0, 1).toUpperCase() + value.substring(1);
 
     if (queryResultSet.length == 0 && value.length == 1) {
-      FirebaseService().searchByService(value).then((QuerySnapshot docs) {
+      FirebaseServiceFilterModel().searchByService(value).then((QuerySnapshot docs) {
         for (int i = 0; i < docs.documents.length; ++i) {
           queryResultSet.add(docs.documents[i].data);
           print(docs.documents[i].data);

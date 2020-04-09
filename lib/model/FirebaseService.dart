@@ -94,14 +94,7 @@ class FirebaseService{
        });
   }
 
-  searchByService(search) async
-  {
-      return Firestore.instance
-          .collection('Shared_Services')
-          .where('searchKey',
-          isEqualTo: search.substring(0, 1).toUpperCase())
-          .getDocuments();
-  }
+
 
 
 
