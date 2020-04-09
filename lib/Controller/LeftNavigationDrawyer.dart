@@ -10,6 +10,8 @@ import 'package:share_e/view/UserInfo/ProfileScreen.dart';
 import 'package:share_e/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourReceivedService.dart';
 import 'package:share_e/view/UserRecord/YourSharedService.dart';
+import 'package:share_e/view/UserRecord/ShareYourServices.dart';
+
 
 class LeftNavDrawyer  {
   static Duration duration = const Duration(milliseconds: 300);
@@ -104,7 +106,7 @@ Widget leftNavLayout(BuildContext context) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => ProfileScreen(),
+                            builder: (BuildContext context) => ShareYourServices(),
                           ));
                     }
                 ),

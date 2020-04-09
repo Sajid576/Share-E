@@ -125,7 +125,8 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         InkWell(
                           child: Icon(Icons.menu, color: Colors.black,size: 35,),

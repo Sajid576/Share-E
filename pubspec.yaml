@@ -30,7 +30,7 @@ dependencies:
   #library for image carosoul/slider
   carousel_pro: ^1.0.0
 
-    # Add the dependencies for any other Firebase products you want to use in your app
+   # Add the dependencies for any other Firebase products you want to use in your app
     # For example, to use Firebase Authentication and Cloud Firestore
   firebase_auth: ^0.14.0+5
   cloud_firestore: ^0.12.9+5
@@ -59,7 +59,9 @@ dependencies:
 
   #A library that is used to store images in local cache from internet
   cached_network_image: ^2.0.0
+  # Library for using same stream controller multiple times
   rxdart: ^0.23.1
+  
 
 dev_dependencies:
   flutter_test:
