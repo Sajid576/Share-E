@@ -1,19 +1,15 @@
-
-import 'dart:collection';
-import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:share_e/AuxilaryClasshelper/GeoCoder.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
-import 'package:background_location/background_location.dart';
-import 'package:share_e/Controller/GetAllSharedServiceController.dart';
-import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/Controller/YourStreamController.dart';
+import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
+import 'package:share_e/view/GoogleMap/AllSharedServiceDetail.dart';
 
 class GoogleMapView{
 
@@ -32,21 +28,20 @@ class GoogleMapView{
 
   static UserBackgroundLocation loc;
 
-  static StreamController<bool> locationTrackingController ;
-  static StreamController<String> searchBoxParameterController;
-  static StreamController<String> searchingController;
+
+
 
   GoogleMapView();
 
   GoogleMapView.init(bool initGoogleMap)
   {
+
      currentSearchingTypeIndex=1;
      currentSearchingTypeHint="Search By Location";
 
-     searchingController=new BehaviorSubject();
-     searchBoxParameterController= new BehaviorSubject();
-     locationTrackingController = new BehaviorSubject();
-     setLocationStreamController(initGoogleMap);
+     YourStreamController.HomeScreenController=new BehaviorSubject();
+
+     setYourStreamController(initGoogleMap);
 
      serviceMarkers = <MarkerId, Marker>{};
 
@@ -59,9 +54,9 @@ class GoogleMapView{
 
   }
 
-  static setLocationStreamController(bool init)
+  static setYourStreamController(bool init)
   {
-        locationTrackingController.add(init);
+       YourStreamController.HomeScreenController.add(init);
 
   }
 
@@ -71,21 +66,25 @@ class GoogleMapView{
     if(currentSearchingTypeIndex==1)
       {
         currentSearchingTypeHint="Search By Location";
-        searchBoxParameterController.add("Search By Location");
+        YourStreamController.HomeScreenController.add("Search By Location");
       }
     else
       {
         currentSearchingTypeHint="Search By Service";
-        searchBoxParameterController.add("Search By Service Name");
+        YourStreamController.HomeScreenController.add("Search By Service Name");
       }
 
   }
 
 
-
-  void setServiceMarker(String id,double lat,double lon,var title,var snippet,BitmapDescriptor _markerIcon)
+  navigateToDetailPage(BuildContext context,DocumentSnapshot sharedServices)
   {
-
+    print("navigate");
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> AllSharedServiceDetail(sharedServices: sharedServices))
+    );
+  }
+  void setServiceMarker(String id,double lat,double lon,var title,var snippet,var doc)
+  {
 
      Marker marker= Marker(
           markerId: MarkerId(id),
@@ -93,11 +92,14 @@ class GoogleMapView{
           infoWindow: InfoWindow(
             title: title,
             snippet: snippet,
+              onTap: (() {
+                // InfoWindow clicked
+                navigateToDetailPage(context,doc);
+              }),
           ),
-          icon: _markerIcon);
+          );
 
-     serviceMarkers[new MarkerId(id)]=marker;
-
+        serviceMarkers[new MarkerId(id)]=marker;
 
   }
 
@@ -107,15 +109,7 @@ class GoogleMapView{
     _userLatitutde=lat;
     _userLongitude=lon;
 
-    if (_googleMapController != null)
-    {
-      _googleMapController.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-          bearing: 192.8334901395799,
-          target: latlng,
-          tilt: 30,
-          zoom: 18.00)));
 
-    }
      Marker userMarker= Marker(
       markerId: MarkerId("user"),
       position: latlng,
@@ -128,11 +122,11 @@ class GoogleMapView{
     serviceMarkers[new MarkerId('user')]=userMarker;
     //print("service markers length : "+serviceMarkers.length.toString());
 
-    setLocationStreamController(true);
+
 
   }
   void _onMapCreated(GoogleMapController controller) {
-    _googleMapController = controller;
+     _googleMapController = controller;
   }
   //google map widget
   Widget googleMapLayout()
@@ -212,7 +206,11 @@ class GoogleMapView{
 
                                     }) ;
                                 }
+                              else
+                                {
+                                     AuxiliaryClass.showToast("Searching Service");
 
+                                }
 
                       },
                     ),
@@ -230,6 +228,17 @@ class GoogleMapView{
         onPressed: () {
           print("floating action button pressed");
             new UserBackgroundLocation().getCurrentLocationUpdates();
+
+          if (_googleMapController != null)
+          {
+
+            _googleMapController.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+                bearing: 192.8334901395799,
+                target: LatLng(_userLatitutde,_userLongitude),
+                tilt: 30,
+                zoom: 18.00)));
+
+          }
 
         },
         child: Icon(Icons.my_location, semanticLabel: 'Action'),

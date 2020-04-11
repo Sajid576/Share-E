@@ -3,13 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 //Here all the store functions of Share Service will be implemented
 class FirebaseShareServiceModel
 {
-  Future setMedicineServiceData(String currentService,String address,String time,String medicineName,String medicineDetails,String medicineQuantity,String medicineExpDate,String medicinePrice)async{
+  Future setMedicineServiceData(String uid,String currentService,String address,String time,String medicineName,String medicineDetails,String medicineQuantity,String medicineExpDate,String medicinePrice)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_product_name']=medicineName;
     map['service_product_details']=medicineDetails;
     map['service_product_quantity']=medicineQuantity;
@@ -26,13 +28,14 @@ class FirebaseShareServiceModel
     });
   }
 
-  Future setVehicleServiceData(String currentService,String address,String time,String vehicleType,String vehicleModel,String vehiclePrice)async{
+  Future setVehicleServiceData(String uid,String currentService,String address,String time,String vehicleType,String vehicleModel,String vehiclePrice)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_product_name']=vehicleType;
     map['service_product_model']=vehicleModel;
     map['price']=vehiclePrice;
@@ -47,13 +50,14 @@ class FirebaseShareServiceModel
     });
   }
 
-  Future setFoodGroceryFruitServiceData(String currentService,String address,String time,String _character1,String foodfruitname,String foodfuitquantity,String foodfuitPrice)async{
+  Future setFoodGroceryFruitServiceData(String uid,String currentService,String address,String time,String _character1,String foodfruitname,String foodfuitquantity,String foodfuitPrice)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_product']=_character1;
     map['service_product_name']=foodfruitname;
     map['service_product_quantity']=foodfuitquantity;
@@ -68,13 +72,14 @@ class FirebaseShareServiceModel
       print(error);
     });
   }
-  Future setBookServiceData(String currentService,String address,String time,String _character1,String bookname,String writername,String bookquantity,String bookprice)async{
+  Future setBookServiceData(String uid,String currentService,String address,String time,String _character1,String bookname,String writername,String bookquantity,String bookprice)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_product']=_character1;
     map['service_product_name']=bookname;
     map['writer_name']=writername;
@@ -91,13 +96,14 @@ class FirebaseShareServiceModel
     });
   }
 
-  Future setParkingServiceData(String currentService,String address,String time,String _character1,String buildingname,String parkingprice)async{
+  Future setParkingServiceData(String uid,String currentService,String address,String time,String _character1,String buildingname,String parkingprice)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_space_for']=_character1;
     map['service_building_name']=buildingname;
 
@@ -113,13 +119,14 @@ class FirebaseShareServiceModel
     });
   }
 
-  Future setHouserentServiceData(String currentService,String address,String time,String _character1,String bedroomnumber,String flatspace,String washroomnumber,String balconyquantity,String _houseprice)async{
+  Future setHouserentServiceData(String uid,String currentService,String address,String time,String _character1,String bedroomnumber,String flatspace,String washroomnumber,String balconyquantity,String _houseprice)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_provided_for']=_character1;
     map['service_bedroom_number']=bedroomnumber;
     map['flat_space']=flatspace;
@@ -137,13 +144,14 @@ class FirebaseShareServiceModel
     });
   }
 
-  Future setMechanicServiceData(String currentService,String address,String time,String _character1,String mechanicdetails)async{
+  Future setMechanicServiceData(String uid,String currentService,String address,String time,String _character1,String mechanicdetails)async{
     final  userinfo = Firestore.instance.collection('Shared_Services');
     DocumentReference docReference = userinfo.document();
     Map<String, dynamic>map=new Map();
+    map['uid']=uid;
     map['service_product_type']=currentService;
     map['area']=address;
-    map['service_product_time']=time;
+    map['available_time']=time;
     map['service_provided_for']=_character1;
     map['service_details']=mechanicdetails;
 

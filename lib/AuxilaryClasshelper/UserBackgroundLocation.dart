@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:background_location/background_location.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
+import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
+
 
 class UserBackgroundLocation
 {
@@ -33,9 +33,6 @@ class UserBackgroundLocation
   void stopLocationService()
   {
     BackgroundLocation.stopLocationService();
-
-    GoogleMapView.setLocationStreamController(false);
-
 
 
   }

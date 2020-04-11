@@ -4,7 +4,50 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
+class FirebaseWrapper {
+
+  static FirebaseAuth _auth;
+  static Firestore _firestore;
+  static FirebaseStorage _storage;
+
+
+  static Future<void> init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+
+    final FirebaseApp app = await FirebaseApp.configure(
+      name: 'ShareEveryThing',
+      options: FirebaseOptions(
+        googleAppID: '1:556320559446:android:46e924c5bb79c50daa46f7',
+        gcmSenderID: '556320559446',
+        apiKey: 'AIzaSyAVP4q06zApK6ndsjZ934T4TcYhhs6l508',
+        projectID: 'shareeverything-78bb8',
+      ),
+    );
+
+    _auth = FirebaseAuth.fromApp(app);
+
+    _firestore = Firestore(app: app);
+
+    _storage = FirebaseStorage(app: app, storageBucket: 'gs://shareeverything-78bb8.appspot.com');
+  }
+
+  static FirebaseAuth auth() {
+    return _auth;
+  }
+
+  static Firestore firestore() {
+    return _firestore;
+  }
+
+  static FirebaseStorage storage() {
+    return _storage;
+  }
+}
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -23,38 +66,37 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future UploadPic() async
-  {
-    print("Uploading Pic");
-    StorageReference reference =
-    FirebaseStorage.instance.ref().child(_image.path.toString());
 
-    StorageUploadTask uploadTask = reference.putFile(_image);
-
-    StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
-
-    String url = (await downloadUrl.ref.getDownloadURL());
-    print(url);
-
-
-  }
 
   Future uploadPic(BuildContext context) async{
     print("Uploading Pic");
+    //final FirebaseStorage storage = FirebaseStorage(storageBucket: 'gs://shareeverything-78bb8.appspot.com');
+    FirebaseWrapper.init();
+    final FirebaseStorage storage=FirebaseWrapper.storage();
 
     String fileName = basename(_image.path);
-    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child("Users").child(fileName);
+    StorageReference firebaseStorageRef = storage.ref().child("Users").child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
 
-    firebaseStorageRef.getDownloadURL().then((fileURL) {
-      setState(() {
-        _uploadedFileURL = fileURL.toString();
-        print("download URL: "+_uploadedFileURL);
-        print("Profile Picture uploaded");
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
-      });
-    });
+    if(uploadTask.isInProgress)
+      {
+          return CircularProgressIndicator();
+      }
+    if(uploadTask.isComplete)
+      {
+
+
+        firebaseStorageRef.getDownloadURL().then((fileURL) {
+          setState(() {
+            _uploadedFileURL = fileURL.toString();
+            print("download URL: "+_uploadedFileURL);
+            //AuxiliaryClass.showToast("Upload Completed");
+            Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+          });
+        });
+      }
+
+
 
   }
 
@@ -276,7 +318,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Color(0xff476cfb),
                       onPressed: () {
 
-                        UploadPic();
+                        uploadPic(context);
                       },
 
                       elevation: 4.0,

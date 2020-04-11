@@ -32,7 +32,7 @@ class _AllSharedServicesState extends State<AllSharedServices> with AutomaticKee
   void initState() {
       super.initState();
 
-      GetAllSharedServiceController.requestAllSharedService();
+      //GetAllSharedServiceController.requestAllSharedService();
   }
 
   @override
@@ -85,7 +85,7 @@ class _AllSharedServicesState extends State<AllSharedServices> with AutomaticKee
                               leading: CachedNetworkImage(
                               width: 100,
                               height: 100,
-                              imageUrl:imageUrl[0],
+                              imageUrl:imageUrl!=null ? imageUrl[0] : "",
                               placeholder: (context, url) => CircularProgressIndicator(),
                               errorWidget: (context, url, error) => Icon(Icons.error),
                             ),

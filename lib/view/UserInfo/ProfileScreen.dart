@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:share_e/AuxilaryClasshelper/Userprofiledetails.dart';
+import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/Userprofiledetails.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/EditProfile.dart';
+
 class ProfileScreen extends StatefulWidget {
 
   @override
@@ -36,11 +37,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.tealAccent[700],
+      backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text("Profile"),
           centerTitle:true,
-          backgroundColor: Colors.blueGrey[900],
+          backgroundColor: Colors.black,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.settings,color: Colors.white,),

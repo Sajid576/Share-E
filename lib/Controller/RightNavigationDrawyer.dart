@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:share_e/Controller/GetAllSharedServiceController.dart';
+import 'package:share_e/Controller/ServiceTypeController.dart';
 
 class RightNavDrawyer
 {
@@ -10,6 +12,12 @@ class RightNavDrawyer
   Animation<Offset> _slideAnimation;
   Color selectedBackgroundColor =Colors.white;
 
+  RightNavDrawyer rightNavDrawyer;
+  static bool rightEnabled=false;
+  setNavDrawyerObject(rightNavDrawyer)
+  {
+      this.rightNavDrawyer=rightNavDrawyer;
+  }
   RightNavDrawyer(control){
 
     //these code for homePage layout animation
@@ -53,9 +61,13 @@ class RightNavDrawyer
                       ],
                     ),
                     onPressed: () {
-
-
-                      //filterService("medicine");
+                      if(!rightNavDrawyer.isCollapsed)
+                      {
+                        rightNavDrawyer.controller.reverse();
+                        rightEnabled=!rightEnabled;
+                        rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                      }
+                      GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.medicine);
 
                     },
 
@@ -77,7 +89,13 @@ class RightNavDrawyer
                       ],
                     ),
                     onPressed: () {
-
+                      if(!rightNavDrawyer.isCollapsed)
+                      {
+                        rightNavDrawyer.controller.reverse();
+                        rightEnabled=!rightEnabled;
+                        rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                      }
+                      GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.book);
 
                     },
 
@@ -93,13 +111,19 @@ class RightNavDrawyer
                         children:<Widget>[
                           Icon(Icons.gavel),
                           Text(
-                            "Shared Mechanics",
+                            "Mechanic/Electrician",
                             style: TextStyle(color: Colors.black, fontSize: 18),
                           ),
                         ],
                       ),
                       onPressed: () {
-
+                        if(!rightNavDrawyer.isCollapsed)
+                        {
+                          rightNavDrawyer.controller.reverse();
+                          rightEnabled=!rightEnabled;
+                          rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                        }
+                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.mechanic);
                       }
                   ),
                   SizedBox(
@@ -118,7 +142,13 @@ class RightNavDrawyer
                         ],
                       ),
                       onPressed: () {
-
+                        if(!rightNavDrawyer.isCollapsed)
+                        {
+                          rightNavDrawyer.controller.reverse();
+                          rightEnabled=!rightEnabled;
+                          rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                        }
+                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.vehicle);
                       }
                   ),
                   SizedBox(
@@ -137,7 +167,13 @@ class RightNavDrawyer
                         ],
                       ),
                       onPressed: () {
-
+                        if(!rightNavDrawyer.isCollapsed)
+                        {
+                          rightNavDrawyer.controller.reverse();
+                          rightEnabled=!rightEnabled;
+                          rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                        }
+                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.food);
                       }
                   ),
                   SizedBox(
@@ -156,7 +192,13 @@ class RightNavDrawyer
                         ],
                       ),
                       onPressed: () {
-
+                        if(!rightNavDrawyer.isCollapsed)
+                        {
+                          rightNavDrawyer.controller.reverse();
+                          rightEnabled=!rightEnabled;
+                          rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                        }
+                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.houseRent);
 
                       }
                   ),
@@ -176,6 +218,13 @@ class RightNavDrawyer
                         ],
                       ),
                       onPressed: () {
+                        if(!rightNavDrawyer.isCollapsed)
+                        {
+                          rightNavDrawyer.controller.reverse();
+                          rightEnabled=!rightEnabled;
+                          rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                        }
+                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.parking);
 
                       }
                   ),
@@ -195,6 +244,13 @@ class RightNavDrawyer
                         ],
                       ),
                       onPressed: () {
+                        if(!rightNavDrawyer.isCollapsed)
+                        {
+                          rightNavDrawyer.controller.reverse();
+                          rightEnabled=!rightEnabled;
+                          rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                        }
+
 
                       }
                   ),

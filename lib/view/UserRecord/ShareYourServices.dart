@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:share_e/Controller/ShareYourServiceController.dart';
+import 'package:share_e/Controller/ServiceTypeController.dart';
+
 class ShareYourServices  extends StatefulWidget {
   @override
   _ShareYourServicesState createState() => _ShareYourServicesState();
@@ -19,10 +21,14 @@ class _ShareYourServicesState extends State<ShareYourServices> {
   TimeOfDay  time2;
   ShareServiceProductHelper page=null;
   Widget value;
-  List _service = ["medicine share", "vehicle share", "Food/Grocery/Fruit item Sharing", "Book sharing", "Parking sharing","House rent","Mechanic service"];
+  List _service = [ServiceTypeController.medicine, ServiceTypeController.vehicle, ServiceTypeController.food
+                    , ServiceTypeController.book,ServiceTypeController.parking,ServiceTypeController.houseRent
+                     , ServiceTypeController.mechanic,ServiceTypeController.courier,"Others"];
+
   List<DropdownMenuItem<String>> _dropDownMenuItems;   //_service list will be in _dropDownMenuItems
   static String currentservice="";
-  var username;
+  static String username="";
+  static String uid="";
   @override
   void initState() {
 
@@ -30,6 +36,7 @@ class _ShareYourServicesState extends State<ShareYourServices> {
     SharedPreferenceHelper.readfromlocalstorage().then((user){
       setState((){
         username = user.getusername();
+        uid=user.getuid();
         _UserName.text=username;
       });
     });
@@ -87,12 +94,12 @@ class _ShareYourServicesState extends State<ShareYourServices> {
   Widget build(BuildContext context) {
 
     theme = Theme.of(context);
-    ShareServiceProductHelper.theme=theme;
+
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Share your service"),
+        title: Text("Share Your Service"),
         centerTitle: true,
         backgroundColor: Colors.black,
       ),
@@ -105,7 +112,7 @@ class _ShareYourServicesState extends State<ShareYourServices> {
 
                     child: Container(
                         margin: EdgeInsets.only(left: 0,right:0,top:30,bottom: 30),
-                        child: Text("Please select service",style: TextStyle(fontSize: 18),)),
+                        child: Text("Please Select a Service You Want to Share",style: TextStyle(fontSize: 18),)),
                   ),
 
                   //dropodown shown....
@@ -259,7 +266,7 @@ class _ShareYourServicesState extends State<ShareYourServices> {
                           print(time.toString()+","+address);
                           setState(() {
 
-                            ShareYourServiceController.requestSendDataToFirebase(currentservice,address,time);
+                            ShareYourServiceController.requestSendDataToFirebase(uid,currentservice,address,time);
                           });
                         },
                         textColor: Colors.yellow,
@@ -286,27 +293,38 @@ class _ShareYourServicesState extends State<ShareYourServices> {
     }
     setState(() {
       currentservice=selectedservice;
-      if(currentservice=="medicine share"){
-        print("current state"+currentservice);
+      if(currentservice==ServiceTypeController.medicine){
+
         value = page.medicineLayout();           //giving medicine widget
       }
-      else if(currentservice=="vehicle share"){
+      else if(currentservice==ServiceTypeController.vehicle){
         value = page.vehicleshareing();           //giving vehicle widget
       }
-      else if(currentservice=="Food/Grocery/Fruit item Sharing"){
+      else if(currentservice==ServiceTypeController.food){
         value = page.Food_Grocery_Fruit();          //giving Food/Grocery/Fruit item Sharing widget
       }
-      else if(currentservice=="Book sharing"){
+      else if(currentservice==ServiceTypeController.book){
         value = page.book_sharing();                 //giving medicine widget
-      }else if(currentservice=="Parking sharing"){
+      }
+      else if(currentservice==ServiceTypeController.parking){
         value = page.parking_sharing();               //giving Parking widget
       }
-      else if(currentservice=="House rent"){
+      else if(currentservice==ServiceTypeController.houseRent){
         value = page.house_rent();                      //giving House rent widget
       }
-      else if(currentservice=="Mechanic service"){
+      else if(currentservice==ServiceTypeController.mechanic){
         value = page.mechanic_service();                  //giving Mechanic service widget
       }
+      else if(currentservice==ServiceTypeController.courier)
+      {
+        //implement Courier widget
+
+      }
+      else if(currentservice=="Others")
+        {
+          //implement Others widget
+
+        }
     });
   }
 }

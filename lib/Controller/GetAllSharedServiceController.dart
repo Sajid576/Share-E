@@ -6,44 +6,41 @@ import 'package:share_e/model/FirebaseServiceFilterModel.dart';
 
 class GetAllSharedServiceController
 {
-  static  List<DocumentSnapshot> AllSharedData;
-  static StreamController<List<DocumentSnapshot>> AllServicedataController=  new BehaviorSubject();
 
-  //variables for searching Service Name
+  static  List<DocumentSnapshot> AllSharedData;
+  static StreamController<List<DocumentSnapshot>> AllServicedataController  =  new BehaviorSubject();
+
+  //variables for searching by Service Name
   static var queryResultSet = [];
   static var tempSearchStore = [];
 
-  static getAllServiceData()
-  {
 
-        //Adding DocumentSnapshot List to the StreamController object to show the List data on the UI
-        if(AllSharedData !=null )
-          {
-
-                AllServicedataController.add(AllSharedData);
-
-          }
-        else
-          {
-                 print("HEHE");
-          }
-
-  }
   static setAllServiceData(data)
   {
 
           AllSharedData=new List<DocumentSnapshot>();
           //Adding all list of Document Snapshot to the List
           AllSharedData.addAll(data);
-          getAllServiceData();
+          //Adding DocumentSnapshot List to the StreamController object to show the List data on the UI
 
+          AllServicedataController.add(AllSharedData);
 
   }
+  //this controller function handles the request of fetching all shared services
   static requestAllSharedService()
   {
         FirebaseService().getAllSharedServicePosts();
 
   }
+  //this controller function handles the request of fetching a specific type of shared services(E.g-Shared Vehicles)
+  static requestFilterSharedService(serviceType)
+  {
+      FirebaseServiceFilterModel().filterByService(serviceType);
+  }
+
+
+  //this controller function handles the request of fetching all shared services that contain a service/product name
+  //provided by the user in the search bar
 
    initiateSearch(value) {
     if (value.length == 0) {

@@ -7,18 +7,15 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/model/FirebaseShareServiceModel.dart';
 import 'package:share_e/view/UserRecord/ShareYourServices.dart';
-
+import 'package:rxdart/rxdart.dart';
 
 class ShareServiceProductHelper {
-  
-  static var theme;
-
 
   //for all radio button set state
   static String character1=" ";
   //stream controller
-  static StreamController<String> streamController = new StreamController();
-  static StreamController<bool> BookTYpeController = new StreamController();
+  static StreamController<dynamic> streamController = new BehaviorSubject();
+  static StreamController<dynamic> BookTYpeController = new BehaviorSubject();
 
   //medicine
   static TextEditingController medicineName = TextEditingController();

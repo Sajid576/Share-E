@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 import 'package:share_e/Controller/RightNavigationDrawyer.dart';
 import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/ProfileScreen.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/Authentication/LoginScreen.dart';
-import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
-
+import 'package:share_e/Controller/YourStreamController.dart';
+import 'package:share_e/view/GoogleMap/ServiceMarkerIcon.dart';
 import 'package:share_e/Controller/GetAllSharedServiceController.dart';
-import 'package:share_e/view/UserRecord/YourReceivedService.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserRecord/YourCartList.dart';
-import 'package:share_e/view/UserRecord/YourSharedService.dart';
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 
 final Color backgroundColor = Colors.white;
 
@@ -26,14 +22,18 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   GoogleMapView googleMapView;
   LeftNavDrawyer leftnavState;
   RightNavDrawyer rightnavState;
-  bool leftEnabled=false;
-  bool rightEnabled=false;
+
+
 
   @override
   void initState() {
     super.initState();
     //initializing the google map interface with initial location and markers
     googleMapView= new GoogleMapView.init(true);
+
+
+    GetAllSharedServiceController.requestAllSharedService();
+
 
     //instantiating left Navigation drawyer Object
     AnimationController leftController=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
@@ -42,23 +42,48 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
     //instantiating right Navigation drawyer object
     AnimationController rightController=AnimationController(vsync:this ,duration: RightNavDrawyer.duration);
     rightnavState=RightNavDrawyer(rightController);
+    rightnavState.setNavDrawyerObject(rightnavState);
 
-    //this function will keep updating the UI of google map on changed location
-    GoogleMapView.locationTrackingController.stream.listen((isTrackOn) {
-            print("isTrackON:  "+isTrackOn.toString());
+    ServiceMarkerIcon service_icons=new ServiceMarkerIcon();
+    GetAllSharedServiceController.AllServicedataController.stream.listen((list) {
+
+
+      list.forEach((doc) {
+          Map<dynamic, dynamic> values = 	Map.from(doc.data);
+          print('***********Data:' + values.toString() +'\n');
+
+          var serviceId=values["service_id"];
+          var serviceProductType=values["service_product_type"];
+          var serviceProductName=values["service_product_name"];
+          var address=  values["area"];
+          var lat=address.latitude;
+          var lon=address.longitude;
+
+
+          //*****Check this issues
+          //var icon=service_icons.getMarkerIcon(serviceProductType);
+          googleMapView.setServiceMarker(serviceId, lat, lon, serviceProductType, serviceProductName,doc);
+
+
+
+
+      });
+
+      YourStreamController.HomeScreenController.add(true);
+
+    });
+
+    //At the first time it will be called after all the data are fetched from firestore
+    //this function will keep updating the UI
+    YourStreamController.HomeScreenController.stream.listen((value) {
+
             setState(() {
             });
         });
-    GoogleMapView.searchBoxParameterController.stream.listen((searchType) {
-      print("SearchTypeSet:  "+searchType.toString());
-      setState(() {
-      });
-    });
 
 
-    //ServiceMarkerIcon markerIcon=new ServiceMarkerIcon();
-    //markerIcon.getMarkerIcon(service_name);
-    //googleMapView.setMarker(id, lat, lon, title, snippet, _markerIcon)
+
+
 
   }
 
@@ -108,10 +133,10 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
       duration: LeftNavDrawyer.duration,
       top: 0,            //scale is done for top and bottom
       bottom: 0,
-      left:rightEnabled==true ?  rightnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width : leftEnabled==true?  leftnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width : 0,
-      right:rightEnabled==true ? rightnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width : leftEnabled==true? leftnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width : 0,
+      left:RightNavDrawyer.rightEnabled==true ?  rightnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width : LeftNavDrawyer.leftEnabled==true?  leftnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width : 0,
+      right:RightNavDrawyer.rightEnabled==true ? rightnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width : LeftNavDrawyer.leftEnabled==true? leftnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width : 0,
       child: ScaleTransition(
-        scale:rightEnabled==true ? rightnavState.scaleAnimation : leftEnabled==true ? leftnavState.scaleAnimation : leftnavState.scaleAnimation,
+        scale:RightNavDrawyer.rightEnabled==true ? rightnavState.scaleAnimation : LeftNavDrawyer.leftEnabled==true ? leftnavState.scaleAnimation : leftnavState.scaleAnimation,
         child: Material(
           borderRadius: BorderRadius.all(Radius.circular(40)),
           elevation: 8,
@@ -141,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
                                 {
                                   leftnavState.controller.reverse();
                                 }
-                              leftEnabled=!leftEnabled;
+                              LeftNavDrawyer.leftEnabled=!LeftNavDrawyer.leftEnabled;
                               leftnavState.isCollapsed = !leftnavState.isCollapsed;
                                  //just reversing it to false
                             });
@@ -163,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
                               {
                                 rightnavState.controller.reverse();
                               }
-                              rightEnabled=!rightEnabled;
+                              RightNavDrawyer.rightEnabled=!RightNavDrawyer.rightEnabled;
                               rightnavState.isCollapsed = !rightnavState.isCollapsed;
                               //just reversing it to false
                             });

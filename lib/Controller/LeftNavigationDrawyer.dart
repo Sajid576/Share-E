@@ -23,7 +23,7 @@ class LeftNavDrawyer  {
   Animation<Offset> _slideAnimation;
   Color selectedBackgroundColor =Colors.white;
   // _controller,_scaleAnimation these for top and bottom so that they don't have overflow condition
-
+  static bool leftEnabled=false;
 
   LeftNavDrawyer(control){
 
