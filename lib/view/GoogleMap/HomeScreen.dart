@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
     //At the first time it will be called after all the data are fetched from firestore
     //this function will keep updating the UI
     YourStreamController.HomeScreenController.stream.listen((value) {
-
+            print("HomeScreen Called");
             setState(() {
             });
         });

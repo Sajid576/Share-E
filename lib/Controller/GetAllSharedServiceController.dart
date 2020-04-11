@@ -2,17 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'dart:async';
-import 'package:share_e/model/FirebaseServiceFilterModel.dart';
+import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
 
 class GetAllSharedServiceController
 {
 
   static  List<DocumentSnapshot> AllSharedData;
+
   static StreamController<List<DocumentSnapshot>> AllServicedataController  =  new BehaviorSubject();
 
   //variables for searching by Service Name
-  static var queryResultSet = [];
-  static var tempSearchStore = [];
+  static List<DocumentSnapshot> queryResultSet = [];
+  //static var tempSearchStore = [];
 
 
   static setAllServiceData(data)
@@ -33,44 +34,53 @@ class GetAllSharedServiceController
 
   }
   //this controller function handles the request of fetching a specific type of shared services(E.g-Shared Vehicles)
-  static requestFilterSharedService(serviceType)
+  //invoked from Right Navigation Drawyer
+  static requestFilterByServiceType(serviceType)
   {
-      FirebaseServiceFilterModel().filterByService(serviceType);
-  }
+    GoogleMapView.resetMarkers();
+    queryResultSet = [];
+    AllSharedData.forEach((element) {
 
+      if (serviceType==element['service_product_type']) {
+        queryResultSet.add(element);
+
+      }
+    });
+    AllServicedataController.add(queryResultSet);
+  }
 
   //this controller function handles the request of fetching all shared services that contain a service/product name
   //provided by the user in the search bar
 
-   initiateSearch(value) {
+   initiateSearch(String value) {
+
     if (value.length == 0) {
 
         queryResultSet = [];
-        tempSearchStore = [];
-         AllServicedataController.add(tempSearchStore);
-      //setstate
-    }
 
-    var capitalizedValue =
-        value.substring(0, 1).toUpperCase() + value.substring(1);
-
-    if (queryResultSet.length == 0 && value.length == 1) {
-      FirebaseServiceFilterModel().searchByService(value).then((QuerySnapshot docs) {
-        for (int i = 0; i < docs.documents.length; ++i) {
-          queryResultSet.add(docs.documents[i].data);
-          print(docs.documents[i].data);
-        }
-      });
-    } else {
-      tempSearchStore = [];
-      queryResultSet.forEach((element) {
-        if (element['service_product_name'].startsWith(capitalizedValue)) {
-            tempSearchStore.add(element);
-            //setState
-            AllServicedataController.add(tempSearchStore);
-        }
-      });
+        AllServicedataController.add(AllSharedData);
+       //setstate
     }
+    else
+      {
+
+        value=value.toLowerCase();
+        GoogleMapView.resetMarkers();
+        //var capitalizedValue = value.substring(0, 1).toUpperCase() + value.substring(1);
+
+        //tempSearchStore = [];
+        AllSharedData.forEach((element) {
+          String serviceProductName= element['service_product_name'];
+          serviceProductName=serviceProductName.toLowerCase();
+          if (serviceProductName.startsWith(value)) {
+            queryResultSet.add(element);
+
+          }
+        });
+        AllServicedataController.add(queryResultSet);
+      }
+
+
   }
 
 

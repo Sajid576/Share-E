@@ -57,6 +57,7 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
         GeoCoder.geoCoding(geo.latitude,geo.longitude).then((address){
           setState(() {
             this.address=address;
+            print("Address:  "+address);
           });
 
         });   //retuns address in form of string
@@ -94,26 +95,29 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
   List<Widget> CaroselImageGenarator()
   {
     String Images=widget.sharedServices.data["images"];
-    List<String>imageUrl;
+    List<String>imageUrls;
+    List imageWidgets;
     if(Images!=null)
     {
       Images=Images.trim();
-      imageUrl= Images.split(",");
+      imageUrls= Images.split(",");
 
-      print("length:  "+imageUrl.length.toString());
+      print("length:  "+imageUrls.length.toString());
+
+      imageWidgets = new List<Widget>();
+      for(var i=0;i<imageUrls.length;i++)
+      {
+        imageWidgets.add(
+          CachedNetworkImage(
+            imageUrl:imageUrls[i],
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.error),
+          ),
+        );
+      }
     }
 
-    List imageWidgets = new List<Widget>();
-    for(var i=0;i<imageUrl.length;i++)
-    {
-      imageWidgets.add(
-        CachedNetworkImage(
-          imageUrl:imageUrl[i],
-          placeholder: (context, url) => CircularProgressIndicator(),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-        ),
-      );
-    }
+
     return imageWidgets;
 
   }
@@ -150,7 +154,7 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
                   height: 200.0,
                   width: double.infinity,
                   child: Carousel(                     //Carousel image showing
-                    images: CaroselImageGenarator(),
+                    images: CaroselImageGenarator() ,
 
                     dotSize: 4.0,
                     dotSpacing: 15.0,

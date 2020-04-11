@@ -10,6 +10,7 @@ import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/Controller/YourStreamController.dart';
 import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
 import 'package:share_e/view/GoogleMap/AllSharedServiceDetail.dart';
+import 'package:share_e/Controller/GetAllSharedServiceController.dart';
 
 class GoogleMapView{
 
@@ -33,6 +34,11 @@ class GoogleMapView{
 
   GoogleMapView();
 
+  static resetMarkers()
+  {
+      serviceMarkers = <MarkerId, Marker>{};
+  }
+
   GoogleMapView.init(bool initGoogleMap)
   {
 
@@ -45,11 +51,11 @@ class GoogleMapView{
 
      serviceMarkers = <MarkerId, Marker>{};
 
-    //start background location tracking
-    loc=new UserBackgroundLocation();
-    loc.getCurrentLocationUpdates();
+      //start background location tracking
+      loc=new UserBackgroundLocation();
+      loc.getCurrentLocationUpdates();
 
-    print("Google map initialized");
+      print("Google map initialized");
 
 
   }
@@ -184,7 +190,12 @@ class GoogleMapView{
                       textInputAction: TextInputAction.go,
                       onChanged: (val) {
                           searchingVal=val;
-                          //GetAllSharedServiceController().initiateSearch(val);
+                          //if searching by Service/Product name is selected
+                         if(currentSearchingTypeIndex==2)
+                           {
+                             GetAllSharedServiceController().initiateSearch(val);
+                           }
+
                       },
 
                       decoration: InputDecoration(

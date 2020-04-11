@@ -3,7 +3,6 @@ import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:share_e/model/FirebaseServiceFilterModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

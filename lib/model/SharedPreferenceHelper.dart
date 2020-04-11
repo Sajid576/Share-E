@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/Userprofiledetails.dart';
+import 'package:share_e/view/UserInfo/Userprofiledetails.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/UserInfo/Userprofiledetails.dart';
 
 class SharedPreferenceHelper{
 

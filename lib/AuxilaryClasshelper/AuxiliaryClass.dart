@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'file:///D:/Flutter_Projects/ShareE_master/Share-E/lib/view/GoogleMap/GoogleMapView.dart';
+import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
 
 class AuxiliaryClass{
 
@@ -11,7 +11,7 @@ class AuxiliaryClass{
 
   static displayAlertDialog(BuildContext context,int currentSearchingTypeIndex) async {
     int index=currentSearchingTypeIndex;
-    print("index:  "+index.toString());
+
     return showDialog(
         context: context,
         builder: (context) {
@@ -42,8 +42,6 @@ class AuxiliaryClass{
                     height: 18,
                   ),
                   Container(
-                    width: double.infinity,
-
                     child: RadioListTile(
                       title: Text("Search by Service name"),
                       groupValue: index,

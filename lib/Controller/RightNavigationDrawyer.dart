@@ -67,7 +67,7 @@ class RightNavDrawyer
                         rightEnabled=!rightEnabled;
                         rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                       }
-                      GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.medicine);
+                      GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.medicine);
 
                     },
 
@@ -95,7 +95,7 @@ class RightNavDrawyer
                         rightEnabled=!rightEnabled;
                         rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                       }
-                      GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.book);
+                      GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.book);
 
                     },
 
@@ -123,7 +123,7 @@ class RightNavDrawyer
                           rightEnabled=!rightEnabled;
                           rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                         }
-                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.mechanic);
+                        GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.mechanic);
                       }
                   ),
                   SizedBox(
@@ -148,7 +148,7 @@ class RightNavDrawyer
                           rightEnabled=!rightEnabled;
                           rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                         }
-                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.vehicle);
+                        GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.vehicle);
                       }
                   ),
                   SizedBox(
@@ -173,7 +173,7 @@ class RightNavDrawyer
                           rightEnabled=!rightEnabled;
                           rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                         }
-                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.food);
+                        GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.food);
                       }
                   ),
                   SizedBox(
@@ -198,7 +198,7 @@ class RightNavDrawyer
                           rightEnabled=!rightEnabled;
                           rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                         }
-                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.houseRent);
+                        GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.houseRent);
 
                       }
                   ),
@@ -224,7 +224,7 @@ class RightNavDrawyer
                           rightEnabled=!rightEnabled;
                           rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
                         }
-                        GetAllSharedServiceController.requestFilterSharedService(ServiceTypeController.parking);
+                        GetAllSharedServiceController.requestFilterByServiceType(ServiceTypeController.parking);
 
                       }
                   ),
