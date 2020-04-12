@@ -55,6 +55,35 @@ class RightNavDrawyer
                       children:<Widget>[
                         Icon(Icons.healing),
                         Text(
+                          "All Shared Services",
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      if(!rightNavDrawyer.isCollapsed)
+                      {
+                        rightNavDrawyer.controller.reverse();
+                        rightEnabled=!rightEnabled;
+                        rightNavDrawyer.isCollapsed = !rightNavDrawyer.isCollapsed;
+                      }
+                      GetAllSharedServiceController.requestAllSharedService();
+
+                    },
+
+                  ),
+                  SizedBox(
+                    height: 18,
+                  ),
+
+                  FlatButton(
+
+                    disabledColor: selectedBackgroundColor,
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children:<Widget>[
+                        Icon(Icons.healing),
+                        Text(
                           "Shared Medicine",
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),

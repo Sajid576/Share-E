@@ -190,11 +190,10 @@ class GoogleMapView{
                       textInputAction: TextInputAction.go,
                       onChanged: (val) {
                           searchingVal=val;
-                          //if searching by Service/Product name is selected
-                         if(currentSearchingTypeIndex==2)
-                           {
-                             GetAllSharedServiceController().initiateSearch(val);
-                           }
+                          if(val.length==0)
+                            {
+                              GetAllSharedServiceController().initiateSearch(searchingVal);
+                            }
 
                       },
 
@@ -214,12 +213,24 @@ class GoogleMapView{
                                 {
                                     AuxiliaryClass.showToast("Searching Location");
                                     GeoCoder.ReverseGeocoding(searchingVal).then((val){
+                                              print("GEocoding position: "+val.latitude.toString()+","+val.longitude.toString());
+                                            if (_googleMapController != null)
+                                            {
 
+                                              _googleMapController.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+                                                  bearing: 192.8334901395799,
+                                                  target: LatLng(val.latitude,val.longitude),
+                                                  tilt: 30,
+                                                  zoom: 18.00)));
+
+                                            }
                                     }) ;
                                 }
                               else
                                 {
                                      AuxiliaryClass.showToast("Searching Service");
+                                     //if searching by Service/Product name is selected
+                                     GetAllSharedServiceController().initiateSearch(searchingVal);
 
                                 }
 
