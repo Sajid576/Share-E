@@ -28,11 +28,11 @@ class FirebaseService{
 
   }
 
-  //this function will be called from HomeScreen
+  //this function will be called from Controller
   getAllSharedServicePosts()async{
 
           var firestore = Firestore.instance; //giving a FireBase instance
-           await firestore.collection("Shared_Services").where("active_state",isEqualTo: 1).getDocuments().then((query){
+           await firestore.collection("Shared_Services").where("active",isEqualTo: 1).getDocuments().then((query){
              print("*************DATA queried: "+query.documents.length.toString());
              GetAllSharedServiceController.setAllServiceData(query.documents);
 

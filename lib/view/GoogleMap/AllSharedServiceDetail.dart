@@ -30,6 +30,7 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
   String serviceId="";
   GeoPoint geo;
   String address="";
+  List imageWidgets;
 
   String operatingUserUid="";
 
@@ -49,39 +50,31 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
           print("Current User"+operatingUserUid);
 
         });
-
+        imageWidgets=CaroselImageGenarator();
         serviceName= widget.sharedServices.data["service_product_name"];
         price= widget.sharedServices.data["price"];
         availableTime= widget.sharedServices.data["available_time"];
         serviceId= widget.sharedServices.data["service_id"];
-        geo=widget.sharedServices.data["area"];
-        GeoCoder.geoCoding(geo.latitude,geo.longitude).then((address){
-          setState(() {
-            this.address=address;
-            print("Address:  "+address);
-          });
+        geo=widget.sharedServices.data["geo"];
+        address=widget.sharedServices.data["area"];
 
-        });   //retuns address in form of string
         //setting marker on google map
         setMarkers(geo.latitude,geo.longitude);
 
-        String ServicemanUid = widget.sharedServices.data["uid"];
-        print(ServicemanUid);
-        readUserData(ServicemanUid.trim());
+        String ServiceProvicerUid = widget.sharedServices.data["uid"];
+        print(ServiceProvicerUid);
+        readUserData(ServiceProvicerUid.trim());
   }
 
   Future<void>readUserData(uid)async{
     var query = await Firestore.instance.collection('users').document(uid);
-    print("ki uid"+uid);
-
 
     query.get().then((datasnapshot) {
       if (datasnapshot.exists) {
         setState(() {
-              print(datasnapshot.data['username'].toString());
-              print(datasnapshot.data['Phone'].toString());
+
               username = datasnapshot.data['username'];
-              phn = datasnapshot.data['Phone'];
+              phn = datasnapshot.data['phone'];
         });
 
       }
@@ -101,20 +94,22 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
     if(Images!=null)
     {
       Images=Images.trim();
-      imageUrls= Images.split(",");
+      imageUrls= Images.split(";");
 
       print("length:  "+imageUrls.length.toString());
 
       imageWidgets = new List<Widget>();
       for(var i=0;i<imageUrls.length;i++)
       {
-        imageWidgets.add(
-          CachedNetworkImage(
-            imageUrl:imageUrls[i],
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          ),
-        );
+        if(imageUrls[i].isNotEmpty) {
+          imageWidgets.add(
+            CachedNetworkImage(
+              imageUrl: imageUrls[i],
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          );
+        }
       }
     }
 
@@ -155,7 +150,7 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
                   height: 200.0,
                   width: double.infinity,
                   child: Carousel(                     //Carousel image showing
-                    images: CaroselImageGenarator() ,
+                    images: imageWidgets ,
 
                     dotSize: 4.0,
                     dotSpacing: 15.0,

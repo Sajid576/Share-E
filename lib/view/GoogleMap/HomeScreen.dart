@@ -27,63 +27,10 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   LeftNavDrawyer leftnavState;
   RightNavDrawyer rightnavState;
 
-  final FirebaseMessaging _fcm = FirebaseMessaging();
-  StreamSubscription iosSubscription;
 
-
-  getDeviceToken() async
-  {
-      // Get the token for this device
-      String fcmToken = await _fcm.getToken();
-      print("Token:  "+fcmToken);
-
-  }
   @override
   void initState() {
     super.initState();
-
-    getDeviceToken();
-
-    if (Platform.isIOS) {
-      iosSubscription = _fcm.onIosSettingsRegistered.listen((data) {
-        // save the token  OR subscribe to a topic here
-      });
-
-      _fcm.requestNotificationPermissions(IosNotificationSettings());
-    }
-
-    _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            content: ListTile(
-              title: Text(message['notification']['title']),
-              subtitle: Text(message['notification']['body']),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
-          ),
-        );
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        // TODO optional
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        // TODO optional
-      },
-    );
-
-
-
 
 
     //initializing the google map interface with initial location and markers
@@ -108,14 +55,13 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
 
       list.forEach((doc) {
           Map<dynamic, dynamic> values = 	Map.from(doc.data);
-          print('***********Data:' + values.toString() +'\n');
 
           var serviceId=values["service_id"];
           var serviceProductType=values["service_product_type"];
           var serviceProductName=values["service_product_name"];
-          var address=  values["area"];
-          var lat=address.latitude;
-          var lon=address.longitude;
+          var geo=  values["geo"];
+          var lat=geo.latitude;
+          var lon=geo.longitude;
 
 
           //*****Check this issues
