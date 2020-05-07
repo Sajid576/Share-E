@@ -76,7 +76,7 @@ class _AllSharedServicesState extends State<AllSharedServices> with AutomaticKee
                         if(images!=null)
                         {
                           images=images.trim();
-                          imageUrl= images.split(",");
+                          imageUrl = images.split(";");
                         }
 
                         return Container(

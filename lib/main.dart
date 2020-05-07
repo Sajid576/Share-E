@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_e/SplashScreen.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
+import 'package:share_e/view/Authentication/LoginScreen.dart';
 import 'package:share_e/view/Messages/MessagesScreen.dart';
 import 'package:share_e/view/Messages/MessagesNotifier.dart';
 import 'package:share_e/view/UserRecord/ShareYourServices.dart';
 import 'package:share_e/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourSharedService.dart';
+import 'package:share_e/view/GoogleMap/HomeScreen.dart';
+
 
 void main()  {
 
@@ -41,7 +44,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       //home:SplashScreen(),
-      home:ShareYourServices(),
+      home:LoginScreen(),
     );
   }
 
