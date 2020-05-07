@@ -2,124 +2,38 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:share_e/view/Authentication/OTPScreen.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_e/ExceptionHandeling/CustomException.dart';
 import 'dart:io';
 
-class LoginScreen extends StatelessWidget {
-  final _phoneController = TextEditingController();
+class LoginScreen extends StatefulWidget {
+  LoginScreen({Key key}) : super(key: key);
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _phoneNumberController = TextEditingController();
   final _usernameController = TextEditingController();
-  final _codeController = TextEditingController();
   final globalKey = GlobalKey<ScaffoldState>();
 
+  bool isValid = false;
 
-
-
-  Future<bool> loginUser(
-      String phone, String username, BuildContext context) async {
-
-      FirebaseAuth _auth = FirebaseAuth.instance;
-      try {                                                     //internet exception
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          print('connected to internet');
-          _auth.verifyPhoneNumber(
-              phoneNumber: phone,
-              timeout: Duration(seconds: 60),
-              verificationCompleted: (AuthCredential credential) async {
-                Navigator.of(context).pop();
-
-                AuthResult result = await _auth.signInWithCredential(credential);
-
-                FirebaseUser user = result.user;
-
-
-                if (user != null) {
-                  print(username+"  verified");
-                  print(phone+"  verified");
-                  print(user.toString()+"  verified");
-
-                  //data storing in FireStore in (FireBaseService.dart)
-                  await FirebaseService().setUserData(username, phone,user.uid);
-                  //data storing local storage
-                  SharedPreferenceHelper.setLocalData(phone,username,user.uid);
-                  AuxiliaryClass.showToast("You are logged in!!");
-
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomeScreen()));
-                } else {
-                  print("Error");
-                }
-
-                //This callback would gets called when verification is done automaticlly
-              },
-              verificationFailed: (AuthException exception) {
-                print(exception.toString());
-              },
-              codeSent: (String verificationId, [int forceResendingToken]) {
-                showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text("Give the code?"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            TextField(
-                              controller: _codeController,
-                            ),
-                          ],
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text("Confirm"),
-                            textColor: Colors.white,
-                            color: Colors.blue,
-                            onPressed: () async {
-                              final code = _codeController.text.trim();
-                              AuthCredential credential = PhoneAuthProvider.getCredential(
-                                  verificationId: verificationId,
-                                  smsCode: code);
-
-                              AuthResult result = await _auth.signInWithCredential(credential);
-
-                              FirebaseUser user = result.user;
-
-                              if (user != null) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen(
-
-                                        )));
-                              } else {
-                                print("Error");
-                              }
-                            },
-                          )
-                        ],
-                      );
-                    });
-              },
-              codeAutoRetrievalTimeout: null);
-        }
-      } on SocketException catch (_) {
-        print('not connected');
-        AuxiliaryClass.showToast("check your internet connection");
-      }
-
-
+  Future<Null> validate(StateSetter updateState) async {
+    print("in validate : ${_phoneNumberController.text.length}");
+    if (_phoneNumberController.text.length == 11) {
+      updateState(() {
+        isValid = true;
+      });
+    }
   }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StatefulBuilder(builder:  (BuildContext context, StateSetter state){
+      return Scaffold(
         key: globalKey,
         body: SingleChildScrollView(
           child: Container(
@@ -156,49 +70,84 @@ class LoginScreen extends StatelessWidget {
                     height: 16,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: _phoneNumberController,
+                    autofocus: true,
+                    onChanged: (text) {
+                      validate(state);
+                    },
                     decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Colors.grey[200])),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
-                            borderSide: BorderSide(color: Colors.grey[300])),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                        hintText: "Mobile Number"),
-                    controller: _phoneController,
-                  ),
-                  SizedBox(
-                    height: 16,
+                      labelText: "11 digit mobile number",
+                      prefix: Container(
+                        padding: EdgeInsets.all(4.0),
+                        child: Text(
+                          "+880",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    autovalidate: true,
+                    autocorrect: false,
+                    maxLengthEnforced: true,
+                    validator: (value) {
+                      return !isValid
+                          ? 'Please provide a valid 11 digit phone number'
+                          : null;
+                    },
                   ),
                   Container(
-                    width: double.infinity,
-                    child: FlatButton(
-                      child: Text("LOGIN"),
-                      textColor: Colors.white,
-                      padding: EdgeInsets.all(16),
-                      onPressed: () {
-                        String phone = _phoneController.text.trim();
-                        final username = _usernameController.text.trim();
-                        print(phone);
-                        print(username);
-
-                        if (phone.isEmpty || username.isEmpty) {
-                          CustomException.ExceptionHandeling(1);
-                        } else {
-
-                            loginUser("+88" + phone, username, context);
-
-
-                        }
-                      },
-                      color: Colors.blue,
+                    padding: EdgeInsets.all(16),
+                    child: Center(
+                      child: SizedBox(
+                        width:  MediaQuery.of(context).size.width * 0.85,
+                        child: RaisedButton(
+                          color: !isValid
+                              ? Theme.of(context)
+                              .primaryColor
+                              .withOpacity(0.5)
+                              : Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(0.0)),
+                          child: Text(
+                            !isValid
+                                ? "ENTER PHONE NUMBER"
+                                : "CONTINUE",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: () {
+                            if (isValid) {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        OTPScreen(
+                                          mobileNumber:
+                                          _phoneNumberController.text,username: _usernameController.text,
+                                        ),
+                                  ));
+                            } else {
+                              validate(state);
+                            }
+                          },
+                          padding: EdgeInsets.all(16.0),
+                        ),
+                      ),
                     ),
                   )
                 ],
               ),
             ),
           ),
-        ));
+        ),
+      );
+    }
+
+    );
   }
 }
