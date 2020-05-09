@@ -8,7 +8,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:488968975882:android:f9c70640cc523e6fee51f3",
+        "mobilesdk_app_id": "1:488968975882:android:7ff7299cec3d2a79ee51f3",
         "android_client_info": {
           "package_name": "com.example.sharee"
         }
@@ -29,7 +29,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB0Ltb8ULWZq0uiU2Jo-GVksRJTCjrT_9o"
+          "current_key": "AIzaSyBAOHhKegz2HvyyYosY37_1w5aJ8ioWceQ"
         }
       ],
       "services": {
