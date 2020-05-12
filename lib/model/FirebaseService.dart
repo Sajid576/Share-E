@@ -8,10 +8,11 @@ import 'package:share_e/Controller/YourStreamController.dart';
 class FirebaseService{
 
   //this function set/overwrites the user data corresponding to the uid
-  Future setUserData(String username,String Phone,String uid)async{
+  Future setUserData(String email,String username,String Phone,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users');
 
     return await userinfo.document(uid).setData({
+      'email':email,
       'username':username,
       'Phone':Phone,
     });
@@ -19,11 +20,12 @@ class FirebaseService{
   }
 
   //this function updates a specific field corresponding to the uid
-  Future EditUserData(String username,String uid)async{
+  Future EditUserData(String phone,String username,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users'); //instatiate the firebase
 
      userinfo.document(uid).setData({     //update the firebase with that coressponding uid
       'username':username,
+       'Phone':phone,
     },merge: true);
 
   }

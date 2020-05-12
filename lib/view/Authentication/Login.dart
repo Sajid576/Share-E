@@ -19,8 +19,9 @@ class SignInPageState extends State<SignInPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success;
-  String _userEmail;
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,17 +46,38 @@ class SignInPageState extends State<SignInPage> {
               decoration: const InputDecoration(labelText: 'Email'),
               validator: (String value) {
                 if (value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter valid email';
                 }
                 return null;
               },
             ),
             TextFormField(
+              obscureText: true,
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               validator: (String value) {
                 if (value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter valid password';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _userNameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Please enter your username';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _phoneController,
+              decoration: const InputDecoration(labelText: 'Mobile No.'),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Please enter your valid Mobile No.';
                 }
                 return null;
               },
@@ -72,18 +94,7 @@ class SignInPageState extends State<SignInPage> {
                 child: const Text('Submit'),
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                _success == null
-                    ? ''
-                    : (_success
-                    ? 'Successfully signed in ' + _userEmail
-                    : 'Sign in failed'),
-                style: TextStyle(color: Colors.red),
-              ),
-            )
+
           ],
         ),
       ),
@@ -106,12 +117,10 @@ class SignInPageState extends State<SignInPage> {
       )).user;
       if (user != null) {
         setState(() {
-          _success = true;
-          _userEmail = user.email;
-          AuxiliaryClass.showToast(_userEmail+" successfully logged in");
+          AuxiliaryClass.showToast(user.email+" successfully logged in");
         });
       } else {
-        _success = false;
+          AuxiliaryClass.showToast(user.email+" failed log in");
       }
     } on PlatformException catch (err) {
       AuxiliaryClass.showToast(err.message);
