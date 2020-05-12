@@ -1,11 +1,12 @@
 
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/view/Authentication/LoginScreen.dart';
+
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/view/UserInfo/ProfileScreen.dart';
 import 'package:share_e/view/UserRecord/YourCartList.dart';
@@ -232,16 +233,21 @@ Widget leftNavLayout(BuildContext context) {
                     "Logout",
                     style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
-                  onPressed: () {
-                    //this logout() used for erasing the session
-                    SharedPreferenceHelper.logout();
+                  onPressed: () async {
+                    final FirebaseAuth _auth = FirebaseAuth.instance;
+                    final FirebaseUser user = await _auth.currentUser();
+                    if (user == null) {
+                      Scaffold.of(context).showSnackBar(const SnackBar(
+                        content: Text('No one has signed in.'),
+                      ));
+                      return;
+                    }
 
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => LoginScreen(),
-                        ));
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(user.email + ' has successfully signed out.'),
+                    ));
+
+                    await _auth.signOut();
                   },
                 ),
 

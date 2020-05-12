@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:488968975882:android:f9c70640cc523e6fee51f3",
+        "mobilesdk_app_id": "1:488968975882:android:7ff7299cec3d2a79ee51f3",
         "android_client_info": {
           "package_name": "com.example.sharee"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "488968975882-3ilhngs85d3sa0omumdjaa5lo9asqqh5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sharee",
+            "certificate_hash": "38fc855f9c9ab5cd5a8be1f5c282dbb0c9b9a087"
+          }
+        },
         {
           "client_id": "488968975882-i8gn1t3u5lgdr026065tpg9e6lpkoddg.apps.googleusercontent.com",
           "client_type": 3
@@ -21,7 +29,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAMEf340nZPRHJYxQ28myAJ_-wyLow8WGA"
+          "current_key": "AIzaSyBAOHhKegz2HvyyYosY37_1w5aJ8ioWceQ"
         }
       ],
       "services": {
