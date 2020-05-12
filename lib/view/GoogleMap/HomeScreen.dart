@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
@@ -11,11 +9,9 @@ import 'package:share_e/Controller/YourStreamController.dart';
 import 'package:share_e/view/GoogleMap/ServiceMarkerIcon.dart';
 import 'package:share_e/Controller/GetAllSharedServiceController.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 final Color backgroundColor = Colors.white;
+
 
 class HomeScreen extends StatefulWidget {
   @override

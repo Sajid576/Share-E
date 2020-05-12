@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:share_e/main.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
-import 'package:share_e/view/Authentication/LoginScreen.dart';
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
-
+import 'package:share_e/view/Authentication/signin_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -14,43 +14,31 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   BuildContext context;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  static bool _isSignedUp=false;
+  FirebaseUser user;
 
+  void getCurrentUser() async {
+    FirebaseUser _user = await _firebaseAuth.currentUser();
+    setState(() {
+      user = _user;
+    });
+  }
   @override
   void initState() {
     super.initState();
-
+    getCurrentUser();
 
     Timer(Duration(
       milliseconds: 2000,
     ), () {
-
-      SharedPreferenceHelper.readfromlocalstorage().then((user)
-      {
-
-        print('signedup?? '+user.getsession().toString());
-
-        bool isSignedUp=  user.getsession();
-
-        setState(() {
-          _isSignedUp=isSignedUp;
-        });
-
-
-        Navigator.pop(context);
-
-        if(_isSignedUp){
-          Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen() )) ;
-        }
-        else{
-          Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen() )) ;
-        }
-
-
-
-
-      });
+      Navigator.pop(context);
+      if(user != null){
+        Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen() )) ;
+      }
+      else{
+        Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() )) ;
+      }
 
 
     }
@@ -75,13 +63,6 @@ class _SplashScreenState extends State<SplashScreen> {
       ),
     );
   }
-
-  void autoLogin() async {
-
-
-
-  }
-
 
 
 }
