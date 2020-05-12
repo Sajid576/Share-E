@@ -13,6 +13,8 @@ import 'package:share_e/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourReceivedService.dart';
 import 'package:share_e/view/UserRecord/YourSharedService.dart';
 import 'package:share_e/view/UserRecord/ShareYourServices.dart';
+import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:share_e/view/Authentication/Login.dart';
 
 
 class LeftNavDrawyer  {
@@ -236,18 +238,13 @@ Widget leftNavLayout(BuildContext context) {
                   onPressed: () async {
                     final FirebaseAuth _auth = FirebaseAuth.instance;
                     final FirebaseUser user = await _auth.currentUser();
-                    if (user == null) {
-                      Scaffold.of(context).showSnackBar(const SnackBar(
-                        content: Text('No one has signed in.'),
-                      ));
-                      return;
-                    }
 
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                      content: Text(user.email + ' has successfully signed out.'),
-                    ));
+                    AuxiliaryClass.showToast(user.email+" has successfully signed out.");
+
 
                     await _auth.signOut();
+                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() )) ;
                   },
                 ),
 

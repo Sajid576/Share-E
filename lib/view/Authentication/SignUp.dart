@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:share_e/view/Authentication/Login.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class RegisterPage extends StatefulWidget {
-  final String title = 'Registration';
+  final String title = 'Sign Up';
   @override
   State<StatefulWidget> createState() => RegisterPageState();
 }
@@ -15,14 +16,14 @@ class RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _success;
-  String _userEmail;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Center(child: Text(widget.title)),
+        backgroundColor: Colors.black,
       ),
       body: Form(
         key: _formKey,
@@ -34,17 +35,18 @@ class RegisterPageState extends State<RegisterPage> {
               decoration: const InputDecoration(labelText: 'Email'),
               validator: (String value) {
                 if (value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter the email address';
                 }
                 return null;
               },
             ),
             TextFormField(
+              obscureText: true,
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               validator: (String value) {
                 if (value.isEmpty) {
-                  return 'Please enter some text';
+                  return 'Please enter a password with more than 5 digits';
                 }
                 return null;
               },
@@ -61,14 +63,7 @@ class RegisterPageState extends State<RegisterPage> {
                 child: const Text('Submit'),
               ),
             ),
-            Container(
-              alignment: Alignment.center,
-              child: Text(_success == null
-                  ? ''
-                  : (_success
-                  ? 'Successfully registered ' + _userEmail
-                  : 'Registration failed')),
-            )
+
           ],
         ),
       ),
@@ -93,13 +88,15 @@ class RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text,
       )).user;
       if (user != null) {
-        setState(() {
-          _success = true;
-          _userEmail = user.email;
-         
-        });
+
+
+        AuxiliaryClass.showToast(user.email+" is successfully signed up");
+
+        Navigator.pop(context);
+        Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() ));
+
       } else {
-        _success = false;
+        AuxiliaryClass.showToast(user.email+" failed signed up");
       }
     } on PlatformException catch (err) {
         AuxiliaryClass.showToast(err.message);

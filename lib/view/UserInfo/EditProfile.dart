@@ -54,8 +54,8 @@ class _EditprofileState extends State<Editprofile> {
                       uid = "O13DYw7p94dj3AExf8D7g77rfC72";
                       print("uid ta" + uid);
 
-                      FirebaseService().EditUserData(username,uid);
-                      SharedPreferenceHelper.updateLocalData(username);
+                     // FirebaseService().EditUserData(username,uid);
+                      //SharedPreferenceHelper.updateLocalData(username);
 
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => ProfileScreen()));

@@ -4,7 +4,7 @@ import 'package:share_e/main.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
-import 'package:share_e/view/Authentication/signin_page.dart';
+import 'package:share_e/view/Authentication/Login.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
