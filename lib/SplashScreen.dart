@@ -34,12 +34,12 @@ class _SplashScreenState extends State<SplashScreen> {
     ), () {
       Navigator.pop(context);
       if(user != null){
+
         Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen() )) ;
       }
       else{
-        Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() )) ;
+        Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen() )) ;
       }
-
 
     }
     );

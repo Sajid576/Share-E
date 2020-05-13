@@ -33,9 +33,10 @@ class SharedPreferenceHelper{
    var username=prefs.getString('username')??'';
    var session = prefs.getBool('session')?? false;
    var uid = prefs.getString('uid')??'';
+   var email = prefs.getString('email')??'';
 
 
-   Userprofiledetails userprofile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session);
+   Userprofiledetails userprofile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session,email: email);
     return userprofile;
   }
 

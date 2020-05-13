@@ -3,7 +3,8 @@ class Userprofiledetails{
     var username;
     var uid;
     var session;
-    Userprofiledetails({this.phone,this.username,this.uid,this.session});
+    var email;
+    Userprofiledetails({this.phone,this.username,this.uid,this.session,this.email});
     getphone(){
       return phone;
     }
@@ -18,6 +19,9 @@ class Userprofiledetails{
 
     getsession(){
       return session;
+    }
+    getemail(){
+      return email;
     }
 
 }

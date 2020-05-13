@@ -13,6 +13,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   var _profile_username;
   var _profile_phone_no;
+  var _profile_email;
 
   // activity jokon first initiate hoy tokhon initstate call hoy and runs only once the activity created
   void initState(){
@@ -25,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
      setState(() {
        _profile_phone_no=user.getphone();
        _profile_username = user.getusername();
+       _profile_email = user.getemail();
        print("edit er uname"+_profile_username);
      });
 
@@ -118,6 +120,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     title: Text(
                       "$_profile_phone_no",
+                      style:
+                      TextStyle( fontSize: 20.0),
+                    ),
+                  )),
+              Card(
+                  color: Colors.white,
+                  margin:
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.mail,
+                      color: Colors.teal[900],
+                    ),
+                    title: Text(
+                      "$_profile_email",
                       style:
                       TextStyle( fontSize: 20.0),
                     ),

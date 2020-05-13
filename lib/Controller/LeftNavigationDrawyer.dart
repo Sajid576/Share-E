@@ -244,7 +244,7 @@ Widget leftNavLayout(BuildContext context) {
 
                     await _auth.signOut();
                     Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() )) ;
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen() )) ;
                   },
                 ),
 

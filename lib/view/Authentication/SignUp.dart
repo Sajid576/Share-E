@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
+import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/Authentication/Login.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -16,6 +18,8 @@ class RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
 
   @override
@@ -32,7 +36,11 @@ class RegisterPageState extends State<RegisterPage> {
           children: <Widget>[
             TextFormField(
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: InputDecoration(
+                hintText: 'Email',
+                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+              ),
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'Please enter the email address';
@@ -43,10 +51,36 @@ class RegisterPageState extends State<RegisterPage> {
             TextFormField(
               obscureText: true,
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration:InputDecoration( hintText: 'password',
+                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),),
               validator: (String value) {
                 if (value.isEmpty) {
                   return 'Please enter a password with more than 5 digits';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _userNameController,
+              decoration: InputDecoration( hintText: 'username',
+                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),),
+              validator: (String value) {
+                if (value.isEmpty) {
+                  return 'Please enter your username';
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _phoneController,
+              decoration:  InputDecoration( hintText: 'mobile no',
+                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),),
+              validator: (String value) {
+                if (value.isEmpty&&value.length!=11) {
+                  return 'Please enter your valid Mobile No.';
                 }
                 return null;
               },
@@ -60,7 +94,7 @@ class RegisterPageState extends State<RegisterPage> {
                     _register();
                   }
                 },
-                child: const Text('Submit'),
+                child: const Text('Register'),
               ),
             ),
 
@@ -84,16 +118,16 @@ class RegisterPageState extends State<RegisterPage> {
   void _register() async {
     try {
       final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       )).user;
       if (user != null) {
-
-
+        SharedPreferenceHelper.setLocalData(_emailController.text.trim(), _userNameController.text.trim(), _phoneController.text.trim(), user.uid);
+        FirebaseService().setUserData(_emailController.text.trim(), _userNameController.text.trim(), _phoneController.text.trim(), user.uid);
         AuxiliaryClass.showToast(user.email+" is successfully signed up");
 
         Navigator.pop(context);
-        Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() ));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen() ));
 
       } else {
         AuxiliaryClass.showToast(user.email+" failed signed up");
