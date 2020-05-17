@@ -3,7 +3,13 @@ class Userprofiledetails{
     var username;
     var uid;
     var session;
-    Userprofiledetails({this.phone,this.username,this.uid,this.session});
+    var myChatList;
+
+    Userprofiledetails({this.phone,this.username,this.uid,this.session,this.myChatList});
+    getMyChatList()
+    {
+      return myChatList;
+    }
     getphone(){
       return phone;
     }
