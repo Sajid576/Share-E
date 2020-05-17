@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -26,10 +27,10 @@ class _LoginScreenState extends State<LoginScreen > {
         title: Center(child: Text('Sign In')),
         backgroundColor: Colors.black,
       ),
-      body: SingleChildScrollView(
-
-        child: SafeArea(
-          child: Container(
+      body: ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          Container(
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
                 begin: Alignment.centerLeft,
@@ -39,18 +40,20 @@ class _LoginScreenState extends State<LoginScreen > {
               ),
             ),
             height: MediaQuery.of(context).size.height,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.only(top: 150.0, bottom: 50.0),
-                    child: Center(
-                      child: new Column(
+            child: Center(
+              child: Form(
+                key: _formKey,
+                child:
+                    Container(
+                      //margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            height: 128.0,
-                            width: 128.0,
+                            height: MediaQuery.of(context).size.height*.15,
+                            width: MediaQuery.of(context).size.width*.25,
                             child: new CircleAvatar(
                               backgroundColor: Colors.transparent,
                               foregroundColor: Colors.white,
@@ -72,180 +75,133 @@ class _LoginScreenState extends State<LoginScreen > {
                               //image: DecorationImage(image: this.logo)
                             ),
                           ),
-                          new Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: new Text(
-                              "Share-E",
-                              style: TextStyle(color:Colors.white),
+                          Text(
+                            'Share-E',style: TextStyle(color: Colors.white),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            // margin:  EdgeInsets.only(left: 40.0, right: 40.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    color:Colors.white,
+                                    width: 0.5,
+                                    style: BorderStyle.solid),
+                              ),
                             ),
-                          )
+                            //padding:  EdgeInsets.only(left: 0.0, right: 10.0),
+                            child: TextFormField(
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.alternate_email,
+                                  color: Colors.white,),
+                                hintText: 'Email',
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                                // border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+                              ),
+                              validator: (String value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter the email address';
+                                }
+                                return null;
+                              },
+                            ),
+
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            //margin:  EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    color: Colors.white,
+                                    width: 0.5,
+                                    style: BorderStyle.solid),
+                              ),
+                            ),
+                            //padding:  EdgeInsets.only(left: 0.0, right: 10.0),
+                            child: TextFormField(
+                              controller: _passwordController,
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.lock_open,
+                                  color: Colors.white,),
+                                hintText: 'password',
+                                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                                // border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+                              ),
+                              validator: (String value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter a password with more than 5 digits';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            alignment: Alignment.center,
+                            child:  FlatButton(
+                              //padding: EdgeInsets.all( 10,),
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  _signInWithEmailAndPassword();
+                                }
+                              },
+                              child: Text('Login',style: TextStyle(color: Colors.white.withOpacity(0.5))),
+                            ),
+                          ),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            alignment: Alignment.center,
+                            child: FlatButton(
+                              //padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                              //color: Colors.transparent,
+                              onPressed: () => {},
+                              child:  Text(
+                                "Forgot your password?",
+                                style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                              ),
+                            ),
+                          ),
+
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            alignment: Alignment.center,
+                            child: FlatButton(
+                              // padding: const EdgeInsets.all(10),
+                              // color: Colors.transparent,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => RegisterPage()),
+                                );
+                              },
+                              child: Text(
+                                "Don't have an account? Create One",
+                                style: TextStyle(color: Colors.white.withOpacity(0.5)),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  new Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 40.0, right: 40.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color:Colors.white,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        new Padding(
-                          padding:
-                          EdgeInsets.only(top: 10.0, bottom: 10.0, right: 00.0),
-                          child: Icon(
-                            Icons.alternate_email,
-                            color: Colors.white,
-                          ),
-                        ),
-                        new Expanded(
-                          child:  TextFormField(
-                            controller: _emailController,
-                            decoration: const InputDecoration(labelText: 'Email'),
-                            validator: (String value) {
-                              if (value.isEmpty) {
-                                return 'Please enter valid email';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  new Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                            color: Colors.white,
-                            width: 0.5,
-                            style: BorderStyle.solid),
-                      ),
-                    ),
-                    padding: const EdgeInsets.only(left: 0.0, right: 10.0),
-                    child: new Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        new Padding(
-                          padding:
-                          EdgeInsets.only(top: 10.0, bottom: 10.0, right: 00.0),
-                          child: Icon(
-                            Icons.lock_open,
-                            color: Colors.white,
-                          ),
-                        ),
-                        new Expanded(
-                          child:   TextFormField(
-                            obscureText: true,
-                            controller: _passwordController,
-                            decoration: const InputDecoration(labelText: 'Password'),
-                            validator: (String value) {
-                              if (value.isEmpty) {
-                                return 'Please enter valid password';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  new Container(
-                    color: Colors.green[600],
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 20.0),
-                    alignment: Alignment.center,
-                    child: new Row(
-                      children: <Widget>[
-                        new Expanded(
-                          child: new RaisedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                _signInWithEmailAndPassword();
-                              }
-                            },
-                            child: const Text('Submit'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  new Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
-                    alignment: Alignment.center,
-                    child: new Row(
-                      children: <Widget>[
-                        new Expanded(
-                          child: new FlatButton(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20.0, horizontal: 20.0),
-                            color: Colors.transparent,
-                            onPressed: () => {},
-                            child: Text(
-                              "Forgot your password?",
-                              style: TextStyle(color: Colors.white.withOpacity(0.5)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  new Expanded(
-                    child: Divider( color: Colors.white,
-                    height: 10,
-                    thickness: 4,
-                    indent: 20,
-                    endIndent: 0,),
-
-                  ),
-
-                  new Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.only(left: 40.0, right: 40.0, bottom: 80.0),
-                    alignment: Alignment.center,
-                    child: new Row(
-                      children: <Widget>[
-                        new Expanded(
-                          child: new FlatButton(
-                            padding: const EdgeInsets.all(10),
-                            color: Colors.transparent,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => RegisterPage()),
-                              );
-                            },
-                            child: Text(
-                              "Don't have an account? Create One",
-                              style: TextStyle(color: Colors.white.withOpacity(0.5)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ),
             ),
           ),
-        ),
+        ],
+
+
       ),
     );
   }

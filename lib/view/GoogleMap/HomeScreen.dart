@@ -178,7 +178,6 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
                         InkWell(
                           child: Icon(Icons.menu, color: Colors.black,size: 35,),
                           onTap: () {
-
                             setState(() {
                               if(rightnavState.isCollapsed)
                               {
