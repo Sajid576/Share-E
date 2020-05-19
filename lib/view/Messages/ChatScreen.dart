@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:share_e/Controller/MessageController.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,9 +31,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
     //this stream controller update the UI whenever a new list of messages will arrive.Technically when a new message
     //is sent by other user this stream controller will update the UI with new set of messages in realtime
-    MessageController.inboxController.stream.listen((inboxList) {
 
-      this.inboxList=inboxList;
+    MessageController.inboxController.stream.listen((inboxList) {
+      if(inboxList!=null)
+        {
+          this.inboxList=inboxList;
+        }
+
       setState(() {
       });
     });
@@ -40,12 +46,14 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
   }
 
 
-  Widget messageLayout()
+  List<Widget> messageLayout()
   {
 
+    List<Widget> messageWidgets=new List<Widget>();
     for(var i=0;i<inboxList.length;i++)
       {
             var messageMapping=inboxList[i];
@@ -54,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
             if(uName==widget.username)
               {
                 //container for other user messages
-                return Align(
+                messageWidgets.add( Align(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -74,17 +82,17 @@ class _ChatScreenState extends State<ChatScreen> {
                       //paste it
 
                       SizedBox(height: 4,),
-                      Text(messageMapping['createdAt'], style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.grey)),)
+                      Text(DateFormat('kk:mm:ss \n EEE d MMM').format(messageMapping['createdAt'].toDate()), style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.grey)),)
 
                     ],
                   ),
                   alignment: Alignment.bottomLeft,
-                );
+                ));
               }
             else
               {
                 //Container my messages
-                return Align(
+                messageWidgets.add( Align(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -104,14 +112,16 @@ class _ChatScreenState extends State<ChatScreen> {
                       //paste it
 
                       SizedBox(height: 4,),
-                      Text(messageMapping['createdAt'], style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.grey)),)
+                      Text(DateFormat('kk:mm:ss \n EEE d MMM').format(messageMapping['createdAt'].toDate()), style: GoogleFonts.roboto(textStyle: TextStyle(color: Colors.grey)),)
 
                     ],
                   ),
                   alignment: Alignment.bottomRight,
-                );
+                ));
               }
       }
+
+    return messageWidgets;
   }
 
   @override
@@ -159,14 +169,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   padding: EdgeInsets.all(16),
                   child: SingleChildScrollView(
                     child: Column(
-                      children: <Widget>[
+                      children:  messageLayout(),
                         //Text("", style: GoogleFonts.roboto(textStyle: TextStyle(color: appStyleMode.primaryTextColor, fontWeight: FontWeight.w500)),),
 
-                        SizedBox(height: 32,),
-                        messageLayout(),
-                        SizedBox(height: 32,),
+                        //SizedBox(height: 32,),
 
-                      ],
+                        //SizedBox(height: 32,),
+
+
                     ),
                   ),
                 );
@@ -206,6 +216,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   icon: Icon(Icons.send, color: Colors.blue,),
                   onPressed: ()
                   {
+
                         var content=messageController.text;
 
                         DateTime currentPhoneDate = DateTime.now(); //DateTime
@@ -213,9 +224,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate); //To TimeStamp
 
                         //DateTime myDateTime = myTimeStamp.toDate(); // TimeStamp to DateTime
-
+                        print("Pressed!!!"+myTimeStamp.toString()+"---"+content);
                         MessageController.requestSendText(widget.chatRoomId, myTimeStamp,content, widget.myUsername);
-
+                        messageController.text="";
                    },
 
                 ),

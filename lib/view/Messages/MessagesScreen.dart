@@ -182,7 +182,7 @@ class _MessageScreenState extends State<MessageScreen >  {
                               ),
                               contentPadding: EdgeInsets.all(8),
                               title: Text(snapshot.data[index] ,style:TextStyle(color: Colors.black ,fontWeight: FontWeight.bold,fontSize: 20),),
-                              subtitle: Text("New Message",style:TextStyle(color: Colors.red),),
+                              //subtitle: Text("New Message",style:TextStyle(color: Colors.red),),
 
                             ),
                             //passing username to the createChatRoom()

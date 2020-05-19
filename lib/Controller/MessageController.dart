@@ -24,18 +24,7 @@ class MessageController extends ChangeNotifier
   switchMode()
   {
 
-    if(mode == 0){
-      //if it is light mode currently switch to dark
-      primaryBackgroundColor = Colors.grey[900];
 
-      mode = 1;
-    }
-    else{
-      //if it is dark mode currently switch to light
-      primaryBackgroundColor = Colors.grey[100];
-
-      mode = 0;
-    }
 
     notifyListeners();
 
