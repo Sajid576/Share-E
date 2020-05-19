@@ -23,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   LeftNavDrawyer leftnavState;
   RightNavDrawyer rightnavState;
 
+  ServiceMarkerIcon serviceIcons=new ServiceMarkerIcon.init();
+
 
   @override
   void initState() {
@@ -45,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
     rightnavState=RightNavDrawyer(rightController);
     rightnavState.setNavDrawyerObject(rightnavState);
 
-    ServiceMarkerIcon service_icons=new ServiceMarkerIcon();
+
+
     GetAllSharedServiceController.AllServicedataController.stream.listen((list) {
 
 
@@ -58,14 +61,9 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
           var geo=  values["geo"];
           var lat=geo.latitude;
           var lon=geo.longitude;
+          var icon=ServiceMarkerIcon.getMarkerIcon(serviceProductType);
 
-
-          //*****Check this issues
-          //var icon=service_icons.getMarkerIcon(serviceProductType);
-          googleMapView.setServiceMarker(serviceId, lat, lon, serviceProductType, serviceProductName,doc);
-
-
-
+          googleMapView.setServiceMarker(serviceId, lat, lon, serviceProductType, serviceProductName,doc,icon);
 
       });
 
@@ -192,6 +190,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
                               rightnavState.isCollapsed = !rightnavState.isCollapsed;
                               //just reversing it to false
                             });
+
                           },
                         ),
 
@@ -230,11 +229,4 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
       ),
     );
   }
-
-
-
-
-
-
-
 }

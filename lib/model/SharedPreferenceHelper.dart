@@ -26,16 +26,30 @@ class SharedPreferenceHelper{
     //prefs1.setBool('session', true);
 
   }
-   //read purpose
+  static setChatRoomId(myUid,uId) async
+  {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      String newChatRoomId=myUid+"_"+uId;
+      var myChatList = prefs.getStringList('chatRoomList')??[];
+      print("myStringList: "+myChatList.toString());
+      myChatList.add(newChatRoomId);
+      print("myStringList: "+myChatList.toString());
+      prefs.setStringList('chatRoomList',myChatList );
+
+
+  }
+
+   //read user details
   static Future<Userprofiledetails> readfromlocalstorage()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
    var phone = prefs.getString('phone') ??'';
    var username=prefs.getString('username')??'';
    var session = prefs.getBool('session')?? false;
    var uid = prefs.getString('uid')??'';
+   var myChatList = prefs.getStringList('chatRoomList')??[];
 
-
-   Userprofiledetails userprofile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session);
+    Userprofiledetails userprofile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session,myChatList:myChatList);
     return userprofile;
   }
 

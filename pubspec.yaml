@@ -54,6 +54,9 @@ dependencies:
   #Date-Time picker package
   datetime_picker_formfield: ^1.0.0
 
+  #DateFormat package
+  intl: ^0.16.1
+
   #library for checking internet connectivity
   connectivity: ^0.4.6+2
 
@@ -90,6 +93,7 @@ flutter:
     - assets/splash.png
     - assets/medicine_ico.png
     - assets/book_ico.png
+    - assets/person.png
     #  - assets/vehicle_ico.png
     #  - assets/parking_ico.png
     #  - assets/house_ico.png

@@ -12,10 +12,13 @@ class ServiceMarkerIcon{
   static var _parkingMarkerIcon;
   static var _mechanicMarkerIcon;
 
-  ServiceMarkerIcon()
+
+  ServiceMarkerIcon.init()
   {
-    setMarkerIcon();
+      setMarkerIcon();
+      print("Service marker set");
   }
+
   void setMarkerIcon() async
   {
     _bookMarkerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/book_ico.png');
@@ -27,7 +30,7 @@ class ServiceMarkerIcon{
     _mechanicMarkerIcon=await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/mechanic_ico.png');
   }
 
-  getMarkerIcon(String service)
+  static getMarkerIcon(String service)
   {
     service=service.trim();
     print("Service: "+service);

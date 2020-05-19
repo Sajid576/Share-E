@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 class YourStreamController
 {
@@ -7,7 +8,7 @@ class YourStreamController
 
 
   //used to stream data in CartList
-  static StreamController<dynamic> CartListstreamController = new StreamController<dynamic>();
+  static StreamController<dynamic> CartListstreamController = new BehaviorSubject();
 
 
 }
