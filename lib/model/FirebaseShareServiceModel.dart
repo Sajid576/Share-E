@@ -21,7 +21,7 @@ class FirebaseShareServiceModel
     map['service_product_expdate']=medicineExpDate;
     map['price']=medicinePrice;
     docReference.setData(map).then((doc) {
-
+     //service id <- auth id
       userinfo.document(docReference.documentID).setData({
         'service_id': docReference.documentID,
       },merge: true).then((value) => CustomException.ExceptionHandeling(2));

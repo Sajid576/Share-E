@@ -302,11 +302,6 @@ class _AllSharedServiceDetailState extends State<AllSharedServiceDetail> {
               ),
             ),
 
-
-
-
-
-
           ],
         ),
       ) ,

@@ -140,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen > {
                                 }
                                 return null;
                               },
+                              obscureText: true,
                             ),
                           ),
                           SizedBox(
@@ -224,7 +225,7 @@ class _LoginScreenState extends State<LoginScreen > {
 
           AuxiliaryClass.showToast(user.email+" successfully logged in");
           Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen() ));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen(uid: user.uid,) ));
 
         });
       } else {

@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 import 'package:share_e/Controller/RightNavigationDrawyer.dart';
+import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
 import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
@@ -9,26 +11,59 @@ import 'package:share_e/Controller/YourStreamController.dart';
 import 'package:share_e/view/GoogleMap/ServiceMarkerIcon.dart';
 import 'package:share_e/Controller/GetAllSharedServiceController.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/firebase.dart';
 
 final Color backgroundColor = Colors.white;
 
-
 class HomeScreen extends StatefulWidget {
+  final String uid;
+
+  // receive data from the FirstScreen as a parameter
+  HomeScreen({Key key, @required this.uid}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
-
+const String spKey = 'myBool';
 class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   GoogleMapView googleMapView;
   LeftNavDrawyer leftnavState;
   RightNavDrawyer rightnavState;
-
+  SharedPreferences sharedPreferences;
+  bool _testValue;
 
   @override
   void initState() {
     super.initState();
 
+    SharedPreferences.getInstance().then((SharedPreferences sp) {
+      sharedPreferences = sp;
+      _testValue = sharedPreferences.getBool(spKey);
+      // will be null if never previously saved
+      if (_testValue == null) {
+        _testValue = false;
+        persist(_testValue); // set an initial value
+      }
+      setState(() async{
+        Future <void> readdata(uid)async{
+          var query = await Firestore.instance.collection('users').document(uid);
+          query.get().then((datasnapshot) {
+            if (datasnapshot.exists) {
+              setState(() {
+                SharedPreferenceHelper.setLocalData(datasnapshot.data['email'],datasnapshot.data['username'], datasnapshot.data['Phone'],uid);
+              });
 
+            }
+            else{
+              print("No such user");
+            }
+
+          });
+        }
+
+      });
+    });
     //initializing the google map interface with initial location and markers
     googleMapView= new GoogleMapView.init(true);
 
@@ -85,6 +120,12 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
 
 
 
+  }
+  void persist(bool value) {
+    setState(() {
+      _testValue = value;
+    });
+    sharedPreferences?.setBool(spKey, value);
   }
 
 
@@ -219,8 +260,6 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
                       ],
                     ),
                   ),
-
-
                 ],
               ),
             ),
@@ -229,11 +268,4 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
       ),
     );
   }
-
-
-
-
-
-
-
 }
