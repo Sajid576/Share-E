@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share_e/Controller/MessageController.dart';
 import 'package:share_e/model/ChatModel.dart';
-import 'package:share_e/view/Messages/MessagesNotifier.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -16,78 +15,107 @@ class MessageScreen  extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen >  {
 
-  String myUid="";
-  var chatRoomIdList=[];
-  var othersUid=[];
 
-  getChatRoomId(String uid,String myUid)
+  String myUsername="";
+  var chatRoomIdList=[];
+  var othersUsernameList=[];
+
+  checkChatRoom(String uid,String myUid)
   {
         String chatRoomId1=uid+"_"+myUid;
         String chatRoomId2=myUid+"_"+uid;
 
         //by default chatRoomId value is chatRoomId1
         String chatRoomId=chatRoomId1;
+        var exists=false;
 
-         for(var i=0;i<chatList.length;i++)
+         for(var i=0;i<chatRoomIdList.length;i++)
          {
-             if(chatRoomId1.contains(chatList[i]))
+             if(chatRoomId1.contains(chatRoomIdList[i]))
              {
                     chatRoomId=chatRoomId1;
-                    return chatRoomId;
+                    exists=true;
+                    break;
+
              }
-             if(chatRoomId2.contains(chatList[i]))
+             if(chatRoomId2.contains(chatRoomIdList[i]))
              {
                     chatRoomId=chatRoomId2;
-                    return chatRoomId;
+                    exists=true;
+                    break;
+
              }
          }
 
-        return chatRoomId;
+         Map<String,dynamic>chatMap=Map();
+         chatMap['chatRoomId']=chatRoomId;
+         chatMap['exists']=exists;
+
+         return chatMap;
 
   }
 
-  createChatRoom(BuildContext context,DocumentSnapshot msg,String uid)
+  createChatRoom(BuildContext context,String username)
   {
 
-        var chatRoomId = getChatRoomId(uid,myUid);
-        MessageController.setRequestInboxController(chatRoomId);
 
+        var chatMap = checkChatRoom(username,myUsername);
+        var chatRoomId=chatMap['chatRoomId'];
+        if(chatMap['exists'])
+          {
+              MessageController.requestFetchConversationsController(chatRoomId);
+          }
+        else
+          {
+             //if the chat room doesn't exist ,request for creating new chat Room
+
+             MessageController.requestCreateNewInboxController(chatRoomId);
+
+          }
+
+        navigateToChatScreenPage(context,username,myUsername,chatRoomId);
 
   }
-
+  navigateToChatScreenPage(BuildContext context,String username,String myUsername,String chatRoomId)
+  {
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>
+        ChatScreen(username,myUsername,chatRoomId))
+    );
+  }
   @override
   void initState() {
     super.initState();
 
-
-
     SharedPreferenceHelper.readfromlocalstorage().then((user) {
           //fetch uid from local storage
           //myUid=user.getuid();
-          myUid="6FViFtOTqTgoZ9IMv3nMOqAXuqM2";
+          myUsername="Sajid576";
 
           //fetch list of chatRoomId from local storage
-          chatRoomIdList= user.myChatList();
+          //chatRoomIdList= user.myChatList();
+          chatRoomIdList.add("Sajid576_sajju");
+
           for(var i=0;i<chatRoomIdList.length;i++)
             {
                var chatRoomId=chatRoomIdList[i];
                chatRoomId=chatRoomId.trim();
 
-               var uidPair=chatRoomId.split("_");
-               var uid1=uidPair[0];
-               var uid2=uidPair[1];
+               var usernamePair=chatRoomId.split("_");
+               var username1=usernamePair[0];
+               var username2=usernamePair[1];
 
-               if(myUid==uid1)
+               if(myUsername==username1)
                {
-                 othersUid.add(uid2);
+                 othersUsernameList.add(username2);
                }
-               if(myUid==uid2)
+               if(myUsername==username2)
                {
-                 othersUid.add(uid1);
+                 othersUsernameList.add(username1);
                }
 
             }
-            MessageController.messagesController.add(othersUid);
+            MessageController.userMessageListController.add(othersUsernameList);
+
 
 
     });
@@ -99,23 +127,22 @@ class _MessageScreenState extends State<MessageScreen >  {
     super.dispose();
   }
 
-  navigateToDetailPage(BuildContext context,DocumentSnapshot msg)
-  {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>
-        ChatScreen(messages:msg ,))
-    );
-  }
+
   @override
   Widget build(BuildContext context) {
-    final appStyleMode = Provider.of<MessagesNotifier>(context);
+    final appStyleMode = Provider.of<MessageController>(context);
     return Scaffold(
       backgroundColor: appStyleMode.primaryBackgroundColor,
+      appBar: AppBar(
+        title: Center(child: Text("Messages")),
+        backgroundColor: Colors.black,
+      ),
       body: SafeArea(
         child: Container(
           color: Colors.grey[400],
 
           child: StreamBuilder(
-              stream: MessageController.messagesController.stream,
+              stream: MessageController.userMessageListController.stream,
               builder: (_, snapshot) {
                 //snapshot has all the array data
 
@@ -135,27 +162,31 @@ class _MessageScreenState extends State<MessageScreen >  {
                       return Card(
                         color: Colors.white,
                         child: Padding(
-                          padding: const EdgeInsets.only(left:10 ,top: 5, right: 10 ,bottom: 5),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                               child:ClipOval(
-                                  child:dp!=null ? CachedNetworkImage(
-                                    width: 100,
-                                    height: 100,
-                                    imageUrl:dp,
-                                    placeholder: (context, url) => CircularProgressIndicator(),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
-                                  ) : new Image(
-                                      image: new AssetImage('assets/person.png'),
-                                      width:100,
-                                      height:100,
-                                  ),
+                          padding: const EdgeInsets.only(left:0 ,top: 5, right: 10 ,bottom: 5),
+                          child: GestureDetector(
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                 child:ClipOval(
+                                    child:dp!=null ? CachedNetworkImage(
+                                      width: 100,
+                                      height: 100,
+                                      imageUrl:dp,
+                                      placeholder: (context, url) => CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) => Icon(Icons.error),
+                                    ) : new Image(
+                                        image: new AssetImage('assets/person.png'),
+                                        width:100,
+                                        height:100,
+                                    ),
+                                ),
                               ),
+                              contentPadding: EdgeInsets.all(8),
+                              title: Text(snapshot.data[index] ,style:TextStyle(color: Colors.black ,fontWeight: FontWeight.bold,fontSize: 20),),
+                              subtitle: Text("New Message",style:TextStyle(color: Colors.red),),
+
                             ),
-                            //contentPadding: EdgeInsets.all(8),
-                            title: Text(snapshot.data[index].data["uid"]),
-                            //subtitle: Text(snapshot.data[index].data["service_product_name"]),
-                            onTap: () => createChatRoom(context, snapshot.data[index],snapshot.data[index].data["uid"]), //passing all data of the document to the detail page
+                            //passing username to the createChatRoom()
+                            onTap: () => createChatRoom(context, snapshot.data[index]),
                           ),
                         ),
                       );

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
+import 'package:share_e/view/Messages/MessagesScreen.dart';
 import 'package:share_e/view/UserInfo/ProfileScreen.dart';
 import 'package:share_e/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourReceivedService.dart';
@@ -192,7 +193,11 @@ Widget leftNavLayout(BuildContext context) {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
-                     
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => MessageScreen(),
+                          ));
 
 
                     }
@@ -257,6 +262,7 @@ Widget leftNavLayout(BuildContext context) {
         ),
       ),
     ),
+
   );
 }
 

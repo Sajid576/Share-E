@@ -89,12 +89,13 @@ class GoogleMapView{
     Navigator.push(context, MaterialPageRoute(builder: (context)=> AllSharedServiceDetail(sharedServices: sharedServices))
     );
   }
-  void setServiceMarker(String id,double lat,double lon,var title,var snippet,var doc)
+  void setServiceMarker(String id,double lat,double lon,var title,var snippet,var doc,var imageIcon)
   {
 
      Marker marker= Marker(
           markerId: MarkerId(id),
           position: LatLng(lat, lon),
+          icon: imageIcon,
           infoWindow: InfoWindow(
             title: title,
             snippet: snippet,
