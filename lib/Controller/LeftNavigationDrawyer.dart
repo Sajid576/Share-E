@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/view/Messages/MessagesScreen.dart';
@@ -15,10 +13,14 @@ import 'package:share_e/view/UserRecord/YourReceivedService.dart';
 import 'package:share_e/view/UserRecord/YourSharedService.dart';
 import 'package:share_e/view/UserRecord/ShareYourServices.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
-import 'package:share_e/view/Authentication/Login.dart';
+import 'package:share_e/view/Authentication/LoginScreen.dart';
+import 'package:swipedetector/swipedetector.dart';
 
 
 class LeftNavDrawyer  {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
   static Duration duration = const Duration(milliseconds: 300);
   AnimationController controller;
   bool isCollapsed = true; //at the begining it is collapsed that means only home is showing 100%
@@ -66,12 +68,14 @@ Widget leftNavLayout(BuildContext context) {
                     "Home",
                     style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    final FirebaseUser user = await _auth.currentUser();
+
                     Navigator.of(context).pop();
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => HomeScreen(),
+                          builder: (BuildContext context) => HomeScreen(user.uid),
                         ));
                   },
 
@@ -87,9 +91,8 @@ Widget leftNavLayout(BuildContext context) {
                     style: TextStyle(color:  Colors.black, fontSize: 18),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.push(
-                        context,
+                    //Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                           builder: (BuildContext context) => ProfileScreen(),
                         ));
@@ -220,19 +223,7 @@ Widget leftNavLayout(BuildContext context) {
                 SizedBox(
                   height: 18,
                 ),
-                FlatButton(
-                    disabledColor: selectedBackgroundColor,
-                    child:Text(
-                      "Account",
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }
-                ),
-                SizedBox(
-                  height: 18,
-                ),
+
 
                 FlatButton(
                   disabledColor: selectedBackgroundColor,
@@ -241,15 +232,15 @@ Widget leftNavLayout(BuildContext context) {
                     style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
                   onPressed: () async {
-                    final FirebaseAuth _auth = FirebaseAuth.instance;
+
                     final FirebaseUser user = await _auth.currentUser();
 
                     AuxiliaryClass.showToast(user.email+" has successfully signed out.");
 
 
                     await _auth.signOut();
-                    Navigator.pop(context);
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() )) ;
+                    //Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen() )) ;
                   },
                 ),
 

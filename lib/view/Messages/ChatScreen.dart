@@ -182,7 +182,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 );
               },
               initialChildSize: 1.0,
-              maxChildSize: 1.0,
+              minChildSize: 1.0,
               expand: true,
             ),
           ),

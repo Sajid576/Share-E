@@ -4,7 +4,7 @@ import 'package:share_e/main.dart';
 import 'package:flutter/material.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
-import 'package:share_e/view/Authentication/Login.dart';
+import 'package:share_e/view/Authentication/LoginScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -34,10 +34,10 @@ class _SplashScreenState extends State<SplashScreen> {
     ), () {
       Navigator.pop(context);
       if(user != null){
-        Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen() )) ;
+        Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen(user.uid) )) ;
       }
       else{
-        Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPage() )) ;
+        Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen() )) ;
       }
 
 
