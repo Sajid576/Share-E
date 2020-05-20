@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 import 'package:share_e/Controller/RightNavigationDrawyer.dart';
+import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/GoogleMap/AllSharedServices.dart';
 import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
 import 'package:share_e/AuxilaryClasshelper/UserBackgroundLocation.dart';
@@ -14,6 +16,10 @@ final Color backgroundColor = Colors.white;
 
 
 class HomeScreen extends StatefulWidget {
+  final String authUid;
+
+
+  HomeScreen(this.authUid);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -26,9 +32,31 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   ServiceMarkerIcon serviceIcons=new ServiceMarkerIcon.init();
 
 
+
+
+  checkLocalUserData()
+  {
+    SharedPreferenceHelper.readfromlocalstorage().then((user) {
+
+      //checks if there is any user data in Shared Preference.
+      //this session will return false when user uninstall the app after successfull sign up.And then user install the
+      //app and sign in . So,when there is no user data in local storage we fetch it from cloud firestore.
+      if(!user.getsession())
+        {
+                FirebaseService.readCloudUserData(widget.authUid);
+        }
+
+
+    });
+  }
   @override
   void initState() {
     super.initState();
+
+    //this function will check user details in SharedPreference.If there there is user data in Shared preference then
+    //it wont fetch anything from cloud firestore otherwise it will fetch user data from firestore and store it into
+    //SharedPreference.
+    checkLocalUserData();
 
 
     //initializing the google map interface with initial location and markers

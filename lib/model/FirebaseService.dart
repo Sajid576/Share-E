@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/Controller/GetAllSharedServiceController.dart';
 import 'package:share_e/Controller/YourStreamController.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 class FirebaseService{
 
@@ -73,8 +74,21 @@ class FirebaseService{
 
   }
 
+   //this function used for fetching user data from cloud firestore and store it into local storage(Shared Preference)
+   static readCloudUserData(uid)async{
+    var query =  Firestore.instance.collection('users').document(uid);
+    query.get().then((snapshot) {
+      if (snapshot.exists) {
 
+          SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['username'], snapshot.data['Phone'],uid);
 
+      }
+      else{
+        print("No such user");
+      }
+
+    });
+  }
 
 
 
