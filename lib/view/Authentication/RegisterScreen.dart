@@ -10,6 +10,8 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class RegisterScreen extends StatefulWidget {
   final String title = 'Sign Up';
+
+
   @override
   State<StatefulWidget> createState() => RegisterScreenState();
 }
@@ -140,7 +142,23 @@ class RegisterScreenState extends State<RegisterScreen> {
                           if (value.isEmpty) {
                             return 'Please enter your username';
                           }
-                          return null;
+                          FirebaseService.validateUsername(value);
+                          while(FirebaseService.uniqueUserName==-1)
+                          {
+
+                          }
+                          if(FirebaseService.uniqueUserName==1)
+                            {
+
+                                FirebaseService.uniqueUserName=-1;
+                                return null;
+                            }
+                          else
+                            {
+                                FirebaseService.uniqueUserName=-1;
+                                return 'Your username is already taken';
+                            }
+
                         },
                       ),
                     ),
@@ -168,9 +186,14 @@ class RegisterScreenState extends State<RegisterScreen> {
                           // border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0),),
                         ),
                         validator: (String value) {
-                          if (value.isEmpty&&value.length!=11) {
+
+                          if (value.trim().isEmpty) {
                             return 'Please enter your valid Mobile No.';
                           }
+                          if(value.trim().length!=11)
+                            {
+                              return 'Please enter the 11 digit Mobile No.';
+                            }
                           return null;
                         },
                       ),
@@ -183,6 +206,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                       alignment: Alignment.center,
                       child: RaisedButton(
                         onPressed: () async {
+
                           if (_formKey.currentState.validate()) {
                             _register();
                           }

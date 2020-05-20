@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/view/Messages/MessagesScreen.dart';
@@ -16,6 +14,7 @@ import 'package:share_e/view/UserRecord/YourSharedService.dart';
 import 'package:share_e/view/UserRecord/ShareYourServices.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/view/Authentication/LoginScreen.dart';
+import 'package:swipedetector/swipedetector.dart';
 
 
 class LeftNavDrawyer  {

@@ -11,6 +11,8 @@ import 'package:share_e/Controller/YourStreamController.dart';
 import 'package:share_e/view/GoogleMap/ServiceMarkerIcon.dart';
 import 'package:share_e/Controller/GetAllSharedServiceController.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:swipedetector/swipedetector.dart';
+
 
 final Color backgroundColor = Colors.white;
 
@@ -137,12 +139,32 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: Stack(
-        children: <Widget>[
-          rightnavState.rightNavLayout(context),
-          leftnavState.leftNavLayout(context),
-          HomeLayout(context),
-        ],
+      body: SwipeDetector(
+        onSwipeLeft: () {
+          setState(() {
+
+            if(leftnavState.isCollapsed)
+            {
+              leftnavState.controller.forward();
+            }
+            /*
+            else
+            {
+              leftnavState.controller.reverse();
+            }
+            */
+            LeftNavDrawyer.leftEnabled=!LeftNavDrawyer.leftEnabled;
+            leftnavState.isCollapsed = !leftnavState.isCollapsed;
+            //just reversing it to false
+          });
+        },
+        child: Stack(
+          children: <Widget>[
+            rightnavState.rightNavLayout(context),
+            leftnavState.leftNavLayout(context),
+            HomeLayout(context),
+          ],
+        ),
       ),
 
     );

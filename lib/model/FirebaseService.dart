@@ -8,6 +8,15 @@ import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 class FirebaseService{
 
+  //this variable denotes if the entered username is unique or not.
+  //if value is -1 then, it means variable is not set yet. if value is 0,then it means this username is already taken.
+  //if the value is 1 , then it means entered username is not taken yet.
+  static var uniqueUserName=-1;
+
+
+
+
+
   //this function set/overwrites the user data corresponding to the uid
   Future setUserData(String email,String username,String Phone,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users');
@@ -30,11 +39,42 @@ class FirebaseService{
     },merge: true);
 
   }
+  //this function used for fetching user data from cloud firestore and store it into local storage(Shared Preference)
+  static readCloudUserData(uid)async{
+    var query =  Firestore.instance.collection('users').document(uid);
+    query.get().then((snapshot) {
+      if (snapshot.exists) {
+        SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['username'], snapshot.data['Phone'],uid);
+      }
+      else{
+        print("No such user");
+      }
+
+    });
+  }
+
+  static validateUsername(username)
+  {
+    var fireStore =  Firestore.instance.collection('users');
+    fireStore.where("username",isEqualTo: username).getDocuments().then((query){
+          if(query.documents.length>0)
+            {
+                print("Username already exists");
+                uniqueUserName=0;
+            }
+          else
+            {
+              print("Username does not already exist");
+              uniqueUserName=1;
+            }
+    });
+
+  }
 
   //this function will be called from Controller
   getAllSharedServicePosts()async{
 
-          var firestore = Firestore.instance; //giving a FireBase instance
+          var firestore = Firestore.instance;
            await firestore.collection("Shared_Services").where("active",isEqualTo: 1).getDocuments().then((query){
              print("*************DATA queried: "+query.documents.length.toString());
              GetAllSharedServiceController.setAllServiceData(query.documents);
@@ -74,21 +114,6 @@ class FirebaseService{
 
   }
 
-   //this function used for fetching user data from cloud firestore and store it into local storage(Shared Preference)
-   static readCloudUserData(uid)async{
-    var query =  Firestore.instance.collection('users').document(uid);
-    query.get().then((snapshot) {
-      if (snapshot.exists) {
-
-          SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['username'], snapshot.data['Phone'],uid);
-
-      }
-      else{
-        print("No such user");
-      }
-
-    });
-  }
 
 
 
