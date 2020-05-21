@@ -23,6 +23,7 @@ class RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
+  String usernameValidator;
 
   @override
   Widget build(BuildContext context) {
@@ -139,25 +140,12 @@ class RegisterScreenState extends State<RegisterScreen> {
                           //border:OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
                         ),
                         validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          FirebaseService.validateUsername(value);
-                          while(FirebaseService.uniqueUserName==-1)
+                          if (value.isEmpty)
                           {
-
+                            usernameValidator='Please enter your username';
+                            return usernameValidator;
                           }
-                          if(FirebaseService.uniqueUserName==1)
-                            {
-
-                                FirebaseService.uniqueUserName=-1;
-                                return null;
-                            }
-                          else
-                            {
-                                FirebaseService.uniqueUserName=-1;
-                                return 'Your username is already taken';
-                            }
+                          return usernameValidator;
 
                         },
                       ),
@@ -207,6 +195,25 @@ class RegisterScreenState extends State<RegisterScreen> {
                       child: RaisedButton(
                         onPressed: () async {
 
+                          await FirebaseService.validateUsername(_userNameController.text.trim()).then((value) {
+                           setState(() {
+                             if(value==1)
+                             {
+                               usernameValidator=null;
+
+                             }
+                             else if(value==0)
+                             {
+                               usernameValidator='Your username is already taken';
+                               return;
+                             }
+
+                           });
+
+
+
+                          });
+
                           if (_formKey.currentState.validate()) {
                             _register();
                           }
@@ -238,10 +245,13 @@ class RegisterScreenState extends State<RegisterScreen> {
 
   // Example code for registration.
   void _register() async {
+
+
+
     try {
       final FirebaseUser user = (await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        password: _passwordController.text,
       )).user;
       if (user != null) {
         SharedPreferenceHelper.setLocalData(_emailController.text.trim(), _userNameController.text.trim(), _phoneController.text.trim(), user.uid);

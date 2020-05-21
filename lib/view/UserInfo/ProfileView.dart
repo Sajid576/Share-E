@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future uploadPic(BuildContext context) async{
     print("Uploading Pic");
     //final FirebaseStorage storage = FirebaseStorage(storageBucket: 'gs://shareeverything-78bb8.appspot.com');
-    FirebaseWrapper.init();
+    //FirebaseWrapper.init();
     final FirebaseStorage storage=FirebaseWrapper.storage();
 
     String fileName = basename(_image.path);
