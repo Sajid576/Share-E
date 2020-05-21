@@ -21,7 +21,7 @@ class FirebaseService{
   }
 
   //this function updates a specific field corresponding to the uid
-  Future EditUserData(String phone,String username,String uid)async{
+  static editUserData(String phone,String username,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users'); //instatiate the firebase
 
      userinfo.document(uid).setData({     //update the firebase with that coressponding uid

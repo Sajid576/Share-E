@@ -8,6 +8,7 @@ import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 
@@ -17,22 +18,38 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  //if an new image selected to change the dp then this _image variable will be initialized otherwise it will be null
   File _image;
+  //after uploading the file to firebase storage, this variable have the download URL of that image that has to be stored
+  //in cloud firestore
   String _uploadedFileURL="";
+  
+
   String username="";
   String phoneNo="";
   String email="";
+  String uid="";
 
-
+  bool editEnabled=false;
+  TextEditingController _usernameEditingController;
+  TextEditingController _phoneNoEditingController;
 
   void initState(){
     super.initState();
+
+
+
     SharedPreferenceHelper.readfromlocalstorage().then((user) {
 
       setState(() {
+        uid=user.getuid();
         phoneNo=user.getphone();
         username = user.getusername();
         email=user.getemail();
+
+        _phoneNoEditingController=TextEditingController(text: phoneNo);
+        _usernameEditingController=TextEditingController(text: username);
+
         print("username: "+username+", phone: "+phoneNo+",Email: "+email);
       });
 
@@ -116,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       alignment: Alignment.center,
                       child: CircleAvatar(
                         radius: 100,
-                        backgroundColor: Color(0xff476cfb),
+                        backgroundColor: Colors.black45,
                         child: ClipOval(
                           child: new SizedBox(
                             width: 180.0,
@@ -149,99 +166,65 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 20.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Username',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 18.0)),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(username,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
 
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Email',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 18.0)),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(email,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    child: Column(
+                      children: [
 
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Mobile',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 18.0)),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(phoneNo,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
 
-                  ],
+                        Text('Username',
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 18.0)),
+                        editEnabled? TextField(
+                          enabled: editEnabled,
+                          onChanged: (text) {
+
+                            _usernameEditingController.text = text;
+                            _usernameEditingController.selection = TextSelection.fromPosition(TextPosition(offset: _usernameEditingController.text.length));
+
+                          },
+                          controller: _usernameEditingController,
+                        ) : Text(username,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 18.0)),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text('Email',
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 18.0)),
+                        Text(email,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text('Mobile',
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 18.0)),
+                        editEnabled ? TextField(
+                          enabled: editEnabled,
+                          onChanged: (text) {
+
+                            _phoneNoEditingController.text = text;
+                            _phoneNoEditingController.selection = TextSelection.fromPosition(TextPosition(offset: _phoneNoEditingController.text.length));
+
+                          },
+                          controller: _phoneNoEditingController,
+                        ): Text(phoneNo,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 18.0)),
+
+                      ],
+                    ),
+                  ),
                 ),
+
+
 
                 SizedBox(
                   height: 20.0,
@@ -251,15 +234,32 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: <Widget>[
 
                     RaisedButton(
-                      color: Colors.black,
+                      color: editEnabled ? Colors.green : Colors.black,
                       onPressed: () {
+                        if(editEnabled)
+                          {
+                            if(_image!=null)
+                              {
+                                uploadPic(context);
+                              }
+                            if(username!=_usernameEditingController.text || phoneNo!=_phoneNoEditingController.text)
+                              {
+                                username=_usernameEditingController.text;
+                                phoneNo=_phoneNoEditingController.text;
+                                SharedPreferenceHelper.updateLocalData(phoneNo, username);
+                                FirebaseService.editUserData(phoneNo, username, uid);
+                              }
 
-                        uploadPic(context);
+                          }
+                         setState(() {
+                           editEnabled=!editEnabled;
+                         });
+
                       },
 
                       elevation: 4.0,
                       splashColor: Colors.white,
-                      child: Text('Submit', style: TextStyle(color: Colors.white, fontSize: 16.0),),
+                      child:editEnabled? Text('Save Info', style: TextStyle(color: Colors.white, fontSize: 16.0),) : Text('Edit Info', style: TextStyle(color: Colors.white, fontSize: 16.0),),
                     ),
 
                   ],

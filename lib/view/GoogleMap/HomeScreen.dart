@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   LeftNavDrawyer leftnavState;
   RightNavDrawyer rightnavState;
 
-  ServiceMarkerIcon serviceIcons=new ServiceMarkerIcon.init();
+
 
 
 
@@ -56,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   void initState() {
     super.initState();
 
+    new ServiceMarkerIcon.init();
 
     //this function will check user details in SharedPreference.If there there is user data in Shared preference then
     //it wont fetch anything from cloud firestore otherwise it will fetch user data from firestore and store it into
