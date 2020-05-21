@@ -72,7 +72,7 @@ dependencies:
   #provider
   provider: ^3.1.0+1
 
-  #package for spinner/loader
+  bitmap: ^0.0.6
 
 
 dev_dependencies:
@@ -97,10 +97,10 @@ flutter:
     - assets/medicine_ico.png
     - assets/book_ico.png
     - assets/person.png
-    #  - assets/vehicle_ico.png
-    #  - assets/parking_ico.png
-    #  - assets/house_ico.png
-    #  - assets/food_ico.png
+    - assets/vehicle_ico.png
+    - assets/parking_ico.png
+    - assets/house_ico.png
+    - assets/food_ico.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

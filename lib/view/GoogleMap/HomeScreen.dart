@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:share_e/Controller/LeftNavigationDrawyer.dart';
 import 'package:share_e/Controller/RightNavigationDrawyer.dart';
 import 'package:share_e/model/FirebaseService.dart';
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
     SharedPreferenceHelper.readfromlocalstorage().then((user) {
 
       //checks if there is any user data in Shared Preference.
-      //this session will return false when user uninstall the app after successfull sign up.And then user install the
+      //this session will return false when user uninstall the app after successful sign up.And then user install the
       //app and sign in . So,when there is no user data in local storage we fetch it from cloud firestore.
       if(!user.getsession())
         {
@@ -65,14 +66,15 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
     googleMapView= new GoogleMapView.init(true);
 
 
+    //this function request for all the Share services that are shared by users
     GetAllSharedServiceController.requestAllSharedService();
 
 
-    //instantiating left Navigation drawyer Object
+    //instantiating left Navigation drawyer Object and Animation controller for this drawyer
     AnimationController leftController=AnimationController(vsync:this ,duration: LeftNavDrawyer.duration);
     leftnavState=LeftNavDrawyer(leftController);
 
-    //instantiating right Navigation drawyer object
+    //instantiating right Navigation drawyer object and Animation controller for this drawyer
     AnimationController rightController=AnimationController(vsync:this ,duration: RightNavDrawyer.duration);
     rightnavState=RightNavDrawyer(rightController);
     rightnavState.setNavDrawyerObject(rightnavState);
@@ -91,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
           var geo=  values["geo"];
           var lat=geo.latitude;
           var lon=geo.longitude;
-          var icon=ServiceMarkerIcon.getMarkerIcon(serviceProductType);
+          BitmapDescriptor icon=ServiceMarkerIcon.getMarkerIcon(serviceProductType);
 
           googleMapView.setServiceMarker(serviceId, lat, lon, serviceProductType, serviceProductName,doc,icon);
 
@@ -139,38 +141,20 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: SwipeDetector(
-        onSwipeLeft: () {
-          setState(() {
-
-            if(leftnavState.isCollapsed)
-            {
-              leftnavState.controller.forward();
-            }
-            /*
-            else
-            {
-              leftnavState.controller.reverse();
-            }
-            */
-            LeftNavDrawyer.leftEnabled=!LeftNavDrawyer.leftEnabled;
-            leftnavState.isCollapsed = !leftnavState.isCollapsed;
-            //just reversing it to false
-          });
-        },
-        child: Stack(
-          children: <Widget>[
-            rightnavState.rightNavLayout(context),
-            leftnavState.leftNavLayout(context),
-            HomeLayout(context),
-          ],
-        ),
+      body: Stack(
+        children: <Widget>[
+          rightnavState.rightNavLayout(context),
+          leftnavState.leftNavLayout(context),
+          HomeLayout(context),
+        ],
       ),
 
     );
 
 
   }
+
+
 
   // Homelayout is for home page
 

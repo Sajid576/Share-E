@@ -4,13 +4,13 @@ import 'package:share_e/Controller/ServiceTypeController.dart';
 
 class ServiceMarkerIcon{
 
-  static var  _bookMarkerIcon;
-  static var _vehicleMarkerIcon;
-  static var _houseMarkerIcon;
-  static var _medicalMarkerIcon;
-  static var _foodMarkerIcon;
-  static var _parkingMarkerIcon;
-  static var _mechanicMarkerIcon;
+  static BitmapDescriptor  _bookMarkerIcon;
+  static BitmapDescriptor _vehicleMarkerIcon;
+  static BitmapDescriptor _houseMarkerIcon;
+  static BitmapDescriptor _medicalMarkerIcon;
+  static BitmapDescriptor _foodMarkerIcon;
+  static BitmapDescriptor _parkingMarkerIcon;
+  static BitmapDescriptor _mechanicMarkerIcon;
 
 
   ServiceMarkerIcon.init()
@@ -21,13 +21,23 @@ class ServiceMarkerIcon{
 
   void setMarkerIcon() async
   {
-    _bookMarkerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/book_ico.png');
-    _vehicleMarkerIcon=await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/vehicle_ico.png');
-    _houseMarkerIcon= await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/house_ico.png');
-    _medicalMarkerIcon=await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/medical_ico.png');
-    _foodMarkerIcon=await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/food_ico.png');
-    _parkingMarkerIcon=await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/parking_ico.png');
-    _mechanicMarkerIcon=await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/mechanic_ico.png');
+        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/book_ico.png').then((value) {
+          _bookMarkerIcon=value;
+        });
+        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/vehicle_ico.png').then((value) =>
+        _vehicleMarkerIcon=value);
+       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/house_ico.png').then((value) =>
+       _houseMarkerIcon=value);
+       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/medical_ico.png').then((value) =>
+       _medicalMarkerIcon=value);
+       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/food_ico.png').then((value) =>
+       _foodMarkerIcon=value);
+       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/parking_ico.png').then((value) =>
+       _parkingMarkerIcon=value);
+       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/mechanic_ico.png').then((value) =>
+       _mechanicMarkerIcon=value);
+
+
   }
 
   static getMarkerIcon(String service)

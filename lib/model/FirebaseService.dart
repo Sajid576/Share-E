@@ -8,15 +8,6 @@ import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 class FirebaseService{
 
-  //this variable denotes if the entered username is unique or not.
-  //if value is -1 then, it means variable is not set yet. if value is 0,then it means this username is already taken.
-  //if the value is 1 , then it means entered username is not taken yet.
-  static var uniqueUserName=-1;
-
-
-
-
-
   //this function set/overwrites the user data corresponding to the uid
   Future setUserData(String email,String username,String Phone,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users');
@@ -53,21 +44,22 @@ class FirebaseService{
     });
   }
 
-  static validateUsername(username)
-  {
+  //this function used to validate username .
+  static Future<dynamic> validateUsername(username) async {
+
     var fireStore =  Firestore.instance.collection('users');
-    fireStore.where("username",isEqualTo: username).getDocuments().then((query){
-          if(query.documents.length>0)
-            {
-                print("Username already exists");
-                uniqueUserName=0;
-            }
-          else
-            {
-              print("Username does not already exist");
-              uniqueUserName=1;
-            }
-    });
+    var query=await fireStore.where("username",isEqualTo: username).getDocuments();
+    if(query.documents.length>0)
+    {
+        print("Username already exists");
+        return 0;
+    }
+    else
+      {
+        print("Username does not already exist");
+        return 1;
+      }
+
 
   }
 
