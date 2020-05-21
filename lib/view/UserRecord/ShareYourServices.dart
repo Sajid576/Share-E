@@ -256,7 +256,7 @@ class _ShareYourServicesState extends State<ShareYourServices> {
                       color:  Colors.black87,
                       onPressed: () {
 
-                        new UserBackgroundLocation().getCurrentLocationUpdates();
+                        UserBackgroundLocation.getCurrentLocationUpdates();
 
                         if (_googleMapController != null)
                         {

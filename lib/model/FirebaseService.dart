@@ -35,7 +35,7 @@ class FirebaseService{
     var query =  Firestore.instance.collection('users').document(uid);
     query.get().then((snapshot) {
       if (snapshot.exists) {
-        SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['username'], snapshot.data['Phone'],uid);
+        SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['Phone'],snapshot.data['username'], uid);
       }
       else{
         print("No such user");

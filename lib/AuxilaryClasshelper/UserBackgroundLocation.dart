@@ -2,18 +2,27 @@ import 'dart:async';
 
 import 'package:background_location/background_location.dart';
 import 'package:share_e/view/GoogleMap/GoogleMapView.dart';
-
+import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 
 class UserBackgroundLocation
 {
 
-
-  UserBackgroundLocation()
+  UserBackgroundLocation.init()
   {
-      BackgroundLocation.startLocationService();
-      print("background location initialized");
+      BackgroundLocation.getPermissions(
+        onGranted: () {
+          // Start location service here or do something else
+          BackgroundLocation.startLocationService();
+          print("background location initialized");
+        },
+        onDenied: () {
+          // Show a message asking the user to reconsider or do something else
+
+        },
+      );
   }
-  void getCurrentLocationUpdates() async {
+
+  static getCurrentLocationUpdates() async {
 
     print("getCurrentLocation called");
     BackgroundLocation.getLocationUpdates((location) {
@@ -30,7 +39,7 @@ class UserBackgroundLocation
 
   }
 
-  void stopLocationService()
+  static stopLocationService()
   {
     BackgroundLocation.stopLocationService();
 

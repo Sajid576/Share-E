@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:typed_data';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:share_e/Controller/ServiceTypeController.dart';
+import 'package:image/image.dart' as Images;
 
 class ServiceMarkerIcon{
 
@@ -19,23 +22,41 @@ class ServiceMarkerIcon{
       print("Service marker set");
   }
 
-  void setMarkerIcon() async
+   setMarkerIcon() async
   {
-        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/book_ico.png').then((value) {
-          _bookMarkerIcon=value;
-        });
-        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/vehicle_ico.png').then((value) =>
-        _vehicleMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/house_ico.png').then((value) =>
-       _houseMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/medical_ico.png').then((value) =>
-       _medicalMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/food_ico.png').then((value) =>
-       _foodMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/parking_ico.png').then((value) =>
-       _parkingMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/mechanic_ico.png').then((value) =>
-       _mechanicMarkerIcon=value);
+         await rootBundle.load("assets/book_ico.png").then((bookByteData) =>
+             _bookMarkerIcon=BitmapDescriptor.fromBytes(bookByteData.buffer.asUint8List())
+        );
+
+         await rootBundle.load("assets/vehicle_ico.png").then((vehicleByteData) =>
+            _vehicleMarkerIcon=BitmapDescriptor.fromBytes(vehicleByteData.buffer.asUint8List())
+        );
+
+
+        await rootBundle.load("assets/house_ico.png").then((houseByteData) =>
+           _houseMarkerIcon=BitmapDescriptor.fromBytes(houseByteData.buffer.asUint8List())
+        );
+
+
+        await rootBundle.load("assets/medical_ico.png").then((medicalByteData) =>
+              _medicalMarkerIcon=BitmapDescriptor.fromBytes(medicalByteData.buffer.asUint8List())
+        );
+
+
+        await rootBundle.load("assets/food_ico.png").then((foodByteData) =>
+        _foodMarkerIcon=BitmapDescriptor.fromBytes(foodByteData.buffer.asUint8List())
+
+        );
+
+        await rootBundle.load("assets/parking_ico.png").then((parkingByteData) =>
+               _parkingMarkerIcon=BitmapDescriptor.fromBytes(parkingByteData.buffer.asUint8List())
+
+        );
+
+        await rootBundle.load("assets/mechanic_ico.png").then((mechanicByteData) =>
+              _mechanicMarkerIcon=BitmapDescriptor.fromBytes(mechanicByteData.buffer.asUint8List())
+
+        );
 
 
   }
