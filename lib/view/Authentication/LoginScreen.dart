@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+
 import 'package:flutter/services.dart';
 import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:share_e/view/Authentication/RegisterScreen.dart';
@@ -153,6 +153,7 @@ class LoginScreenState extends State<LoginScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         alignment: Alignment.center,
                         child:  FlatButton(
+                          color:Colors.black.withOpacity(0.5) ,
                           //padding: EdgeInsets.all( 10,),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {

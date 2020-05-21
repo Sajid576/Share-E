@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:share_e/Controller/ServiceTypeController.dart';
 
@@ -19,23 +20,23 @@ class ServiceMarkerIcon{
       print("Service marker set");
   }
 
-  void setMarkerIcon() async
+   setMarkerIcon()
   {
-        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/book_ico.png').then((value) {
-          _bookMarkerIcon=value;
-        });
-        await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/vehicle_ico.png').then((value) =>
-        _vehicleMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/house_ico.png').then((value) =>
-       _houseMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/medical_ico.png').then((value) =>
-       _medicalMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/food_ico.png').then((value) =>
-       _foodMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/parking_ico.png').then((value) =>
-       _parkingMarkerIcon=value);
-       await BitmapDescriptor.fromAssetImage(ImageConfiguration(), 'assets/mechanic_ico.png').then((value) =>
-       _mechanicMarkerIcon=value);
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/book_ico.png').then((value) {
+      _bookMarkerIcon=value;
+    });
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/vehicle_ico.png').then((value) =>
+    _vehicleMarkerIcon=value);
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/house_ico.png').then((value) =>
+    _houseMarkerIcon=value);
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/medical_ico.png').then((value) =>
+    _medicalMarkerIcon=value);
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/food_ico.png').then((value) =>
+    _foodMarkerIcon=value);
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/parking_ico.png').then((value) =>
+    _parkingMarkerIcon=value);
+     BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5), 'assets/mechanic_ico.png').then((value) =>
+    _mechanicMarkerIcon=value);
 
 
   }

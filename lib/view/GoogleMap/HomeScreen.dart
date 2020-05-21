@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   LeftNavDrawyer leftnavState;
   RightNavDrawyer rightnavState;
 
-  ServiceMarkerIcon serviceIcons=new ServiceMarkerIcon.init();
+
 
 
 
@@ -55,6 +55,8 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
+
+    new ServiceMarkerIcon.init();
 
     //this function will check user details in SharedPreference.If there there is user data in Shared preference then
     //it wont fetch anything from cloud firestore otherwise it will fetch user data from firestore and store it into
@@ -123,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen>  with TickerProviderStateMixin{
     super.dispose();
     //When user gets out of this Screen location tracking interface will be disabled
     //code for disabling
-    new UserBackgroundLocation().stopLocationService();
+    UserBackgroundLocation.stopLocationService();
 
     //closing the stream controller to prevent performance dropout
     //GoogleMapView.locationTrackingController.close();

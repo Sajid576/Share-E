@@ -51,9 +51,9 @@ class GoogleMapView{
 
      serviceMarkers = <MarkerId, Marker>{};
 
-      //start background location tracking
-      loc=new UserBackgroundLocation();
-      loc.getCurrentLocationUpdates();
+      //check for user permission and start background location tracking
+      loc=new UserBackgroundLocation.init();
+      UserBackgroundLocation.getCurrentLocationUpdates();
 
       print("Google map initialized");
 
@@ -96,7 +96,7 @@ class GoogleMapView{
      Marker marker= Marker(
           markerId: MarkerId(id),
           position: LatLng(lat, lon),
-          //icon: imageIcon,
+          icon: imageIcon,
           infoWindow: InfoWindow(
             title: title,
             snippet: snippet,
@@ -250,8 +250,8 @@ class GoogleMapView{
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("floating action button pressed");
-            new UserBackgroundLocation().getCurrentLocationUpdates();
+          //print("floating action button pressed");
+          UserBackgroundLocation.getCurrentLocationUpdates();
 
           if (_googleMapController != null)
           {

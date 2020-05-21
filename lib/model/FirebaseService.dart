@@ -21,7 +21,7 @@ class FirebaseService{
   }
 
   //this function updates a specific field corresponding to the uid
-  Future EditUserData(String phone,String username,String uid)async{
+  static editUserData(String phone,String username,String uid)async{
     final CollectionReference userinfo = Firestore.instance.collection('users'); //instatiate the firebase
 
      userinfo.document(uid).setData({     //update the firebase with that coressponding uid
@@ -35,7 +35,7 @@ class FirebaseService{
     var query =  Firestore.instance.collection('users').document(uid);
     query.get().then((snapshot) {
       if (snapshot.exists) {
-        SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['username'], snapshot.data['Phone'],uid);
+        SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['Phone'],snapshot.data['username'], uid);
       }
       else{
         print("No such user");

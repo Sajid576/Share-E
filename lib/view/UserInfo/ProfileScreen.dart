@@ -11,26 +11,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  var _profile_username;
-  var _profile_phone_no;
 
-  // activity jokon first initiate hoy tokhon initstate call hoy and runs only once the activity created
-  void initState(){
 
-    SharedPreferenceHelper.readfromlocalstorage().then((user) {
 
-     //_profile_username = user.getusername();
-      //in setstate it runs the activity and see if there is any change in the activity or not
-      //because in the edit section data can be edited so we need setstate
-     setState(() {
-       _profile_phone_no=user.getphone();
-       _profile_username = user.getusername();
-       print("edit er uname"+_profile_username);
-     });
-
-    });
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,11 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Icons.person,
                       color: Colors.teal[900],
                     ),
-                    title: Text(
-                      "$_profile_username",
-                      style:
-                      TextStyle( fontSize: 20.0),
-                    ),
+                    title:null ,
                   )),
               Card(
                   color: Colors.white,
@@ -117,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.teal[900],
                     ),
                     title: Text(
-                      "$_profile_phone_no",
+                      null,
                       style:
                       TextStyle( fontSize: 20.0),
                     ),

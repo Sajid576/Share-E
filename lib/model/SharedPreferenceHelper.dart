@@ -18,11 +18,10 @@ class SharedPreferenceHelper{
 
   }
   //adding value which is update in editing option
-  static updateLocalData(String phone,String username,String email) async {
+  static updateLocalData(String phone,String username) async {
         SharedPreferences prefs1 = await SharedPreferences.getInstance();
         prefs1.setString('phone', phone);
         prefs1.setString('username', username);
-        prefs1.setString('email', email);
         prefs1.setBool('session', true);
 
   }

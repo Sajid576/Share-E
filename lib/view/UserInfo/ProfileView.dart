@@ -8,54 +8,56 @@ import 'package:share_e/AuxilaryClasshelper/AuxiliaryClass.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-class FirebaseWrapper {
-
-  static FirebaseAuth _auth;
-  static Firestore _firestore;
-  static FirebaseStorage _storage;
+import 'package:share_e/model/FirebaseService.dart';
+import 'package:share_e/model/SharedPreferenceHelper.dart';
 
 
-  static Future<void> init() async {
-    WidgetsFlutterBinding.ensureInitialized();
-
-    final FirebaseApp app = await FirebaseApp.configure(
-      name: 'ShareEveryThing',
-      options: FirebaseOptions(
-        googleAppID: '1:556320559446:android:46e924c5bb79c50daa46f7',
-        gcmSenderID: '556320559446',
-        apiKey: 'AIzaSyAVP4q06zApK6ndsjZ934T4TcYhhs6l508',
-        projectID: 'shareeverything-78bb8',
-      ),
-    );
-
-    _auth = FirebaseAuth.fromApp(app);
-
-    _firestore = Firestore(app: app);
-
-    _storage = FirebaseStorage(app: app, storageBucket: 'gs://shareeverything-78bb8.appspot.com');
-  }
-
-  static FirebaseAuth auth() {
-    return _auth;
-  }
-
-  static Firestore firestore() {
-    return _firestore;
-  }
-
-  static FirebaseStorage storage() {
-    return _storage;
-  }
-}
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  //if an new image selected to change the dp then this _image variable will be initialized otherwise it will be null
   File _image;
+  //after uploading the file to firebase storage, this variable have the download URL of that image that has to be stored
+  //in cloud firestore
   String _uploadedFileURL="";
+  
+
+  String username="";
+  String phoneNo="";
+  String email="";
+  String uid="";
+
+  bool editEnabled=false;
+  TextEditingController _usernameEditingController;
+  TextEditingController _phoneNoEditingController;
+
+  void initState(){
+    super.initState();
+
+
+
+    SharedPreferenceHelper.readfromlocalstorage().then((user) {
+
+      setState(() {
+        uid=user.getuid();
+        phoneNo=user.getphone();
+        username = user.getusername();
+        email=user.getemail();
+
+        _phoneNoEditingController=TextEditingController(text: phoneNo);
+        _usernameEditingController=TextEditingController(text: username);
+
+        print("username: "+username+", phone: "+phoneNo+",Email: "+email);
+      });
+
+    });
+
+  }
+
+
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -70,9 +72,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future uploadPic(BuildContext context) async{
     print("Uploading Pic");
-    //final FirebaseStorage storage = FirebaseStorage(storageBucket: 'gs://shareeverything-78bb8.appspot.com');
+    final FirebaseStorage storage = FirebaseStorage(storageBucket: 'gs://share-e-ccfae.appspot.com');
     //FirebaseWrapper.init();
-    final FirebaseStorage storage=FirebaseWrapper.storage();
+    //final FirebaseStorage storage=FirebaseWrapper.storage();
 
     String fileName = basename(_image.path);
     StorageReference firebaseStorageRef = storage.ref().child("Users").child(fileName);
@@ -80,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if(uploadTask.isInProgress)
       {
-          return CircularProgressIndicator();
+         // return CircularProgressIndicator();
       }
     if(uploadTask.isComplete)
       {
@@ -106,12 +108,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         leading: IconButton(
-            icon: Icon(FontAwesomeIcons.arrowLeft),
+            icon: Icon(Icons.menu),
             onPressed: () {
-              Navigator.pop(context);
+
             }),
-        title: Text('Edit Profile'),
+        title: Text('My Profile'),
+        centerTitle:true,
       ),
       body: SingleChildScrollView(
         child: Builder(
@@ -129,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       alignment: Alignment.center,
                       child: CircleAvatar(
                         radius: 100,
-                        backgroundColor: Color(0xff476cfb),
+                        backgroundColor: Colors.black45,
                         child: ClipOval(
                           child: new SizedBox(
                             width: 180.0,
@@ -162,176 +166,111 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 20.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Username',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 18.0)),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Michelle James',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ],
+
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    child: Column(
+                      children: [
+
+
+                        Text('Username',
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 18.0)),
+                        editEnabled? TextField(
+                          enabled: editEnabled,
+                          onChanged: (text) {
+
+                            _usernameEditingController.text = text;
+                            _usernameEditingController.selection = TextSelection.fromPosition(TextPosition(offset: _usernameEditingController.text.length));
+
+                          },
+                          controller: _usernameEditingController,
+                        ) : Text(username,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 18.0)),
+                        SizedBox(
+                          height: 20.0,
                         ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        child: Icon(
-                          FontAwesomeIcons.pen,
-                          color: Color(0xff476cfb),
+                        Text('Email',
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 18.0)),
+                        Text(email,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold)),
+                        SizedBox(
+                          height: 20.0,
                         ),
-                      ),
+                        Text('Mobile',
+                            style: TextStyle(
+                                color: Colors.blueGrey, fontSize: 18.0)),
+                        editEnabled ? TextField(
+                          enabled: editEnabled,
+                          onChanged: (text) {
+
+                            _phoneNoEditingController.text = text;
+                            _phoneNoEditingController.selection = TextSelection.fromPosition(TextPosition(offset: _phoneNoEditingController.text.length));
+
+                          },
+                          controller: _phoneNoEditingController,
+                        ): Text(phoneNo,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 18.0)),
+
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Birthday',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 18.0)),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('1st April, 2000',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        child: Icon(
-                          FontAwesomeIcons.pen,
-                          color: Color(0xff476cfb),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Column(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Location',
-                                  style: TextStyle(
-                                      color: Colors.blueGrey, fontSize: 18.0)),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Paris, France',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold)),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        child: Icon(
-                          FontAwesomeIcons.pen,
-                          color: Color(0xff476cfb),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Text('Email',
-                          style:
-                          TextStyle(color: Colors.blueGrey, fontSize: 18.0)),
-                      SizedBox(width: 20.0),
-                      Text('michelle123@gmail.com',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold)),
-                    ],
                   ),
                 ),
+
+
+
                 SizedBox(
                   height: 20.0,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    RaisedButton(
-                      color: Color(0xff476cfb),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      elevation: 4.0,
-                      splashColor: Colors.blueGrey,
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(color: Colors.white, fontSize: 16.0),
-                      ),
-                    ),
-                    RaisedButton(
-                      color: Color(0xff476cfb),
-                      onPressed: () {
 
-                        uploadPic(context);
+                    RaisedButton(
+                      color: editEnabled ? Colors.green : Colors.black,
+                      onPressed: () {
+                        if(editEnabled)
+                          {
+                            if(_image!=null)
+                              {
+                                uploadPic(context);
+                              }
+                            if(username!=_usernameEditingController.text || phoneNo!=_phoneNoEditingController.text)
+                              {
+                                username=_usernameEditingController.text;
+                                phoneNo=_phoneNoEditingController.text;
+                                SharedPreferenceHelper.updateLocalData(phoneNo, username);
+                                FirebaseService.editUserData(phoneNo, username, uid);
+                              }
+
+                          }
+                         setState(() {
+                           editEnabled=!editEnabled;
+                         });
+
                       },
 
                       elevation: 4.0,
-                      splashColor: Colors.blueGrey,
-                      child: Text(
-                        'Submit',
-                        style: TextStyle(color: Colors.white, fontSize: 16.0),
-                      ),
+                      splashColor: Colors.white,
+                      child:editEnabled? Text('Save Info', style: TextStyle(color: Colors.white, fontSize: 16.0),) : Text('Edit Info', style: TextStyle(color: Colors.white, fontSize: 16.0),),
                     ),
 
                   ],
-                )
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
               ],
+
+
+
             ),
           ),
         ),
