@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +12,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:share_e/model/FirebaseService.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
+import 'dart:io' as Io;
+import 'dart:convert';
 
 
 class ProfilePage extends StatefulWidget {
@@ -23,12 +27,13 @@ class _ProfilePageState extends State<ProfilePage> {
   //after uploading the file to firebase storage, this variable have the download URL of that image that has to be stored
   //in cloud firestore
   String _uploadedFileURL="";
-  
+
 
   String username="";
   String phoneNo="";
   String email="";
   String uid="";
+  String userDP="";
 
   bool editEnabled=false;
   TextEditingController _usernameEditingController;
@@ -42,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
     SharedPreferenceHelper.readfromlocalstorage().then((user) {
 
       setState(() {
+        userDP=user.getDP();
         uid=user.getuid();
         phoneNo=user.getphone();
         username = user.getusername();
@@ -50,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
         _phoneNoEditingController=TextEditingController(text: phoneNo);
         _usernameEditingController=TextEditingController(text: username);
 
-        print("username: "+username+", phone: "+phoneNo+",Email: "+email);
+        print("UID: "+uid+",username: "+username+", phone: "+phoneNo+",Email: "+email);
       });
 
     });
@@ -70,34 +76,44 @@ class _ProfilePageState extends State<ProfilePage> {
 
 
 
+  uploadPicToDb(imagePath,uid)
+  {
+      final bytes = Io.File(imagePath).readAsBytesSync();
+
+      String img64 = base64Encode(bytes);
+
+      FirebaseService.uploadUserDP(uid, img64);
+      SharedPreferenceHelper.setUserDP(img64);
+
+  }
+
   Future uploadPic(BuildContext context) async{
     print("Uploading Pic");
-    final FirebaseStorage storage = FirebaseStorage(storageBucket: 'gs://share-e-ccfae.appspot.com');
-    //FirebaseWrapper.init();
-    //final FirebaseStorage storage=FirebaseWrapper.storage();
+
 
     String fileName = basename(_image.path);
-    StorageReference firebaseStorageRef = storage.ref().child("Users").child(fileName);
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-
-    if(uploadTask.isInProgress)
-      {
-         // return CircularProgressIndicator();
-      }
-    if(uploadTask.isComplete)
-      {
-
-
-        firebaseStorageRef.getDownloadURL().then((fileURL) {
+    // Upload image to firebase.
+    try {
+      final StorageReference storageReference = FirebaseStorage.instance.ref()
+          .child("users")
+          .child(fileName);
+      final StorageUploadTask uploadTask = storageReference.putFile(_image);
+      await uploadTask.onComplete;
+      if (uploadTask.isComplete) {
+        storageReference.getDownloadURL().then((fileURL) {
           setState(() {
             _uploadedFileURL = fileURL.toString();
-            print("download URL: "+_uploadedFileURL);
+            print("download URL: " + _uploadedFileURL);
             //AuxiliaryClass.showToast("Upload Completed");
-            Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text('Profile Picture Uploaded')));
           });
         });
       }
-
+    }catch(Exception)
+    {
+      AuxiliaryClass.showToast(Exception.message());
+    }
 
 
   }
@@ -149,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    Padding(
+                   editEnabled? Padding(
                       padding: EdgeInsets.only(top: 60.0),
                       child: IconButton(
                         icon: Icon(
@@ -160,7 +176,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           getImage();
                         },
                       ),
-                    ),
+                    ): Container(
+
+                   ),
                   ],
                 ),
                 SizedBox(
@@ -241,6 +259,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             if(_image!=null)
                               {
                                 uploadPic(context);
+                                //uploadPicToDb(_image.path,uid);
                               }
                             if(username!=_usernameEditingController.text || phoneNo!=_phoneNoEditingController.text)
                               {

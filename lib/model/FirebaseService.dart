@@ -30,11 +30,24 @@ class FirebaseService{
     },merge: true);
 
   }
+
+  static uploadUserDP(uid,encrypted_dp)
+  {
+    final CollectionReference userinfo = Firestore.instance.collection('users'); //instatiate the firebase
+
+    userinfo.document(uid).setData({     //update the firebase with that coressponding uid
+      'dp':encrypted_dp,
+
+    },merge: true).then((value) => AuxiliaryClass.showToast("Profile image successfully updated"));
+  }
+
+
   //this function used for fetching user data from cloud firestore and store it into local storage(Shared Preference)
   static readCloudUserData(uid)async{
     var query =  Firestore.instance.collection('users').document(uid);
     query.get().then((snapshot) {
       if (snapshot.exists) {
+        SharedPreferenceHelper.setUserDP(snapshot.data['dp']);
         SharedPreferenceHelper.setLocalData(snapshot.data['email'],snapshot.data['Phone'],snapshot.data['username'], uid);
       }
       else{

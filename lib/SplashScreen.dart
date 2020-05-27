@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:share_e/model/SharedPreferenceHelper.dart';
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/view/Authentication/LoginScreen.dart';
+import 'package:share_e/view/GoogleMap/ServiceMarkerIcon.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -27,6 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
+    ServiceMarkerIcon();
+
     getCurrentUser();
 
     Timer(Duration(
