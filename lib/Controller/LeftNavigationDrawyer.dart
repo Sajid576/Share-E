@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:share_e/view/GoogleMap/HomeScreen.dart';
 import 'package:share_e/view/Messages/MessagesScreen.dart';
-import 'package:share_e/view/UserInfo/ProfileScreen.dart';
+
 import 'package:share_e/view/UserInfo/ProfileView.dart';
 import 'package:share_e/view/UserRecord/YourCartList.dart';
 import 'package:share_e/view/UserRecord/YourReceivedService.dart';

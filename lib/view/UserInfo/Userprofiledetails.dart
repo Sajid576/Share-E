@@ -5,12 +5,18 @@ class Userprofiledetails{
     var session;
     var email;
     var myChatList;
+    var dp;
 
-    Userprofiledetails({this.phone,this.username,this.uid,this.session,this.email,this.myChatList});
+    Userprofiledetails({this.dp,this.phone,this.username,this.uid,this.session,this.email,this.myChatList});
     getMyChatList()
     {
       return myChatList;
     }
+    getDP()
+    {
+        return dp;
+    }
+
     getphone(){
       return phone;
     }

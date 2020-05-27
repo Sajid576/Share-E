@@ -13,7 +13,7 @@ class SharedPreferenceHelper{
         prefs.setString('email', email);
         prefs.setString('phone', phone);
         prefs.setString('username', username);
-        prefs.setString('Uid', uid);
+        prefs.setString('uid', uid);
         prefs.setBool('session', true);
 
   }
@@ -25,6 +25,11 @@ class SharedPreferenceHelper{
         prefs1.setBool('session', true);
 
   }
+  static setUserDP(img64) async {
+      SharedPreferences prefs1 = await SharedPreferences.getInstance();
+       prefs1.setString('dp', img64);
+  }
+
   static setChatRoomId(myUid,uId) async
   {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,6 +47,7 @@ class SharedPreferenceHelper{
    //read user details
   static Future<Userprofiledetails> readfromlocalstorage()async{
          SharedPreferences prefs = await SharedPreferences.getInstance();
+         var dp = prefs.getString('dp') ??'';
          var phone = prefs.getString('phone') ??'';
          var username=prefs.getString('username')??'';
          var session = prefs.getBool('session')?? false;
@@ -50,7 +56,7 @@ class SharedPreferenceHelper{
 
          var myChatList = prefs.getStringList('chatRoomList')??[];
 
-         Userprofiledetails userProfile = new Userprofiledetails(phone:phone,username: username,uid: uid,session: session,email: email,myChatList:myChatList);
+         Userprofiledetails userProfile = new Userprofiledetails(dp:dp,phone:phone,username: username,uid: uid,session: session,email: email,myChatList:myChatList);
          return userProfile;
   }
 
