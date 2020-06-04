@@ -8,9 +8,7 @@ import 'package:share_e/view/Messages/MessagesScreen.dart';
 
 void main()  {
  // WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {

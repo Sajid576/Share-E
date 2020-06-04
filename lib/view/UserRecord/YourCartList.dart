@@ -42,7 +42,7 @@ class _YourCartListState extends State<YourCartList> with SingleTickerProviderSt
   @override
   void dispose() {
     super.dispose();
-
+    leftnavState.controller.dispose();
 
   }
 
@@ -55,62 +55,113 @@ class _YourCartListState extends State<YourCartList> with SingleTickerProviderSt
   Widget build(BuildContext context){
 
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text("Your Cart List")),
-        backgroundColor: Colors.grey[800],
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: <Widget>[
+
+          leftnavState.leftNavLayout(context),
+          YourCartlist(context),
+        ],
       ),
-      body: SafeArea(
-        child: Container(
-            color: Colors.grey[400],
-            //bringing data from cloud fireStore through 'FutureBuilder'
-            child: StreamBuilder(
+    );
+  }
+  Widget YourCartlist(context){
+    return AnimatedPositioned(
+      duration: LeftNavDrawyer.duration,
+      top: 0,            //scale is done for top and bottom
+      bottom: 0,
+      left: leftnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width ,
+      right:leftnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width,
+      child: ScaleTransition(
+        scale: LeftNavDrawyer.leftEnabled==true ? leftnavState.scaleAnimation : leftnavState.scaleAnimation,
+        child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          elevation: 8,
+          color: Colors.white,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text("Your Cart List"),
+              leading: GestureDetector(
+                //onHorizontalDragEnd: (DragEndDetails details)=>_onHorizontalDrag(details),
+                onTap: (){
+                  setState(() {
+                    if(leftnavState.isCollapsed)
+                    {
+                      leftnavState.controller.forward();
+                    }
+                    else
+                    {
+                      leftnavState.controller.reverse();
+                    }
+                    LeftNavDrawyer.leftEnabled=!LeftNavDrawyer.leftEnabled;
+                    leftnavState.isCollapsed = !leftnavState.isCollapsed;
+                    //just reversing it to false
+                  });
+                },
+                child: Icon(
+                  Icons.menu,color: Colors.black,size: 35,  // add custom icons also
+                ),
+              ),
+            ),
+            body: ListView(
+              children: <Widget>[
+                SafeArea(
+                  child: Container(
+                      color: Colors.grey[400],
+                      //bringing data from cloud fireStore through 'FutureBuilder'
+                      child: StreamBuilder(
 
-                stream:YourStreamController.CartListstreamController.stream ,
-                builder:(_, snapshot){ //snapshot has all the array data
-                  //if it's not yet come from fireBase
-                  if(!snapshot.hasData){
-                    return Center(
-                      child: Text("Loading..."),
-                    );
-                  }else{
-                    return ListView.separated(
-                      itemCount: snapshot.data.length,//shared_service document array size
-                      itemBuilder:(BuildContext context,int index){
-                        String images=snapshot.data[index].data["images"];
-                        List<String>imageUrl;
-                        if(images!=null)
-                          {
-                            images=images.trim();
-                            imageUrl= images.split(",");
+                          stream:YourStreamController.CartListstreamController.stream ,
+                          builder:(_, snapshot){ //snapshot has all the array data
+                            //if it's not yet come from fireBase
+                            if(!snapshot.hasData){
+                              return Center(
+                                child: Text("Loading..."),
+                              );
+                            }else{
+                              return ListView.separated(
+                                itemCount: snapshot.data.length,//shared_service document array size
+                                itemBuilder:(BuildContext context,int index){
+                                  String images=snapshot.data[index].data["images"];
+                                  List<String>imageUrl;
+                                  if(images!=null)
+                                  {
+                                    images=images.trim();
+                                    imageUrl= images.split(",");
+                                  }
+
+                                  return Container(
+                                    color: Colors.white,
+                                    child: ListTile(
+
+                                      leading: CachedNetworkImage(
+                                        width: 100,
+                                        height: 100,
+                                        imageUrl:imageUrl!=null ? imageUrl[0] : "",
+                                        placeholder: (context, url) => CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                      ),
+                                      contentPadding: EdgeInsets.all(8),
+                                      title:Text(snapshot.data[index].data["service_product_type"]),
+                                      subtitle: Text(snapshot.data[index].data["service_product_name"]),
+                                      onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document to the detail page
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context,int index){
+                                  return Divider(
+                                    color: Colors.black,
+                                  );
+                                },
+                              );
+                            }
                           }
-
-                        return Container(
-                          color: Colors.white,
-                          child: ListTile(
-
-                            leading: CachedNetworkImage(
-                              width: 100,
-                              height: 100,
-                              imageUrl:imageUrl!=null ? imageUrl[0] : "",
-                              placeholder: (context, url) => CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                            ),
-                            contentPadding: EdgeInsets.all(8),
-                            title:Text(snapshot.data[index].data["service_product_type"]),
-                            subtitle: Text(snapshot.data[index].data["service_product_name"]),
-                            onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document to the detail page
-                          ),
-                        );
-                      },
-                      separatorBuilder: (BuildContext context,int index){
-                        return Divider(
-                          color: Colors.black,
-                        );
-                      },
-                    );
-                  }
-                }
-            )
+                      )
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
