@@ -12,14 +12,10 @@ class YourSharedService extends StatefulWidget {
   _YourSharedServiceState createState() => _YourSharedServiceState();
 }
 
-class _YourSharedServiceState extends State<YourSharedService> {
+class _YourSharedServiceState extends State<YourSharedService> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text("Your Shared Services")),
-        backgroundColor: Colors.grey[800],
-      ),
       body: YourListPage(),
     );
   }
@@ -56,6 +52,7 @@ class _YourListPageState extends State<YourListPage> with SingleTickerProviderSt
   @override
   void dispose() {
     super.dispose();
+    leftnavState.controller.dispose();
     _streamController.close();
 
   }
@@ -72,57 +69,110 @@ class _YourListPageState extends State<YourListPage> with SingleTickerProviderSt
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Colors.grey[400],
-        //bringing data from cloud fireStore through 'FutureBuilder'
-        child: StreamBuilder(
-            stream:_streamController.stream,//getting documents of shared_services
-            builder:(_, snapshot){ //snapshot has all the array data
-              //if it's not yet come from fireBase
-              if(!snapshot.hasData){
-                return Center(
-                  child: Text("Loading..."),
-                );
-              }else{
-                return ListView.separated(
-                  itemCount: snapshot.data.length,//shared_service document array size
-                  itemBuilder:(BuildContext context,int index){
-                    String images=snapshot.data[index].data["images"];
-                    List<String>imageUrl;
-                    if(images!=null)
-                    {
-                      images=images.trim();
-                      imageUrl= images.split(",");
-                    }
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: <Widget>[
 
-                    return SingleChildScrollView(                          //srollable
-                      child: Container(
-                        color:Colors.white,
-                        child: ListTile(
-                          leading: CachedNetworkImage(
-                            width: 100,
-                            height: 100,
-                            imageUrl:imageUrl!=null ? imageUrl[0] : "",
-                            placeholder: (context, url) => CircularProgressIndicator(),
-                            errorWidget: (context, url, error) => Icon(Icons.error),
-                          ),
-                          contentPadding: EdgeInsets.all(8),
-                          title:Text(snapshot.data[index].data["service_product_type"]),
-                          subtitle: Text(snapshot.data[index].data["service_product_name"]),
-                          onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document to the detail page
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext context,int index){
-                    return Divider(
-                      color: Colors.black,
-                    );
-                  },
-                );
-              }
-            }
-        )
+          leftnavState.leftNavLayout(context),
+          YourShareservice(context),
+        ],
+      ),
+    );
+  }
+  Widget YourShareservice(context){
+    return AnimatedPositioned(
+      duration: LeftNavDrawyer.duration,
+      top: 0,            //scale is done for top and bottom
+      bottom: 0,
+      left: leftnavState.isCollapsed ? 0 : 0.6 * MediaQuery.of(context).size.width ,
+      right:leftnavState.isCollapsed ? 0 : -0.4 * MediaQuery.of(context).size.width,
+      child: ScaleTransition(
+        scale:LeftNavDrawyer.leftEnabled==true ? leftnavState.scaleAnimation : leftnavState.scaleAnimation,
+        child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(40)),
+          elevation: 8,
+          color: Colors.white,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text("Your Share Service"),
+              leading: GestureDetector(
+                //onHorizontalDragEnd: (DragEndDetails details)=>_onHorizontalDrag(details),
+                onTap: (){
+                  setState(() {
+                    if(leftnavState.isCollapsed)
+                    {
+                      leftnavState.controller.forward();
+                    }
+                    else
+                    {
+                      leftnavState.controller.reverse();
+                    }
+                    LeftNavDrawyer.leftEnabled=!LeftNavDrawyer.leftEnabled;
+                    leftnavState.isCollapsed = !leftnavState.isCollapsed;
+                    //just reversing it to false
+                  });
+                },
+                child: Icon(
+                  Icons.menu,color: Colors.black,size: 37,  // add custom icons also
+                ),
+              ),
+            ),
+            body: Container(
+                color: Colors.grey[400],
+                //bringing data from cloud fireStore through 'FutureBuilder'
+                child: StreamBuilder(
+                    stream:_streamController.stream,//getting documents of shared_services
+                    builder:(_, snapshot){ //snapshot has all the array data
+                      //if it's not yet come from fireBase
+                      if(!snapshot.hasData){
+                        return Center(
+                          child: Text("Loading..."),
+                        );
+                      }else{
+                        return ListView.separated(
+                          itemCount: snapshot.data.length,//shared_service document array size
+                          itemBuilder:(BuildContext context,int index){
+                            String images=snapshot.data[index].data["images"];
+                            List<String>imageUrl;
+                            if(images!=null)
+                            {
+                              images=images.trim();
+                              imageUrl= images.split(",");
+                            }
+
+                            return SingleChildScrollView(                          //srollable
+                              child: Container(
+                                color:Colors.white,
+                                child: ListTile(
+                                  leading: CachedNetworkImage(
+                                    width: 100,
+                                    height: 100,
+                                    imageUrl:imageUrl!=null ? imageUrl[0] : "",
+                                    placeholder: (context, url) => CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                  ),
+                                  contentPadding: EdgeInsets.all(8),
+                                  title:Text(snapshot.data[index].data["service_product_type"]),
+                                  subtitle: Text(snapshot.data[index].data["service_product_name"]),
+                                  onTap: () =>navigateToDetailPage(snapshot.data[index]),//passing all data of the document to the detail page
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context,int index){
+                            return Divider(
+                              color: Colors.black,
+                            );
+                          },
+                        );
+                      }
+                    }
+                )
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
